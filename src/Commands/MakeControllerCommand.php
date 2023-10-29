@@ -23,6 +23,10 @@ class MakeControllerCommand extends ControllerMakeCommand
             $this->createAction();
         }
 
+        if ($this->option('inertia')) {
+            $this->createInertiaView();
+        }
+
         return false;
     }
 
@@ -58,13 +62,46 @@ class MakeControllerCommand extends ControllerMakeCommand
         ]);
     }
 
+    /**
+     * Create a model factory for the model.
+     *
+     * @return void
+     */
+    protected function createInertiaView(): void
+    {
+        $nameInput = Str::replace('Controller', '', $this->getNameInput());
+        $name = Str::studly($nameInput);
+        $fileName = Str::afterLast($name, '/');;
+
+        $this->call('make:inertia-view', [
+            'name' => "{$name}/{$fileName}Index",
+            '--resource-index' => true
+        ]);
+
+        $this->call('make:inertia-view', [
+            'name' => "{$name}/{$fileName}Create",
+            '--resource-create' => true
+        ]);
+
+        $this->call('make:inertia-view', [
+            'name' => "{$name}/{$fileName}Edit",
+            '--resource-edit' => true
+        ]);
+
+        $this->call('make:inertia-view', [
+            'name' => "{$name}/{$fileName}Show",
+            '--resource-show' => true
+        ]);
+    }
+
     public function getOptions(): array
     {
-        return array_merge(parent::getOptions(), [
-            'service', 'S', InputOption::VALUE_NONE, 'Generate a service for the controller',
-            'action', 'A', InputOption::VALUE_NONE, 'Generate a action for the controller',
-            'inertia', 'I', InputOption::VALUE_NONE, 'Generate a inertia for the controller'
-        ]);
+        $options = parent::getOptions();
+        $options[] = ['service', 'S', InputOption::VALUE_NONE, 'Generate a service for the controller'];
+        $options[] = ['action', 'A', InputOption::VALUE_NONE, 'Generate a action for the controller'];
+        $options[] = ['inertia', 'I', InputOption::VALUE_NONE, 'Generate a inertia for the controller'];
+
+        return $options;
     }
 
     /**
@@ -89,6 +126,6 @@ class MakeControllerCommand extends ControllerMakeCommand
      */
     protected function resolveStubPath($stub): string
     {
-        return file_exists($customPath = __DIR__ . $stub) ? $customPath : parent::resolveStubPath($stub);
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/'))) ? $customPath : __DIR__ . $stub;
     }
 }

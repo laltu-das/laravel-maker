@@ -3,7 +3,7 @@
 namespace Laltu\LaravelMaker\Commands;
 
 use Illuminate\Foundation\Console\ViewMakeCommand;
-use Laltu\LaravelMaker\Support\Str;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 class MakeViewCommand extends ViewMakeCommand
@@ -38,45 +38,46 @@ class MakeViewCommand extends ViewMakeCommand
         ]);
     }
 
-//    /**
-//     * Create a model factory for the model.
-//     *
-//     * @return void
-//     */
-//    protected function createInertiaVue(): void
-//    {
-//        $nameInput = Str::replace('', '', $this->getNameInput());
-//        $name = Str::studly($nameInput);
-//
-//        $this->call('make:view --vue', [
-//            'name' => "{$name}Service",
-//            '--methods' => "get,store,show,update,destroy",
-//        ]);
-//    }
+    /**
+     * Create a model factory for the model.
+     *
+     * @return void
+     */
+    protected function createInertiaVue(): void
+    {
+        $nameInput = Str::replace('', '', $this->getNameInput());
+        $name = Str::studly($nameInput);
 
-//    /**
-//     * Create a model factory for the model.
-//     *
-//     * @return void
-//     */
-//    protected function createInertiaReact(): void
-//    {
-//        $nameInput = Str::replace('', '', $this->getNameInput());
-//        $name = Str::studly($nameInput);
-//
-//        $this->call('make:view --inertia-react', [
-//            'name' => "{$name}Service",
-//            '--methods' => "get,store,show,update,destroy",
-//        ]);
-//    }
+        $this->call('make:view --vue', [
+            'name' => "{$name}Service",
+            '--methods' => "get,store,show,update,destroy",
+        ]);
+    }
+
+    /**
+     * Create a model factory for the model.
+     *
+     * @return void
+     */
+    protected function createInertiaReact(): void
+    {
+        $nameInput = Str::replace('', '', $this->getNameInput());
+        $name = Str::studly($nameInput);
+
+        $this->call('make:view --inertia-react', [
+            'name' => "{$name}Service",
+            '--methods' => "get,store,show,update,destroy",
+        ]);
+    }
 
     public function getOptions(): array
     {
-        return array_merge(parent::getOptions(), [
-            'resource', null, InputOption::VALUE_NONE, 'Generate a resource view',
-            'vue', null, InputOption::VALUE_NONE, 'Generate a inertia vue js file',
-            'react', null, InputOption::VALUE_NONE, 'Generate a inertia react js file'
-        ]);
+        $options = parent::getOptions();
+        $options[] = ['resource', null, InputOption::VALUE_NONE, 'Generate a resource view'];
+        $options[] = ['vue', null, InputOption::VALUE_NONE, 'Generate a inertia vue js file'];
+        $options[] = ['react', null, InputOption::VALUE_NONE, 'Generate a inertia react js file'];
+
+        return $options;
     }
 
     /**

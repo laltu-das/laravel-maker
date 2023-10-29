@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
 use Laltu\LaravelMaker\Commands\MakeControllerCommand;
+use Laltu\LaravelMaker\Commands\MakeInertiaViewCommand;
 use Laltu\LaravelMaker\Commands\MakeModelCommand;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
@@ -44,6 +45,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
                  MakeServiceCommand::class,
                  MakeActionCommand::class,
                  MakePackageCommand::class,
+                 MakeInertiaViewCommand::class,
              ]);
         }
     }
