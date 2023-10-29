@@ -2,10 +2,10 @@
 import {Head} from '@inertiajs/vue3';
 import {useForm} from 'laravel-precognition-vue-inertia';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import SubmitButton from "@/Components/Buttons/SubmitButton.vue";
-import CancelButton from "@/Components/Buttons/CancelButton.vue";
-import PrimaryLinkButton from "@/Components/Buttons/PrimaryLinkButton.vue";
-import Card from "@/Components/Cards/Card.vue";
+import SubmitButton from "@/Components/Core/Buttons/SubmitButton.vue";
+import CancelButton from "@/Components/Core/Buttons/CancelButton.vue";
+import PrimaryLinkButton from "@/Components/Core/Buttons/PrimaryLinkButton.vue";
+import Card from "@/Components/Core/Cards/Card.vue";
 
 const form = useForm('post', route('admin.banner.store'), {
 
@@ -23,8 +23,7 @@ const form = useForm('post', route('admin.banner.store'), {
                     <div class="flex items-center gap-x-3">
                         <h2 class="text-lg font-medium text-gray-800 dark:text-white">Banners Management</h2>
                     </div>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">These companies have purchased in the last
-                        12 months.</p>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">These companies have purchased in the last 12 months.</p>
                 </div>
 
                 <div class="flex items-center mt-4 gap-x-3">

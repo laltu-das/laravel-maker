@@ -2,10 +2,10 @@
 import {Head, usePage} from '@inertiajs/vue3';
 import {useForm} from 'laravel-precognition-vue-inertia';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import SubmitButton from "@/Components/Buttons/SubmitButton.vue";
-import CancelButton from "@/Components/Buttons/CancelButton.vue";
-import PrimaryLinkButton from "@/Components/Buttons/PrimaryLinkButton.vue";
-import Card from "@/Components/Cards/Card.vue";
+import SubmitButton from "@/Components/Core/Buttons/SubmitButton.vue";
+import CancelButton from "@/Components/Core/Buttons/CancelButton.vue";
+import PrimaryLinkButton from "@/Components/Core/Buttons/PrimaryLinkButton.vue";
+import Card from "@/Components/Core/Cards/Card.vue";
 
 const banner = usePage().props.banner.data;
 
