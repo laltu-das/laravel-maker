@@ -1,0 +1,48 @@
+{
+  "name": "{{ packageName }}",
+  "description": "{{ packageDescription }}",
+  "license": "{{ packageLicense }}",
+  "keywords": [
+    "{{ packageKeywords }}"
+  ],
+  "type": "library",
+  "authors": [
+    {
+      "name": "{{ authorName }}",
+      "email": "{{ authorEmail }}"
+    }
+  ],
+  "require": {
+    "php": "{{ phpVersion }}",
+    "illuminate/support": "^10.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^8.4|^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "{{ vendorNamespace }}\\{{ packageNamespace }}\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "{{ vendorNamespace }}\\{{ packageNamespace }}\\Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "{{ vendorNamespace }}\\{{ packageNamespace }}\\{{ serviceProviderClassName }}"
+      ],
+      "aliases": {
+        "{{ packageNamespace }}": "{{ vendorNamespace }}\\{{ packageNamespace }}\\Facade"
+      }
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

@@ -1,0 +1,55 @@
+{
+    "name": "laltu/laravel-maker",
+    "description": "admin package for laravel application",
+    "keywords": [
+        "laltu",
+        "laravel-maker"
+    ],
+    "homepage": "https://github.com/laltu/laravel-maker",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "laltu das",
+            "email": "laltu.lspl@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0|^8.2",
+        "illuminate/console": "*",
+        "illuminate/container": "*",
+        "illuminate/filesystem": "*",
+        "illuminate/support": "*",
+        "illuminate/view": "*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.11",
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laltu\\LaravelMaker\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laltu\\LaravelMaker\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Laltu\\LaravelMaker\\LaravelMakerServiceProvider"
+            ],
+            "aliases": {
+                "LaravelMaker": "Laltu\\LaravelMaker\\LaravelMakerFacade"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -1,0 +1,37 @@
+# {{ packageHumanName\n }}
+
+[![GitHub Workflow Status](https://github.com/{{ packageName }}/workflows/Run%20tests/badge.svg)](https://github.com/{{ packageName }}/actions)
+[![styleci](https://styleci.io/repos/CHANGEME/shield)](https://styleci.io/repos/CHANGEME)
+
+[![Packagist](https://img.shields.io/packagist/v/{{ packageName }}.svg)](https://packagist.org/packages/{{ packageName }})
+[![Packagist](https://poser.pugx.org/{{ packageName }}/d/total.svg)](https://packagist.org/packages/{{ packageName }})
+[![Packagist](https://img.shields.io/packagist/l/{{ packageName }}.svg)](https://packagist.org/packages/{{ packageName }})
+
+Package description: CHANGE ME
+
+## Installation
+
+Install via composer
+```bash
+composer require {{ packageName }}
+```
+
+### Publish package assets
+
+```bash
+php artisan vendor:publish --provider="{{ package }}\ServiceProvider"
+```
+
+## Usage
+
+CHANGE ME
+
+## Security
+
+If you discover any security related issues, please email {{ email\n }}
+instead of using the issue tracker.
+
+## Credits
+
+- [<?php echo name; ?>]({{ githubPackageUrl }})
+- [All contributors]({{ githubPackageUrl }}/graphs/contributors)
