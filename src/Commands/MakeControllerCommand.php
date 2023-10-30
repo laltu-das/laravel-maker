@@ -128,4 +128,46 @@ class MakeControllerCommand extends ControllerMakeCommand
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/'))) ? $customPath : __DIR__ . $stub;
     }
+
+
+
+    /**
+     * Build the class with the given name.
+     *
+     * Remove the base controller import if we are already in the base namespace.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function buildClass($name)
+    {
+        $controllerNamespace = $this->getNamespace($name);
+
+        $replace = [];
+
+        if ($this->option('parent')) {
+            $replace = $this->buildParentReplacements();
+        }
+
+        if ($this->option('model')) {
+            $replace = $this->buildModelReplacements($replace);
+        }
+
+        if ($this->option('creatable')) {
+            $replace['abort(404);'] = '//';
+        }
+
+        $replace["use {$controllerNamespace}\Controller;\n"] = '';
+
+        $replace["{{ routePath }}"]  = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
+        $replace["{{ viewPath }}"]  = Str::replace('Controller', '', $this->getNameInput());
+
+        return str_replace(
+            array_keys($replace), array_values($replace), parent::buildClass($name)
+        );
+
+//        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'.php';
+//        $replace["use {$controllerNamespace}\Controller;\n"] = '';
+    }
+
 }

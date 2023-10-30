@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class {{ class }} extends Model
 {
-    use HasFactory, SoftDelete;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

@@ -16,7 +16,7 @@ class {{ class }} extends Controller
     {
         ${{ modelVariable }} = {{ model }}::latest()->paginate();
 
-        return Inertia::render('{{ model }}/{{ model }}Index', compact('{{ modelVariable }}'));
+        return Inertia::render('{{ viewPath }}/{{ model }}Index', compact('{{ modelVariable }}'));
     }
 
     /**
@@ -24,7 +24,7 @@ class {{ class }} extends Controller
      */
     public function create()
     {
-        return Inertia::render('{{ model }}/{{ model }}Create');
+        return Inertia::render('{{ viewPath }}/{{ model }}Create');
     }
 
     /**
@@ -34,7 +34,7 @@ class {{ class }} extends Controller
     {
         {{ model }}::create($request->all());
 
-        return redirect()->route('{{ modelVariable }}.index')->with(['success', 'Created Successfully']);
+        return redirect()->route('{{ routePath }}.index')->with(['success', 'Created Successfully']);
     }
 
     /**
@@ -42,7 +42,7 @@ class {{ class }} extends Controller
      */
     public function show({{ model }} ${{ modelVariable }})
     {
-        return Inertia::render('{{ model }}/{{ model }}Show');
+        return Inertia::render('{{ viewPath }}/{{ model }}Show');
     }
 
     /**
@@ -50,7 +50,7 @@ class {{ class }} extends Controller
      */
     public function edit({{ model }} ${{ modelVariable }})
     {
-        return Inertia::render('{{ model }}/{{ model }}Edit');
+        return Inertia::render('{{ viewPath }}/{{ model }}Edit');
     }
 
     /**
@@ -60,7 +60,7 @@ class {{ class }} extends Controller
     {
         {{ model }}::update($request->all());
 
-        return redirect()->route('{{ modelVariable }}.index')->with(['success', 'Updated Successfully']);
+        return redirect()->route('{{ routePath }}.index')->with(['success', 'Updated Successfully']);
     }
 
     /**
@@ -70,6 +70,6 @@ class {{ class }} extends Controller
     {
         ${{ modelVariable }}->delete();
 
-        return redirect()->route('{{ modelVariable }}.index')->with(['success', 'Deleted Successfully']);
+        return redirect()->route('{{ routePath }}.index')->with(['success', 'Deleted Successfully']);
     }
 }
