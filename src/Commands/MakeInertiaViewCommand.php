@@ -3,6 +3,7 @@
 namespace Laltu\LaravelMaker\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -95,10 +96,13 @@ class MakeInertiaViewCommand extends GeneratorCommand
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the controller already exists'],
-            ['resource-index', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['resource-create', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['resource-edit', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['resource-show', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['react', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['vue', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['resource', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['-index', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['-create', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['-edit', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['-show', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
         ];
     }
 
@@ -125,5 +129,43 @@ class MakeInertiaViewCommand extends GeneratorCommand
     protected function resolveStubPath($stub): string
     {
         return file_exists($customPath = __DIR__ . $stub) ? $customPath : __DIR__ . $stub;
+    }
+
+
+    /**
+     * Build the class with the given name.
+     *
+     * Remove the base controller import if we are already in the base namespace.
+     *
+     * @param string $name
+     * @return string
+     * @throws FileNotFoundException
+     */
+    protected function buildClass($name)
+    {
+        $controllerNamespace = $this->getNamespace($name);
+
+        $replace = [];
+
+        if ($this->option('parent')) {
+            $replace = $this->buildParentReplacements();
+        }
+
+        if ($this->option('model')) {
+            $replace = $this->buildModelReplacements($replace);
+        }
+
+        if ($this->option('creatable')) {
+            $replace['abort(404);'] = '//';
+        }
+
+        $replace["use {$controllerNamespace}\Controller;\n"] = '';
+
+        $replace["{{ routePath }}"]  = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
+        $replace["{{ viewPath }}"]  = Str::replace('Controller', '', $this->getNameInput());
+
+        return str_replace(
+            array_keys($replace), array_values($replace), parent::buildClass($name)
+        );
     }
 }
