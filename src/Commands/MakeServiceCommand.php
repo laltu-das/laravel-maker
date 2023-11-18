@@ -47,6 +47,14 @@ class MakeServiceCommand extends GeneratorCommand
     }
 
     /**
+     * Get the method stub.
+     */
+    protected function getMethodStub(): string
+    {
+        return $this->resolveStubPath('/stubs/service.method.stub');
+    }
+
+    /**
      * Resolve the fully qualified path to the stub.
      *
      * @param  string  $stub
@@ -109,13 +117,5 @@ class MakeServiceCommand extends GeneratorCommand
         }
 
         return implode(PHP_EOL, $methods);
-    }
-
-    /**
-     * Get the method stub.
-     */
-    protected function getMethodStub(): string
-    {
-        return $this->resolveStubPath('/stubs/service-method.stub');
     }
 }
