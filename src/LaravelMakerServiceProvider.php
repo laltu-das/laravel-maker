@@ -11,7 +11,6 @@ use Laltu\LaravelMaker\Commands\MakeInertiaViewCommand;
 use Laltu\LaravelMaker\Commands\MakeModelCommand;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
-use Laltu\LaravelMaker\Commands\MakeViewCommand;
 
 class LaravelMakerServiceProvider extends ServiceProvider
 {
@@ -40,7 +39,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
 
             // Registering package commands.
              $this->commands([
-                 MakeViewCommand::class,
                  MakeControllerCommand::class,
                  MakeModelCommand::class,
                  MakeServiceCommand::class,
