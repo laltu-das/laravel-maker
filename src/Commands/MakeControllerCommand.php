@@ -74,7 +74,7 @@ class MakeControllerCommand extends ControllerMakeCommand
         $fileName = Str::afterLast($name, '/');;
 
         $this->call('make:inertia-view', [
-            'name' => "{$name}/{$fileName}Index",
+            'name' => "{$name}/{$fileName}",
             '--resource' => true
         ]);
     }
