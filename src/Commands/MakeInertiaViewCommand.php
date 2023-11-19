@@ -129,7 +129,7 @@ class MakeInertiaViewCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        return $this->laravel['path'] . '/../resources/js/Pages/'  . $this->argument('name') ."/".str_replace('\\', '/', $name) . '.vue';
+        return $this->laravel['path'] . '/../resources/js/Pages/'.str_replace('\\', '/', $name) . '.vue';
     }
 
     /**
@@ -142,7 +142,6 @@ class MakeInertiaViewCommand extends GeneratorCommand
     {
         return file_exists($customPath = __DIR__ . $stub) ? $customPath : __DIR__ . $stub;
     }
-
 
     /**
      * Build the class with the given name.
