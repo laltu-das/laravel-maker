@@ -17,7 +17,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    banners: {
+    {{ model }}s: {
         type: Object,
         required: true,
         default: () => ({}),
@@ -28,13 +28,13 @@ const props = defineProps({
 let search = ref(props.filters.search);
 
 watch(search, (value) => {
-    router.get(route('admin.banner.index'), {search: value}, {
+    router.get(route('{{ route }}.index'), {search: value}, {
         preserveState: true,
         replace: true,
     });
 });
 
-const deleteData = (id) => router.delete(route('admin.banner.destroy', id), {
+const deleteData = (id) => router.delete(route('{{ route }}.destroy', id), {
     replace: true,
     onBefore: () => confirm('Are you sure you want to delete this data?'),
     onSuccess: (page) => alert('Successfully deleted'),
@@ -43,14 +43,14 @@ const deleteData = (id) => router.delete(route('admin.banner.destroy', id), {
 </script>
 
 <template>
-    <Head title="Banners"/>
+    <Head title="{{ model }}s"/>
 
     <AdminLayout>
         <template #header>
             <div class="sm:flex sm:items-center sm:justify-between">
                 <div>
                     <div class="flex items-center gap-x-3">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Banners Management</h2>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ model }}s Management</h2>
                     </div>
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">These companies have purchased in the last
                         12 months.</p>
@@ -58,7 +58,7 @@ const deleteData = (id) => router.delete(route('admin.banner.destroy', id), {
 
                 <div class="flex items-center mt-4 gap-x-3">
                     <TextInput v-model="search" placeholder="Search"/>
-                    <PrimaryLinkButton :href="route('admin.banner.create')">Add Banner</PrimaryLinkButton>
+                    <PrimaryLinkButton :href="route('{{ route }}.create')">Add Banner</PrimaryLinkButton>
                 </div>
             </div>
         </template>
@@ -70,18 +70,18 @@ const deleteData = (id) => router.delete(route('admin.banner.destroy', id), {
                             <table-head-cell>Image</table-head-cell>
                         </table-head>
                         <table-body>
-                            <table-row v-for="banner in banners.data" :key="banner.id">
+                            <table-row v-for="{{ model }} in {{ model }}s.data" :key="{{ model }}.id">
 
                                 <table-cell>
                                     <div class="text-right">
                                         <Link
-                                            :href="route('admin.banner.edit',banner.id)"
+                                            :href="route('{{ route }}.edit',{{ model }}.id)"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                             Edit
                                         </Link>
                                         <button
                                             class="font-medium text-red-600 dark:text-blue-500 hover:underline"
-                                            @click="deleteData(banner.id)"
+                                            @click="deleteData({{ model }}.id)"
                                         >
                                             Delete
                                         </button>
@@ -91,7 +91,7 @@ const deleteData = (id) => router.delete(route('admin.banner.destroy', id), {
                         </table-body>
                     </Table>
                 </div>
-                <Pagination :links="banners.meta"/>
+                <Pagination :links="{{ model }}s.meta"/>
             </div>
         </div>
     </AdminLayout>

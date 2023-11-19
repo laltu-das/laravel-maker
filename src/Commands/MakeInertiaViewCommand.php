@@ -162,6 +162,8 @@ class MakeInertiaViewCommand extends GeneratorCommand
 
         $replace["{{ routePath }}"] = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
         $replace["{{ viewPath }}"] = Str::replace('Controller', '', $this->getNameInput());
+        $replace["{{ model }}"] = trim($this->argument('model'));
+        $replace["{{ route }}"] = trim($this->argument('route'));
 
         return str_replace(
             array_keys($replace), array_values($replace), parent::buildClass($name)
