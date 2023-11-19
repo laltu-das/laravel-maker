@@ -4,12 +4,12 @@ import {useForm} from 'laravel-precognition-vue-inertia';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import SubmitButton from "@/Components/Core/Buttons/SubmitButton.vue";
 import CancelButton from "@/Components/Core/Buttons/CancelButton.vue";
-import PrimaryLinkButton from "@/Components/Core/Buttons/PrimaryLinkButton.vue";
+import PrimaryLinkButton from "@/Components/Core/Buttons/LinkButton.vue";
 import Card from "@/Components/Core/Cards/Card.vue";
 
-const banner = usePage().props.banner.data;
+const banner = usePage().props.{{ model }}.data;
 
-const form = useForm('put', route('admin.banner.update', banner.id), {
+const form = useForm('put', route('{{ route }}.update', banner.id), {
 
 });
 
@@ -23,14 +23,14 @@ const form = useForm('put', route('admin.banner.update', banner.id), {
             <div class="sm:flex sm:items-center sm:justify-between">
                 <div>
                     <div class="flex items-center gap-x-3">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Banners Management</h2>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ model }} Management</h2>
                     </div>
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">These companies have purchased in the last
                         12 months.</p>
                 </div>
 
                 <div class="flex items-center mt-4 gap-x-3">
-                    <PrimaryLinkButton :href="route('admin.banner.index')">Back</PrimaryLinkButton>
+                    <LinkButton :href="route('admin.banner.index')">Back</LinkButton>
                 </div>
             </div>
         </template>
@@ -38,11 +38,21 @@ const form = useForm('put', route('admin.banner.update', banner.id), {
             <div class="mx-auto px-4">
                 <Card>
                     <form class="w-full" @submit.prevent="form.submit({onSuccess: () => { form.reset();}})">
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <TextInput v-model="form.title" :label="'Title'" type="text"/>
+                                <InputError :message="form.errors.title" class="mt-2"/>
+                            </div>
+                            <div class="w-full md:w-1/2 px-3">
+                                <TextInput v-model="form.description" :label="'Description'" type="text"/>
+                                <InputError :message="form.errors.description" class="mt-2"/>
+                            </div>
+                        </div>
                         <div class="flex flex-wrap px-3 mb-6 md:mb-0 gap-3">
                             <SubmitButton :class="{'opacity-25':form.processing}" :disabled="form.processing" type="submit">
                                 Submit
                             </SubmitButton>
-                            <CancelButton :href="route('admin.banner.index')">Cancel</CancelButton>
+                            <CancelButton :href="route('{{ route }}.index')">Cancel</CancelButton>
                         </div>
                     </form>
                 </Card>

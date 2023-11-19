@@ -1,16 +1,16 @@
 <script setup>
 import {Head, Link, router} from '@inertiajs/vue3';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import Table from "@/Components/Table/Table.vue";
-import TableHeadCell from "@/Components/Table/TableHeadCell.vue";
-import TableBody from "@/Components/Table/TableBody.vue";
-import TableRow from "@/Components/Table/TableRow.vue";
-import TableCell from "@/Components/Table/TableCell.vue";
-import TableHead from "@/Components/Table/TableHead.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Table from "@/Components/Core/Table/Table.vue";
+import TableHeadCell from "@/Components/Core/Table/TableHeadCell.vue";
+import TableBody from "@/Components/Core/Table/TableBody.vue";
+import TableRow from "@/Components/Core/Table/TableRow.vue";
+import TableCell from "@/Components/Core/Table/TableCell.vue";
+import TableHead from "@/Components/Core/Table/TableHead.vue";
+import Pagination from "@/Components/Core/Pagination.vue";
 import {ref, watch} from "vue";
-import PrimaryLinkButton from "@/Components/Buttons/PrimaryLinkButton.vue";
-import TextInput from "@/Components/Form/TextInput.vue";
+import PrimaryLinkButton from "@/Components/Buttons/LinkButton.vue";
+import TextInput from "@/Components/Core/Form/TextInput.vue";
 
 const props = defineProps({
     filters: {
@@ -74,15 +74,10 @@ const deleteData = (id) => router.delete(route('{{ route }}.destroy', id), {
 
                                 <table-cell>
                                     <div class="text-right">
-                                        <Link
-                                            :href="route('{{ route }}.edit',{{ model }}.id)"
-                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                        <Link :href="route('{{ route }}.edit',{{ model }}.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                             Edit
                                         </Link>
-                                        <button
-                                            class="font-medium text-red-600 dark:text-blue-500 hover:underline"
-                                            @click="deleteData({{ model }}.id)"
-                                        >
+                                        <button class="font-medium text-red-600 dark:text-blue-500 hover:underline" @click="deleteData({{ model }}.id)">
                                             Delete
                                         </button>
                                     </div>

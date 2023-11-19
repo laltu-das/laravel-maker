@@ -1,24 +1,24 @@
 <script setup>
 import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import FileUpload from "@/Components/Form/FileUpload.vue";
-import LinkButton from "@/Components/Buttons/LinkButton.vue";
-import SelectInput from "@/Components/Form/SelectInput.vue";
-import InputError from "@/Components/InputError.vue";
-import SubmitButton from "@/Components/Buttons/SubmitButton.vue";
-import TextInput from "@/Components/Form/TextInput.vue";
+import FileUpload from "@/Components/Core/Form/FileUpload.vue";
+import LinkButton from "@/Components/Core/Buttons/LinkButton.vue";
+import SelectInput from "@/Components/Core/Form/SelectInput.vue";
+import InputError from "@/Components/Core/InputError.vue";
+import SubmitButton from "@/Components/Core/Buttons/SubmitButton.vue";
+import TextInput from "@/Components/Core/Form/TextInput.vue";
 
-const banner = usePage().props.banner;
+const {{ model }} = usePage().props.{{ model }};
 
 const form = useForm({
     _method: 'PUT',
-    title: banner.title ?? '',
-    description: banner.description ?? '',
-    image: banner.image ?? '',
-    active_status: banner.active_status ?? '',
+    title: {{ model }}.title ?? '',
+    description: {{ model }}.description ?? '',
+    image: {{ model }}.image ?? '',
+    active_status: {{ model }}.active_status ?? '',
 });
 
-const update = () => form.post(route('admin.banner.update', banner.id));
+const update = () => form.post(route('{{ route }}.update', {{ model }}.id));
 
 </script>
 
@@ -31,17 +31,13 @@ const update = () => form.post(route('admin.banner.update', banner.id));
                 <div>
                     <div class="flex items-center gap-x-3">
                         <h2 class="text-lg font-medium text-gray-800 dark:text-white">Banners</h2>
-                        <span
-                            class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">240 subscriptions</span>
+                        <span class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">240 subscriptions</span>
                     </div>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">These companies have purchased in the last
-                        12 months.</p>
                 </div>
 
                 <div class="flex items-center mt-4 gap-x-3">
-                    <Link :href="route('admin.banner.index')"
-                          class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
-                        <span>Back</span>
+                    <Link :href="route('{{ route }}.index')" class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
+                        Back
                     </Link>
                 </div>
             </div>
@@ -76,7 +72,7 @@ const update = () => form.post(route('admin.banner.update', banner.id));
                             <SubmitButton :class="{'opacity-25':form.processing}" :disabled="form.processing" type="submit">
                                 Submit
                             </SubmitButton>
-                            <LinkButton :href="route('admin.banner.index')">Cancel</LinkButton>
+                            <LinkButton :href="route('{{ route }}.index')">Cancel</LinkButton>
                         </div>
                     </form>
                 </div>
