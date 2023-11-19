@@ -47,6 +47,14 @@ class MakeActionCommand extends GeneratorCommand
     }
 
     /**
+     * Get the method stub.
+     */
+    protected function getMethodStub(): string
+    {
+        return $this->resolveStubPath('/stubs/action.method.stub');
+    }
+
+    /**
      * Resolve the fully qualified path to the stub.
      *
      * @param string $stub
@@ -109,13 +117,5 @@ class MakeActionCommand extends GeneratorCommand
         }
 
         return implode(PHP_EOL, $methods);
-    }
-
-    /**
-     * Get the method stub.
-     */
-    protected function getMethodStub(): string
-    {
-        return $this->resolveStubPath('/stubs/action-method.stub');
     }
 }

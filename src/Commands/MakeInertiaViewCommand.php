@@ -5,6 +5,7 @@ namespace Laltu\LaravelMaker\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class MakeInertiaViewCommand extends GeneratorCommand
@@ -31,28 +32,30 @@ class MakeInertiaViewCommand extends GeneratorCommand
     protected $type = 'Vue template';
 
     /**
+     * Execute the console command.
+     * @throws FileNotFoundException
+     */
+    public function handle(): bool
+    {
+        if ($this->option('resource')) {
+            $framework = $this->choice('Select the JavaScript framework (Vue/React):', ['vue', 'react'], 0);
+
+            $this->createResource($framework);
+        } else {
+            parent::handle();
+        }
+
+        return false;
+    }
+
+
+    /**
      * Get the stub file for the generator.
      *
      * @return string
      */
     protected function getStub()
     {
-        if ($this->option('resource-index')) {
-            return $this->resolveStubPath('/stubs/vue/resource/index-vue-template.stub');
-        }
-
-        if ($this->option('resource-create')) {
-            return $this->resolveStubPath('/stubs/vue/resource/create-vue-template.stub');
-        }
-
-        if ($this->option('resource-edit')) {
-            return $this->resolveStubPath('/stubs/vue/resource/edit-vue-template.stub');
-        }
-
-        if ($this->option('resource-show')) {
-            return $this->resolveStubPath('/stubs/vue/resource/show-vue-template.stub');
-        }
-
         return $this->resolveStubPath('/stubs/vue/vue-template.stub');
     }
 
@@ -88,6 +91,19 @@ class MakeInertiaViewCommand extends GeneratorCommand
     }
 
     /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return array_merge(parent::getArguments(), [
+            ['model', InputArgument::REQUIRED, 'The model associated with the view.'],
+            ['route', InputArgument::REQUIRED, 'The route name associated with the view.'],
+        ]);
+    }
+
+    /**
      * Get the console command options.
      *
      * @return array
@@ -99,10 +115,6 @@ class MakeInertiaViewCommand extends GeneratorCommand
             ['react', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
             ['vue', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
             ['resource', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['-index', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['-create', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['-edit', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['-show', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
         ];
     }
 
@@ -117,7 +129,7 @@ class MakeInertiaViewCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        return $this->laravel['path'].'/../resources/js/Pages/'.str_replace('\\', '/', $name).'.vue';
+        return $this->laravel['path'] . '/../resources/js/Pages/'  . $this->argument('name') ."/".str_replace('\\', '/', $name) . '.vue';
     }
 
     /**
@@ -147,25 +159,50 @@ class MakeInertiaViewCommand extends GeneratorCommand
 
         $replace = [];
 
-        if ($this->option('parent')) {
-            $replace = $this->buildParentReplacements();
-        }
-
-        if ($this->option('model')) {
-            $replace = $this->buildModelReplacements($replace);
-        }
-
-        if ($this->option('creatable')) {
-            $replace['abort(404);'] = '//';
-        }
-
         $replace["use {$controllerNamespace}\Controller;\n"] = '';
 
-        $replace["{{ routePath }}"]  = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
-        $replace["{{ viewPath }}"]  = Str::replace('Controller', '', $this->getNameInput());
+        $replace["{{ routePath }}"] = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
+        $replace["{{ viewPath }}"] = Str::replace('Controller', '', $this->getNameInput());
 
         return str_replace(
             array_keys($replace), array_values($replace), parent::buildClass($name)
         );
+    }
+
+    private function createResource($framework): bool
+    {
+        $files = [
+            'Index' => 'index',
+            'Create' => 'create',
+            'Edit' => 'edit',
+            'Show' => 'show',
+        ];
+
+        foreach ($files as $option => $suffix) {
+            $stubPath = $this->resolveStubPath("/stubs/{$framework}/resource/{$suffix}-template.stub");
+
+            $stub = file_get_contents($stubPath);
+
+            // Adjust the namespace and class name
+            $name = $this->qualifyClass($this->getNameInput() . $option);
+
+            $this->replaceNamespace($stub, $name);
+
+            $path = $this->getPath($name);
+
+            if ($this->files->exists($path) && !$this->option('force')) {
+                $this->error($this->type . ' already exists!');
+
+                return false;
+            }
+
+            $this->makeDirectory($path);
+
+            file_put_contents($path, $stub);
+
+            $this->info($this->type . ' created successfully.');
+        }
+
+        return true;
     }
 }

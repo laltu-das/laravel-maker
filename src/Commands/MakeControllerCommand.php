@@ -75,22 +75,7 @@ class MakeControllerCommand extends ControllerMakeCommand
 
         $this->call('make:inertia-view', [
             'name' => "{$name}/{$fileName}Index",
-            '--resource-index' => true
-        ]);
-
-        $this->call('make:inertia-view', [
-            'name' => "{$name}/{$fileName}Create",
-            '--resource-create' => true
-        ]);
-
-        $this->call('make:inertia-view', [
-            'name' => "{$name}/{$fileName}Edit",
-            '--resource-edit' => true
-        ]);
-
-        $this->call('make:inertia-view', [
-            'name' => "{$name}/{$fileName}Show",
-            '--resource-show' => true
+            '--resource' => true
         ]);
     }
 
@@ -141,23 +126,7 @@ class MakeControllerCommand extends ControllerMakeCommand
      */
     protected function buildClass($name)
     {
-        $controllerNamespace = $this->getNamespace($name);
-
         $replace = [];
-
-        if ($this->option('parent')) {
-            $replace = $this->buildParentReplacements();
-        }
-
-        if ($this->option('model')) {
-            $replace = $this->buildModelReplacements($replace);
-        }
-
-        if ($this->option('creatable')) {
-            $replace['abort(404);'] = '//';
-        }
-
-        $replace["use {$controllerNamespace}\Controller;\n"] = '';
 
         $replace["{{ routePath }}"]  = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
         $replace["{{ viewPath }}"]  = Str::replace('Controller', '', $this->getNameInput());
@@ -165,9 +134,6 @@ class MakeControllerCommand extends ControllerMakeCommand
         return str_replace(
             array_keys($replace), array_values($replace), parent::buildClass($name)
         );
-
-//        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'.php';
-//        $replace["use {$controllerNamespace}\Controller;\n"] = '';
     }
 
 }

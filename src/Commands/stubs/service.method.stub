@@ -1,4 +1,4 @@
-public function {{ method_name }}()
-{
-    //
-}
+    public function {{ method_name }}()
+    {
+        //
+    }
