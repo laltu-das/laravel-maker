@@ -54,9 +54,9 @@ class MakeInertiaViewCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/vue/vue-template.stub');
+        return $this->resolveStubPath("/stubs/{$this->option('framework')}/{$this->option('framework')}-template.stub");
     }
 
     /**
@@ -112,8 +112,7 @@ class MakeInertiaViewCommand extends GeneratorCommand
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the controller already exists'],
-            ['react', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['vue', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
+            ['framework', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
             ['resource', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
         ];
     }
@@ -129,7 +128,7 @@ class MakeInertiaViewCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        return $this->laravel['path'] . '/../resources/js/Pages/'.str_replace('\\', '/', $name) . '.vue';
+        return $this->laravel['path'] . '/../resources/js/Pages/' . str_replace('\\', '/', $name) . '.vue';
     }
 
     /**
@@ -143,66 +142,48 @@ class MakeInertiaViewCommand extends GeneratorCommand
         return file_exists($customPath = __DIR__ . $stub) ? $customPath : __DIR__ . $stub;
     }
 
+
     /**
-     * Build the class with the given name.
-     *
-     * Remove the base controller import if we are already in the base namespace.
-     *
-     * @param string $name
-     * @return string
-     * @throws FileNotFoundException
      */
-    protected function buildClass($name)
-    {
-        $controllerNamespace = $this->getNamespace($name);
-
-        $replace = [];
-
-        $replace["use {$controllerNamespace}\Controller;\n"] = '';
-
-        $replace["{{ routePath }}"] = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
-        $replace["{{ viewPath }}"] = Str::replace('Controller', '', $this->getNameInput());
-        $replace["{{ model }}"] = trim($this->argument('model'));
-        $replace["{{ route }}"] = trim($this->argument('route'));
-
-        return str_replace(
-            array_keys($replace), array_values($replace), parent::buildClass($name)
-        );
-    }
-
     private function createResource($framework): bool
     {
-        $files = [
-            'Index' => 'index',
-            'Create' => 'create',
-            'Edit' => 'edit',
-            'Show' => 'show',
-        ];
+        $files = ['Index' => 'index', 'Create' => 'create', 'Edit' => 'edit', 'Show' => 'show',];
 
         foreach ($files as $option => $suffix) {
             $stubPath = $this->resolveStubPath("/stubs/{$framework}/resource/{$suffix}-template.stub");
 
-            $stub = file_get_contents($stubPath);
-
-            // Adjust the namespace and class name
             $name = $this->qualifyClass($this->getNameInput() . $option);
-
-            $this->replaceNamespace($stub, $name);
 
             $path = $this->getPath($name);
 
-            if ($this->files->exists($path) && !$this->option('force')) {
-                $this->error($this->type . ' already exists!');
+            if ((!$this->hasOption('force') || !$this->option('force')) && $this->alreadyExists($this->getNameInput())) {
+                $this->components->error($this->type . ' already exists.');
 
                 return false;
             }
 
             $this->makeDirectory($path);
 
-            file_put_contents($path, $stub);
+            // Read the contents of the stub file
+            $stub = file_get_contents($stubPath);
 
-            $this->info($this->type . ' created successfully.');
+            // Define replacements
+            $replace = [
+                '{{ routePath }}' => Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput()))),
+                '{{ viewPath }}' => Str::replace('Controller', '', $this->getNameInput()),
+                '{{ model }}' => trim($this->argument('model')),
+                '{{ route }}' => trim($this->argument('route')),
+            ];
+
+            // Perform replacements in the stub
+            $stub = str_replace(array_keys($replace), array_values($replace), $stub);
+
+            // Write the file with the replaced contents
+            $this->files->put($path, $stub);
+
+            $this->components->info(sprintf('%s [%s] created successfully.', $this->type, $path));
         }
+
 
         return true;
     }
