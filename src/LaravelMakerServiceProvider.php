@@ -23,9 +23,9 @@ class LaravelMakerServiceProvider extends ServiceProvider
          * Optional methods to load your package assets
          */
 //        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-maker');
-//        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-maker');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-maker');
 //        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-//        $this->registerRoutes();
+        $this->registerRoutes();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
