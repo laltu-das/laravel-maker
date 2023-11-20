@@ -2,10 +2,12 @@
 import {Head, usePage} from '@inertiajs/vue3';
 import {useForm} from 'laravel-precognition-vue-inertia';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import SubmitButton from "@/Components/Core/Buttons/SubmitButton.vue";
-import CancelButton from "@/Components/Core/Buttons/CancelButton.vue";
-import PrimaryLinkButton from "@/Components/Core/Buttons/LinkButton.vue";
-import Card from "@/Components/Core/Cards/Card.vue";
+import SubmitButton from "@/Components/Core/Button/SubmitButton.vue";
+import CancelButton from "@/Components/Core/Button/CancelButton.vue";
+import LinkButton from "@/Components/Core/Button/LinkButton.vue";
+import Card from "@/Components/Core/Card/Card.vue";
+import TextInput from "@/Components/Core/Form/TextInput.vue";
+import InputError from "@/Components/Core/Form/InputError.vue";
 
 const banner = usePage().props.{{ model }}.data;
 
@@ -30,7 +32,7 @@ const form = useForm('put', route('{{ route }}.update', banner.id), {
                 </div>
 
                 <div class="flex items-center mt-4 gap-x-3">
-                    <LinkButton :href="route('admin.banner.index')">Back</LinkButton>
+                    <LinkButton :href="route('{{ route }}.index')">Back</LinkButton>
                 </div>
             </div>
         </template>

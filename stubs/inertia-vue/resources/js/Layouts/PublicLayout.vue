@@ -1,5 +1,4 @@
-<script lang="ts" setup>
-import {ref} from 'vue';
+<script setup>
 import NavbarCollapse from "@/Components/Core/Navbar/NavbarCollapse.vue";
 import NavbarLogo from "@/Components/Core/Navbar/NavbarLogo";
 import Navbar from "@/Components/Core/Navbar/Navbar.vue";

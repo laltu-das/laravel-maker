@@ -1,7 +1,7 @@
-<script lang="ts" setup>
+<script setup>
 import {ref} from 'vue';
 import Modal from "@/Components/Core/Modal/Modal.vue";
-import Button from "../../../../../../../../resources/js/Components/Core/Buttons/Button.vue";
+import Button from "@/Components/Core/Button/Button.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import {Link} from "@inertiajs/vue3";
 import Dropdown from "@/Components/Dropdown.vue";

@@ -71,20 +71,31 @@ class InstallPresetCommand extends Command implements PromptsForMissingInput
         // NPM Packages...
         $this->updateNodePackages(function ($packages) {
             return [
-                    "@vueuse/core" => "^10.5.0",
+                    "@inertiajs/vue3" => "^1.0.14",
+                    "@tailwindcss/forms" => "^0.5.7",
+                    "@vitejs/plugin-vue" => "^4.5.0",
+                    "@vue/server-renderer" => "^3.3.8",
+                    "@vueuse/core" => "^10.6.1",
+                    "autoprefixer" => "^10.4.16",
                     "classnames" => "^2.3.2",
                     "floating-vue" => "^2.0.0-beta.24",
+                    "laravel-vite-plugin" => "^0.8.1",
                     "lodash-es" => "^4.17.21",
-                    "tailwind-merge" => "^1.14.0"
+                    "postcss" => "^8.4.31",
+                    "tailwind-merge" => "^2.0.0",
+                    "tailwindcss" => "^3.3.5",
+                    "vite" => "^5.0.0",
+                    "vue" => "^3.3.8",
+                    "laravel-precognition-vue-inertia" => "^0.5.2"
                 ] + $packages;
         });
 
-        // NPM Packages...
-        $this->updateNodePackages(function ($packages) {
-            return [
-                    "laravel-precognition-vue-inertia" => "^0.5.2"
-                ] + $packages;
-        }, false);
+//        // NPM Packages...
+//        $this->updateNodePackages(function ($packages) {
+//            return [
+//                    "laravel-precognition-vue-inertia" => "^0.5.2"
+//                ] + $packages;
+//        }, false);
 
         // Components + Pages...
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Components'));

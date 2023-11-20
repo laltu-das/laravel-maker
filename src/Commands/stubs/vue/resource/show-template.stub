@@ -1,11 +1,10 @@
 <script setup>
 import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import FileUpload from "@/Components/Core/Form/FileUpload.vue";
-import LinkButton from "@/Components/Core/Buttons/LinkButton.vue";
-import SelectInput from "@/Components/Core/Form/SelectInput.vue";
-import InputError from "@/Components/Core/InputError.vue";
-import SubmitButton from "@/Components/Core/Buttons/SubmitButton.vue";
+import FileInput from "@/Components/Core/Form/FileInput.vue";
+import LinkButton from "@/Components/Core/Button/LinkButton.vue";
+import InputError from "@/Components/Core/Form/InputError.vue";
+import SubmitButton from "@/Components/Core/Button/SubmitButton.vue";
 import TextInput from "@/Components/Core/Form/TextInput.vue";
 
 const {{ model }} = usePage().props.{{ model }};
@@ -58,7 +57,7 @@ const update = () => form.post(route('{{ route }}.update', {{ model }}.id));
                         </div>
                         <div class="flex flex-wrap -mx-3 mb-6">
                             <div class="w-full px-3 mb-6 md:mb-0">
-                                <FileUpload :label="'Image'" type="text" @input="form.image = $event.target.files[0]"/>
+                                <FileInput :label="'Image'" type="text" @input="form.image = $event.target.files[0]"/>
                                 <InputError :message="form.errors.description" class="mt-2"/>
                             </div>
                         </div>

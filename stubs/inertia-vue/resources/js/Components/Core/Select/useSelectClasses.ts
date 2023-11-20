@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import { twMerge } from 'tailwind-merge'
-import type { InputSize } from '@/Components/Core/Input/types'
+import type { InputSize } from '@/Components/Core/Form/types'
 
 // LABEL
 const defaultLabelClasses = 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'

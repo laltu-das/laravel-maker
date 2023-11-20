@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import { computed, toRefs } from 'vue'
 import { useRangeClasses } from './useRangeClasses'
-import type { InputSize } from '@/Components/Core/Input/types'
+import type { InputSize } from '@/Components/Core/Form/types'
 
 interface RangeProps {
   modelValue?: string;

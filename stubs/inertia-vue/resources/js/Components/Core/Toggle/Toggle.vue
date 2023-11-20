@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 import { toRefs, computed } from 'vue'
 import { useToggleClasses } from './useToggleClasses'
-import type { InputSize } from '@/Components/Core/Input/types'
+import type { InputSize } from '@/Components/Core/Form/types'
 
 interface ToggleProps {
   modelValue?: boolean;
