@@ -11,6 +11,7 @@ use Laltu\LaravelMaker\Commands\MakeInertiaViewCommand;
 use Laltu\LaravelMaker\Commands\MakeModelCommand;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
+use Laltu\LaravelMaker\Commands\ResourceFileCreate;
 
 class LaravelMakerServiceProvider extends ServiceProvider
 {
@@ -46,6 +47,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
                  MakePackageCommand::class,
                  MakeInertiaViewCommand::class,
                  InstallPresetCommand::class,
+                 ResourceFileCreate::class,
              ]);
         }
     }
