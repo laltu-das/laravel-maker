@@ -22,15 +22,14 @@ const update = () => form.post(route('{{ route }}.update', {{ model }}.id));
 </script>
 
 <template>
-    <Head title="Dashboard"/>
+    <Head title="{{ modelUcFirstPlural }}"/>
 
     <AdminLayout>
         <template #header>
             <div class="sm:flex sm:items-center sm:justify-between">
                 <div>
                     <div class="flex items-center gap-x-3">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Banners</h2>
-                        <span class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">240 subscriptions</span>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ modelUcFirstPlural }} Management</h2>
                     </div>
                 </div>
 

@@ -172,6 +172,8 @@ class MakeInertiaViewCommand extends GeneratorCommand
                 '{{ routePath }}' => Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput()))),
                 '{{ viewPath }}' => Str::replace('Controller', '', $this->getNameInput()),
                 '{{ model }}' => trim($this->argument('model')),
+                '{{ modelPlural }}' => Str::of(trim($this->argument('model')))->plural(),
+                '{{ modelUcFirstPlural }}' => Str::ucfirst(Str::of(trim($this->argument('model')))->plural()),
                 '{{ route }}' => trim($this->argument('route')),
             ];
 

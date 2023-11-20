@@ -18,7 +18,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    {{ model }}s: {
+    {{ modelPlural }}: {
         type: Object,
         required: true,
         default: () => ({}),
@@ -44,17 +44,15 @@ const deleteData = (id) => router.delete(route('{{ route }}.destroy', id), {
 </script>
 
 <template>
-    <Head title="{{ model }}s"/>
+    <Head title="{{ modelUcFirstPlural }}"/>
 
     <AdminLayout>
         <template #header>
             <div class="sm:flex sm:items-center sm:justify-between">
                 <div>
                     <div class="flex items-center gap-x-3">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ model }}s Management</h2>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ modelUcFirstPlural }} Management</h2>
                     </div>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">These companies have purchased in the last
-                        12 months.</p>
                 </div>
 
                 <div class="flex items-center mt-4 gap-x-3">
@@ -71,8 +69,8 @@ const deleteData = (id) => router.delete(route('{{ route }}.destroy', id), {
                             <table-head-cell>Image</table-head-cell>
                         </table-head>
                         <table-body>
-                            <table-row v-for="{{ model }} in {{ model }}s.data" :key="{{ model }}.id">
-
+                            <table-row v-for="{{ model }} in {{ modelPlural }}.data" :key="{{ model }}.id">
+                                <table-cell></table-cell>
                                 <table-cell>
                                     <div class="text-right">
                                         <LinkButton :href="route('{{ route }}.edit',{{ model }}.id)">Edit</LinkButton>
@@ -83,7 +81,7 @@ const deleteData = (id) => router.delete(route('{{ route }}.destroy', id), {
                         </table-body>
                     </Table>
                 </div>
-                <Pagination :links="{{ model }}s.meta"/>
+                <Pagination :links="{{ modelPlural }}.meta"/>
             </div>
         </div>
     </AdminLayout>

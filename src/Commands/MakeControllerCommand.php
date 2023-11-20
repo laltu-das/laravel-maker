@@ -75,6 +75,8 @@ class MakeControllerCommand extends ControllerMakeCommand
 
         $this->call('make:inertia-view', [
             'name' => "{$name}/{$fileName}",
+            'model' => Str::lower($name),
+            'route' => Str::lower($name),
             '--resource' => true
         ]);
     }
