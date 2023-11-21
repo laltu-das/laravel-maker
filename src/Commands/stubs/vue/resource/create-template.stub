@@ -1,23 +1,15 @@
 <script setup>
-import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
+import {Head, Link, usePage} from '@inertiajs/vue3';
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import FileUpload from "@/Components/Core/Form/FileUpload.vue";
 import LinkButton from "@/Components/Core/Button/LinkButton.vue";
-import SelectInput from "@/Components/Core/Form/SelectInput.vue";
-import InputError from "@/Components/Core/InputError.vue";
-import SubmitButton from "@/Components/Core/Button/SubmitButton.vue";
-import TextInput from "@/Components/Core/Form/TextInput.vue";
-import {Head} from '@inertiajs/vue3';
-import {useForm} from 'laravel-precognition-vue-inertia';
-import AdminLayout from "@/Layouts/AdminLayout.vue";
-import SubmitButton from "@/Components/Core/Button/SubmitButton.vue";
-import CancelButton from "@/Components/Core/Button/CancelButton.vue";
-import LinkButton from "@/Components/Core/Button/LinkButton.vue";
-import Card from "@/Components/Core/Card/Card.vue";
-import TextInput from "@/Components/Core/Form/TextInput.vue";
 import InputError from "@/Components/Core/Form/InputError.vue";
+import SubmitButton from "@/Components/Core/Button/SubmitButton.vue";
+import TextInput from "@/Components/Core/Form/TextInput.vue";
+import {useForm} from 'laravel-precognition-vue-inertia';
+import CancelButton from "@/Components/Core/Button/CancelButton.vue";
+import Card from "@/Components/Core/Card/Card.vue";
 
-const form = useForm('post', route('{{ route }}.store'), {
+const form = useForm('{{ model }}', route('{{ route }}.store'), {
 
 });
 
