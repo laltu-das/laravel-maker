@@ -46,7 +46,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
                  MakeActionCommand::class,
                  MakePackageCommand::class,
                  MakeInertiaViewCommand::class,
-                 InstallPresetCommand::class,
                  ResourceFileCreate::class,
              ]);
         }
