@@ -25,7 +25,7 @@
         "livewire/livewire": "^3.2"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.11",
+        "orchestra/testbench": "^8.15",
         "phpunit/phpunit": "^9.6"
     },
     "autoload": {
@@ -36,9 +36,6 @@
     "autoload-dev": {
         "psr-4": {
             "Laltu\\LaravelMaker\\Tests\\": "tests",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "config": {

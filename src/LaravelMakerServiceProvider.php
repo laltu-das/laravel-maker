@@ -4,7 +4,6 @@ namespace Laltu\LaravelMaker;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Laltu\LaravelMaker\Commands\InstallPresetCommand;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
 use Laltu\LaravelMaker\Commands\MakeControllerCommand;
 use Laltu\LaravelMaker\Commands\MakeInertiaViewCommand;
