@@ -29,13 +29,13 @@ class LaravelMakerServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('laravel-maker.php'),
+                __DIR__ . '/../config/laravel-maker.php' => config_path('laravel-maker.php'),
             ], 'config');
 
             // Publishing assets.
-//            $this->publishes([
-//                __DIR__.'/../public' => public_path('vendor/laravel-maker'),
-//            ], ['assets', 'laravel-assets']);
+            $this->publishes([
+                __DIR__.'/../dist' => public_path('vendor/laravel-maker'),
+            ], ['assets', 'laravel-assets']);
 
             // Registering package commands.
              $this->commands([

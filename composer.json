@@ -17,15 +17,16 @@
     ],
     "require": {
         "php": "^8.0|^8.2",
-        "illuminate/console": "*",
-        "illuminate/container": "*",
-        "illuminate/filesystem": "*",
-        "illuminate/support": "*",
-        "illuminate/view": "*",
+        "illuminate/console": "^10.21",
+        "illuminate/routing": "^10.21",
+        "illuminate/filesystem": "^10.21",
+        "illuminate/support": "^10.21",
+        "illuminate/view": "^10.21",
         "livewire/livewire": "^3.2"
     },
     "require-dev": {
         "orchestra/testbench": "^8.15",
+        "orchestra/testbench-dusk": "^8.15",
         "phpunit/phpunit": "^9.6"
     },
     "autoload": {
@@ -36,6 +37,9 @@
     "autoload-dev": {
         "psr-4": {
             "Laltu\\LaravelMaker\\Tests\\": "tests",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "config": {
@@ -56,14 +60,17 @@
     "scripts": {
         "post-autoload-dump": [
             "@clear",
-            "@prepare"
+            "@prepare",
+            "@dusk:install-chromedriver"
         ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
         "serve": [
+            "Composer\\Config::disableProcessTimeout",
             "@build",
             "@php vendor/bin/testbench serve"
-        ]
+        ],
+        "dusk:install-chromedriver": "@php vendor/bin/dusk-updater detect --auto-update --ansi"
     }
 }
