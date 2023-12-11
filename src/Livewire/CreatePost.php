@@ -6,8 +6,20 @@ use Livewire\Component;
 
 class CreatePost extends Component
 {
+    public $count = 1;
+
+    public function increment()
+    {
+        $this->count++;
+    }
+
+    public function decrement()
+    {
+        $this->count--;
+    }
+
     public function render()
     {
-        return view('laravel-maker::livewire.create-post')->layout('laravel-maker::layout');
+        return view('laravel-maker::livewire.create-post');
     }
 }
