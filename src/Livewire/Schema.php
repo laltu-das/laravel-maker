@@ -4,7 +4,7 @@ namespace Laltu\LaravelMaker\Livewire;
 
 use Livewire\Component;
 
-class CreatePost extends Component
+class Schema extends Component
 {
     public $count = 1;
 
@@ -20,6 +20,6 @@ class CreatePost extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.create-post');
+        return view('laravel-maker::livewire.schema');
     }
 }

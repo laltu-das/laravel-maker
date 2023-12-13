@@ -16,7 +16,11 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Factory as ViewFactory;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Foundation\Application;
-use Laltu\LaravelMaker\Livewire\CreatePost;
+use Laltu\LaravelMaker\Livewire\CreateModule;
+use Laltu\LaravelMaker\Livewire\ListModule;
+use Laltu\LaravelMaker\Livewire\Dashboard;
+use Laltu\LaravelMaker\Livewire\FormBuilder;
+use Laltu\LaravelMaker\Livewire\Schema;
 use Laltu\LaravelMaker\Livewire\Servers;
 use Livewire\Livewire;
 use Livewire\LivewireManager;
@@ -40,7 +44,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
 //        $this->registerAuthorization();
         $this->registerRoutes();
         $this->registerBladeComponents();
-        $this->registerComponents();
+        $this->registerLivewireComponents();
 //        $this->registerLivewireComponents();
         $this->registerResources();
 
@@ -110,7 +114,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
                 'middleware' => config('laravel-maker.middleware'),
             ], function (Router $router) {
                 $router->get('/', function (LaravelMaker $laravelMaker, ViewFactory $view) {
-                    return view('laravel-maker::dashboard');
+                    return view('laravel-maker::app-layout');
                 })->name('laravel-maker');
             });
         });
@@ -128,39 +132,19 @@ class LaravelMakerServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the package's components.
-     */
-    protected function registerComponents(): void
-    {
-        Livewire::component('laravel-maker.create-post', CreatePost::class);
-        Livewire::component('laravel-maker.servers', Servers::class);
-    }
-
 
     /**
      * Register Livewire components.
      *
      * @return void
-     * @throws BindingResolutionException
      */
     protected function registerLivewireComponents(): void
     {
-        $this->callAfterResolving('livewire', function (LivewireManager $livewire, Application $app) {
-            $config = $app->make('config');
-
-            $livewire->addPersistentMiddleware($config->get('laravel-maker.middleware', []));
-
-            $components = [
-                'create-post' => Livewire\CreatePost::class,
-                'cache' => Livewire\Cache::class,
-                'servers' => Livewire\Servers::class,
-                // Add other components here...
-            ];
-
-            foreach ($components as $alias => $class) {
-                $livewire->component("laravel-maker.$alias", $class);
-            }
-        });
+        Livewire::component('laravel-maker.dashboard', Dashboard::class);
+        Livewire::component('laravel-maker.schema', Schema::class);
+        Livewire::component('laravel-maker.list-module', ListModule::class);
+        Livewire::component('laravel-maker.create-module', CreateModule::class);
+        Livewire::component('laravel-maker.form-builder', FormBuilder::class);
+        Livewire::component('laravel-maker.servers', Servers::class);
     }
 }

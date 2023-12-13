@@ -1,12 +1,13 @@
-@props(['label', 'options'])
-<div {{ $attributes->only('class')->merge(['class' => 'flex border border-gray-200 dark:border-gray-700 overflow-hidden rounded-md focus-within:ring']) }}>
-    <label class="px-3 flex items-center border-r border-gray-200 dark:border-gray-700 text-xs sm:text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap bg-gray-100 dark:bg-gray-800/50">{{ $label }}</label>
-    <select
+@props(['options' => null])
+<select
         {{ $attributes->except('class') }}
-        class="overflow-ellipsis w-full border-0 pl-3 pr-8 py-1 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs sm:text-sm shadow-none focus:ring-0"
-    >
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+>
+    @if($options)
         @foreach ($options as $value => $label)
             <option value="{{ $value }}">{{ $label }}</option>
         @endforeach
-    </select>
-</div>
+    @else
+        {{ $slot }}
+    @endif
+</select>
