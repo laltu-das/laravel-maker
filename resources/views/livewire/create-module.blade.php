@@ -1,11 +1,11 @@
 <div>
     <div class="col-md-10 col-md-offset-1">
         <section class="content">
-            <x-laravel-maker::card class="box box-primary col-lg-12">
-                <x-laravel-maker::card-header class="box-header">
+            <x-laravel-maker::card>
+                <x-laravel-maker::card-header>
                     <h1 class="box-title">InfyOm Laravel Generator Builder</h1>
                 </x-laravel-maker::card-header>
-                <x-laravel-maker::card-body class="box-body">
+                <x-laravel-maker::card-body>
                     <form id="form">
                         <div class="">
                             <div class="grid gap-4 mb-4 sm:grid-cols-5">

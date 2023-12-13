@@ -78,7 +78,7 @@
                 <!-- img/beams.jpg -->
                 <div class="mx-auto grid default:grid-cols-12 default:gap-6">
 {{--                    {{ $tabContent }}--}}
-                    <livewire:laravel-maker.list-module />
+{{--                    <livewire:laravel-maker.list-module />--}}
                     <livewire:laravel-maker.create-module />
                 </div>
             </main>
