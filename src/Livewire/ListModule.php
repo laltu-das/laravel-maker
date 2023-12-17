@@ -2,6 +2,7 @@
 
 namespace Laltu\LaravelMaker\Livewire;
 
+use Illuminate\Support\Facades\File;
 use Livewire\Component;
 
 class ListModule extends Component
@@ -32,8 +33,49 @@ class ListModule extends Component
         $this->formRelationalFields = array_values($this->formRelationalFields); // Re-index the array
     }
 
+    private function getFileContent()
+    {
+        $directoryPath = storage_path("laravel-maker");
+        $allFileContents = [];
+
+        // Get all files in the directory
+        $files = File::files($directoryPath);
+
+        foreach ($files as $file) {
+            // Read the JSON content from each file
+            $jsonContent = File::get($file);
+
+            // Decode JSON content
+            $data = json_decode($jsonContent, true);
+
+            // Add the data to the array
+            $allFileContents[] = $data;
+        }
+dd($allFileContents);
+        return $allFileContents;
+
+    }
+
+
     public function render()
     {
-        return view('laravel-maker::livewire.list-module');
+        echo $directoryPath = storage_path("laravel-maker");
+        $allFileContents = [];
+
+        // Get all files in the directory
+        $files = File::files($directoryPath);
+
+        foreach ($files as $file) {
+            // Read the JSON content from each file
+            $jsonContent = File::get($file);
+
+            // Decode JSON content
+            $data = json_decode($jsonContent, true);
+
+            // Add the data to the array
+            $allFileContents[] = $data;
+        }
+        dump($allFileContents);
+        return view('laravel-maker::livewire.list-module')->extends('laravel-maker::components.layouts.app');
     }
 }

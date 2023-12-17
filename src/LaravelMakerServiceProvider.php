@@ -3,7 +3,7 @@
 namespace Laltu\LaravelMaker;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
 use Laltu\LaravelMaker\Commands\MakeControllerCommand;
@@ -12,8 +12,6 @@ use Laltu\LaravelMaker\Commands\MakeModelCommand;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
 use Laltu\LaravelMaker\Commands\ResourceFileCreate;
-use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\Factory as ViewFactory;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Foundation\Application;
 use Laltu\LaravelMaker\Livewire\CreateModule;
@@ -22,15 +20,14 @@ use Laltu\LaravelMaker\Livewire\Dashboard;
 use Laltu\LaravelMaker\Livewire\FormBuilder;
 use Laltu\LaravelMaker\Livewire\Schema;
 use Laltu\LaravelMaker\Livewire\Servers;
+use Laltu\LaravelMaker\Livewire\ViewModule;
 use Livewire\Livewire;
-use Livewire\LivewireManager;
 
 
 class LaravelMakerServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     * @throws BindingResolutionException
      */
     public function boot(): void
     {
@@ -41,12 +38,10 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-maker');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
-//        $this->registerAuthorization();
+        $this->registerAuthorization();
         $this->registerRoutes();
-        $this->registerBladeComponents();
-        $this->registerLivewireComponents();
-//        $this->registerLivewireComponents();
         $this->registerResources();
+        $this->registerLivewireComponents();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -72,6 +67,20 @@ class LaravelMakerServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the application services.
+     */
+    public function register(): void
+    {
+        // Automatically apply the package configuration
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-maker.php', 'laravel-maker');
+
+        // Register the main class to use with the facade
+        $this->app->singleton('laravel-maker', function () {
+            return new \Laltu\LaravelMaker\Facades\LaravelMaker();
+        });
+    }
+
+    /**
      * Register the package authorization.
      */
     protected function registerAuthorization(): void
@@ -89,49 +98,20 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-maker');
     }
 
-    /**
-     * Register the application services.
-     */
-    public function register(): void
-    {
-        // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-maker.php', 'laravel-maker');
-
-        // Register the main class to use with the facade
-        $this->app->singleton('laravel-maker', function () {
-            return new \Laltu\LaravelMaker\Facades\LaravelMaker();
-        });
-    }
-
-    /**
-     * Register the package routes.
-     */
     protected function registerRoutes(): void
     {
-        $this->callAfterResolving('router', function (Router $router, Application $app) {
-            $router->group([
-                'prefix' => config('laravel-maker.prefix', 'laravel-maker'),
-                'middleware' => config('laravel-maker.middleware'),
-            ], function (Router $router) {
-                $router->get('/', function (LaravelMaker $laravelMaker, ViewFactory $view) {
-                    return view('laravel-maker::app-layout');
-                })->name('laravel-maker');
-            });
+        Route::group($this->routeConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         });
     }
 
-    /**
-     * Register Blade components.
-     *
-     * @return void
-     */
-    protected function registerBladeComponents(): void
+    protected function routeConfiguration(): array
     {
-        $this->app->afterResolving('blade.compiler', function (BladeCompiler $blade) {
-            $blade->anonymousComponentPath(__DIR__.'/../resources/views/components', 'laravel-maker');
-        });
+        return [
+            'prefix' => config('laravel-maker.prefix', 'laravel-maker'),
+            'middleware' => config('laravel-maker.middleware'),
+        ];
     }
-
 
     /**
      * Register Livewire components.
@@ -144,6 +124,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
         Livewire::component('laravel-maker.schema', Schema::class);
         Livewire::component('laravel-maker.list-module', ListModule::class);
         Livewire::component('laravel-maker.create-module', CreateModule::class);
+        Livewire::component('laravel-maker.view-module', ViewModule::class);
         Livewire::component('laravel-maker.form-builder', FormBuilder::class);
         Livewire::component('laravel-maker.servers', Servers::class);
     }

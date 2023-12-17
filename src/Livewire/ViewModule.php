@@ -5,31 +5,10 @@ namespace Laltu\LaravelMaker\Livewire;
 use Illuminate\Support\Facades\File;
 use Livewire\Component;
 
-class Schema extends Component
+class ViewModule extends Component
 {
-    public $formRelationalFields = [
-        [
-            "foreign_model" => "",
-            "foreign_key" => "",
-            "local_key" => "",
-            "relation_type" => "",
-        ]
-    ];
+    public $activeTab = 'tab1';
 
-    public $formFields = [
-        [
-            "field_name" => false,
-            "validation" => "Quis aut nisi error ",
-            "primary" => true,
-            "is_foreign" => true,
-            "searchable" => false,
-            "fillable" => false,
-            "in_form" => true,
-            "in_index" => true,
-            "db_type" => "longText",
-            "html_type" => "text"
-        ]
-    ];
 
     public function addFormFieldRow()
     {
@@ -102,10 +81,12 @@ class Schema extends Component
         // Write the JSON content to the file
         File::put($filePath, $jsonContent);
         $this->js("alert('Post saved!')");
+
+//        $this->info("Resource file '{$name}.json' created successfully.");
     }
 
     public function render()
     {
-        return view('laravel-maker::livewire.schema')->extends('laravel-maker::components.layouts.app');
+        return view('laravel-maker::livewire.view-module')->extends('laravel-maker::components.layouts.app');
     }
 }

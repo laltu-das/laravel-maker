@@ -108,6 +108,6 @@ class CreateModule extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.create-module');
+        return view('laravel-maker::livewire.create-module')->extends('laravel-maker::components.layouts.app');
     }
 }

@@ -93,7 +93,6 @@
                                             <x-laravel-maker::tr>
                                                 <x-laravel-maker::td>
                                                     <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.field_name" placeholder="Name" required/>
-{{--                                                    <x-laravel-maker::input type="text" wire:model="rows.{{ $index }}.email" placeholder="Foreign table,Primary key"/>--}}
                                                 </x-laravel-maker::td>
                                                 <x-laravel-maker::td>
                                                     <x-laravel-maker::select wire:model="formFields.{{ $index }}.db_type">
@@ -155,7 +154,7 @@
                                                     <x-laravel-maker::checkbox checked wire:model="formFields.{{ $index }}.in_index"></x-laravel-maker::checkbox>
                                                 </x-laravel-maker::td>
                                                 <x-laravel-maker::td>
-                                                    <button type="button" wire:click="removeFormFieldRow({{ $index }})">Remove</button>
+                                                    <x-laravel-maker::button type="button" wire:click="removeFormFieldRow({{ $index }})">Remove</x-laravel-maker::button>
                                                 </x-laravel-maker::td>
                                             </x-laravel-maker::tr>
                                         @endforeach
@@ -197,7 +196,7 @@
                                                     <x-laravel-maker::input type="text" wire:model="formRelationalFields.{{ $index }}.local_key"/>
                                                 </x-laravel-maker::td>
                                                 <x-laravel-maker::td>
-                                                    <button type="button" wire:click="removeFormRelationalFieldRow({{ $index }})">Remove</button>
+                                                    <x-laravel-maker::button type="button" wire:click="removeFormRelationalFieldRow({{ $index }})">Remove</x-laravel-maker::button>
                                                 </x-laravel-maker::td>
                                             </x-laravel-maker::tr>
                                         @endforeach
@@ -206,10 +205,10 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
-{{--                            <x-laravel-maker::button type="button"> Add Primary</x-laravel-maker::button>--}}
-{{--                            <x-laravel-maker::button type="button"> Add Timestamps</x-laravel-maker::button>--}}
+                            <x-laravel-maker::button type="button"> Add Primary</x-laravel-maker::button>
+                            <x-laravel-maker::button type="button"> Add Timestamps</x-laravel-maker::button>
                             <x-laravel-maker::button type="submit" wire:click="submit"> Generate</x-laravel-maker::button>
-{{--                            <x-laravel-maker::button type="button"> Reset</x-laravel-maker::button>--}}
+                            <x-laravel-maker::button type="button"> Reset</x-laravel-maker::button>
                         </div>
                     </form>
                 </x-laravel-maker::card-body>

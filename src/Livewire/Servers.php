@@ -18,10 +18,6 @@ class Servers extends Component
      */
     public function render(): Renderable
     {
-        return view('laravel-maker::livewire.servers', [
-            'servers' => collect(),
-            'time' => collect(),
-            'runAt' => collect(),
-        ]);
+        return view('laravel-maker::livewire.servers')->extends('laravel-maker::components.layouts.app');
     }
 }

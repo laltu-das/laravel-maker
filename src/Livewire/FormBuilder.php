@@ -33,6 +33,6 @@ class FormBuilder extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.form-builder');
+        return view('laravel-maker::livewire.form-builder')->extends('laravel-maker::components.layouts.app');
     }
 }
