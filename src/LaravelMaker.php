@@ -9,25 +9,12 @@ use RuntimeException;
 
 class LaravelMaker
 {
-
     /**
      * The CSS paths to include on the dashboard.
      *
      * @var list<string|Htmlable>
      */
-    protected $css = [__DIR__.'/../dist/laravel-maker.css'];
-
-    /**
-     * Get the default JavaScript variables for Telescope.
-     *
-     * @return array
-     */
-    public static function scriptVariables(): array
-    {
-        return [
-            'path' => config('laravel-maker.path'),
-        ];
-    }
+    protected array $css = [__DIR__.'/../dist/laravel-maker.css'];
 
     /**
      * Register or return CSS for the Pulse dashboard.
