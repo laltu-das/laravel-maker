@@ -3,7 +3,8 @@
         <section class="content">
             <div class="box box-primary col-lg-12">
                 <div class="box-header">
-                    <h1 class="box-title">InfyOm Laravel Generator Builder</h1>
+                    <h1 class="box-title">Laravel Generator Builder</h1>
+                    <a wire:navigate href="{{ route('module-create') }}">Create new</a>
                 </div>
                 <div class="box-body">
                     <x-laravel-maker::table class="table table-striped table-bordered">

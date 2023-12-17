@@ -3,6 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Contracts\Support\Renderable;
+use Laltu\LaravelMaker\View\Components\AppLayout;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
@@ -18,6 +19,6 @@ class Servers extends Component
      */
     public function render(): Renderable
     {
-        return view('laravel-maker::livewire.servers')->extends('laravel-maker::components.layouts.app');
+        return view('laravel-maker::livewire.servers')->layout(AppLayout::class);
     }
 }

@@ -1,5 +1,4 @@
-@php use Laltu\LaravelMaker\Facades\LaravelMaker; @endphp
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -11,11 +10,11 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600" rel="stylesheet"/>
 
-    {!! LaravelMaker::css() !!}
+    {!! \Laltu\LaravelMaker\Facades\LaravelMaker::css() !!}
 
     @livewireStyles
 
-    {!! LaravelMaker::js() !!}
+    {!! \Laltu\LaravelMaker\Facades\LaravelMaker::js() !!}
 </head>
 <body class="font-sans antialiased">
 <div class="bg-gray-50 dark:bg-gray-950 min-h-screen">

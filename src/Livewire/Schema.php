@@ -3,6 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Support\Facades\File;
+use Laltu\LaravelMaker\View\Components\AppLayout;
 use Livewire\Component;
 
 class Schema extends Component
@@ -106,6 +107,6 @@ class Schema extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.schema')->extends('laravel-maker::components.layouts.app');
+        return view('laravel-maker::livewire.schema')->layout(AppLayout::class);
     }
 }

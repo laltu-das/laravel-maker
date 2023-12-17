@@ -3,6 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Support\Facades\File;
+use Laltu\LaravelMaker\View\Components\AppLayout;
 use Livewire\Component;
 
 class ViewModule extends Component
@@ -87,6 +88,6 @@ class ViewModule extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.view-module')->extends('laravel-maker::components.layouts.app');
+        return view('laravel-maker::livewire.view-module')->layout(AppLayout::class);
     }
 }

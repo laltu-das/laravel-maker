@@ -2,7 +2,6 @@
 
 namespace Laltu\LaravelMaker;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
