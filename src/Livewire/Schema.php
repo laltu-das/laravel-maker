@@ -32,7 +32,7 @@ class Schema extends Component
         ]
     ];
 
-    public function addFormFieldRow()
+    public function addFormFieldRow(): void
     {
         $this->formFields[] = [
             "field_name" => false,
@@ -48,13 +48,13 @@ class Schema extends Component
         ];
     }
 
-    public function removeFormFieldRow($index)
+    public function removeFormFieldRow($index): void
     {
         unset($this->formFields[$index]);
         $this->formFields = array_values($this->formFields); // Re-index the array
     }
 
-    public function addFormRelationalFieldRow()
+    public function addFormRelationalFieldRow(): void
     {
         $this->formRelationalFields[] = [
             "foreign_model" => "",
@@ -64,7 +64,7 @@ class Schema extends Component
         ];
     }
 
-    public function removeFormRelationalFieldRow($index)
+    public function removeFormRelationalFieldRow($index): void
     {
         unset($this->formRelationalFields[$index]);
         $this->formRelationalFields = array_values($this->formRelationalFields); // Re-index the array
@@ -73,14 +73,12 @@ class Schema extends Component
     public function submit()
     {
 
-//        dd($this->formRelationalFields,$this->formFields);
-
         $this->generateContent('module',         array_merge($this->formRelationalFields,$this->formFields));
 
     }
 
 
-    private function generateContent($name, $fields)
+    private function generateContent($name, $fields): void
     {
 
         $filePath = storage_path("laravel-maker/{$name}.json");

@@ -67,7 +67,7 @@ class ListModule extends Component
     {
         $allFileContents = $this->getFileContent();
 
-        dump($allFileContents);
+//        dump($allFileContents);
         return view('laravel-maker::livewire.list-module')->layout(AppLayout::class);
     }
 }
