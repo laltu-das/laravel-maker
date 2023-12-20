@@ -12,7 +12,7 @@ class FormBuilder extends Component
 
     protected $listeners = ['fieldOrderUpdated'];
 
-    public function mount()
+    public function mount(): void
     {
         $this->formFields = [
             ['id' => 1, 'label' => 'Field 1'],
@@ -20,14 +20,14 @@ class FormBuilder extends Component
         ];
     }
 
-    public function updateOrder($list)
+    public function updateOrder($list): void
     {
         $this->formFields = collect($list)->map(function ($item, $index) {
             return ['id' => $item['id'], 'label' => $item['innerText']];
         })->toArray();
     }
 
-    public function fieldOrderUpdated($list)
+    public function fieldOrderUpdated($list): void
     {
         $this->updateOrder($list);
     }

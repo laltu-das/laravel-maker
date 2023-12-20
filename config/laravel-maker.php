@@ -99,4 +99,9 @@ return [
     'ignore_commands' => [
         //
     ],
+
+    'database' => [
+        'connection' => 'sqlite',
+        'database' => database_path('testing.sqlite'), // SQLite database file path
+    ],
 ];
