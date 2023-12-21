@@ -13,7 +13,13 @@ return new class extends Migration {
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
+            $table->string('moduleName');
+            $table->string('controllerType');
+            $table->string('controllerName');
+            $table->json('formFields')->nullable();
+            $table->json('apiFields')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

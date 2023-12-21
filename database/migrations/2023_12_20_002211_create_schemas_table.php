@@ -13,10 +13,11 @@ return new class extends Migration {
     {
         Schema::create('schemas', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('fields');
-            $table->string('relationalFields');
+            $table->string('modelName');
+            $table->json('fields');
+            $table->json('relationalFields');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

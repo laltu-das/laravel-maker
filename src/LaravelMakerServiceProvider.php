@@ -13,16 +13,15 @@ use Laltu\LaravelMaker\Commands\MakeServiceCommand;
 use Laltu\LaravelMaker\Commands\ResourceFileCreate;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Foundation\Application;
-use Laltu\LaravelMaker\Livewire\CreateModule;
-use Laltu\LaravelMaker\Livewire\CreateSchema;
+use Laltu\LaravelMaker\Livewire\ModuleApiBuilder;
+use Laltu\LaravelMaker\Livewire\ModuleCreate;
+use Laltu\LaravelMaker\Livewire\ModuleFormBuilder;
+use Laltu\LaravelMaker\Livewire\SchemaCreate;
 use Laltu\LaravelMaker\Livewire\Generator;
 use Laltu\LaravelMaker\Livewire\ModuleList;
 use Laltu\LaravelMaker\Livewire\Dashboard;
-use Laltu\LaravelMaker\Livewire\FormBuilder;
 use Laltu\LaravelMaker\Livewire\SchemaList;
-use Laltu\LaravelMaker\Livewire\Servers;
 use Laltu\LaravelMaker\Livewire\Setting;
-use Laltu\LaravelMaker\Livewire\ViewModule;
 use Livewire\Livewire;
 
 use Illuminate\Support\Facades\DB;
@@ -45,7 +44,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->registerResources();
         $this->registerLivewireComponents();
-//        $this->connectToDatabase();
+        $this->connectToDatabase();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -105,14 +104,14 @@ class LaravelMakerServiceProvider extends ServiceProvider
     protected function registerRoutes(): void
     {
         Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
         });
     }
 
     protected function routeConfiguration(): array
     {
         return [
-            'prefix' => config('laravel-maker.prefix', 'laravel-maker'),
+            'prefix' => config('laravel-maker.path', 'laravel-maker'),
             'middleware' => config('laravel-maker.middleware'),
         ];
     }
@@ -128,12 +127,11 @@ class LaravelMakerServiceProvider extends ServiceProvider
         Livewire::component('laravel-maker.schema', SchemaList::class);
         Livewire::component('laravel-maker.generator', Generator::class);
         Livewire::component('laravel-maker.setting', Setting::class);
-        Livewire::component('laravel-maker.create-schema', CreateSchema::class);
+        Livewire::component('laravel-maker.create-schema', SchemaCreate::class);
         Livewire::component('laravel-maker.list-module', ModuleList::class);
-        Livewire::component('laravel-maker.create-module', CreateModule::class);
-        Livewire::component('laravel-maker.view-module', ViewModule::class);
-        Livewire::component('laravel-maker.form-builder', FormBuilder::class);
-        Livewire::component('laravel-maker.servers', Servers::class);
+        Livewire::component('laravel-maker.create-module', ModuleCreate::class);
+        Livewire::component('laravel-maker.module-form-builder', ModuleFormBuilder::class);
+        Livewire::component('laravel-maker.module-api-builder', ModuleApiBuilder::class);
     }
 
     /**
@@ -146,13 +144,13 @@ class LaravelMakerServiceProvider extends ServiceProvider
         // SQLite database configuration
         $databaseConfig = [
             'driver' => 'sqlite',
-            'database' => database_path('your_database.sqlite'), // Path to your SQLite database file
+            'database' => storage_path('laravel-maker.sqlite'), // Path to your SQLite database file
             'prefix' => '',
         ];
 
         // Establish a dynamic database connection
         config(['database.connections.dynamic' => $databaseConfig]);
-        DB::purge('dynamic');
-        DB::reconnect('dynamic');
+        DB::purge('sqlite');
+        DB::reconnect('sqlite');
     }
 }

@@ -10,7 +10,10 @@ class Schema extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name',
+        'modelName',
         'fields',
+        'relationalFields',
     ];
+
+    protected $casts = ['fields' => 'json','relationalFields' => 'json'];
 }

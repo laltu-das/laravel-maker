@@ -47,6 +47,7 @@ class Setting extends Component
     public function removeFormFieldRow($index): void
     {
         unset($this->formFields[$index]);
+
         $this->formFields = array_values($this->formFields); // Re-index the array
     }
 
@@ -63,6 +64,7 @@ class Setting extends Component
     public function removeFormRelationalFieldRow($index): void
     {
         unset($this->formRelationalFields[$index]);
+
         $this->formRelationalFields = array_values($this->formRelationalFields); // Re-index the array
     }
 

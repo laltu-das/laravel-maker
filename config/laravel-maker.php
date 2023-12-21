@@ -88,20 +88,20 @@ return [
     |
     */
 
-    'only_paths' => [
-        // 'api/*'
-    ],
+//    'only_paths' => [
+//        // 'api/*'
+//    ],
+//
+//    'ignore_paths' => [
+//        'nova-api*',
+//    ],
+//
+//    'ignore_commands' => [
+//        //
+//    ],
 
-    'ignore_paths' => [
-        'nova-api*',
-    ],
-
-    'ignore_commands' => [
-        //
-    ],
-
-    'database' => [
-        'connection' => 'sqlite',
-        'database' => database_path('testing.sqlite'), // SQLite database file path
-    ],
+//    'database' => [
+//        'connection' => 'sqlite',
+//        'database' => storage_path('laravel-maker.sqlite'), // SQLite database file path
+//    ],
 ];

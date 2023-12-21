@@ -1,7 +1,7 @@
 <div class="mx-auto grid gap-4 mb-4 grid-cols-12 justify-between">
     <x-laravel-maker::card class="col-span-4">
         <x-laravel-maker::card-header>
-            <h1 class="box-title">InfyOm Laravel Generator Builder</h1>
+            <h1 class="box-title">Laravel Generator Builder</h1>
         </x-laravel-maker::card-header>
         <x-laravel-maker::card-body>
             <x-laravel-maker::table class="table table-striped table-bordered">
@@ -18,7 +18,7 @@
                                 {{ $row->name }}
                             </x-laravel-maker::td>
                             <x-laravel-maker::td class="flex justify-center">
-                                <x-laravel-maker::icons.x-cog class="cursor-pointer" wire:click="show('{{ $row->name }}')"/>
+                                <x-laravel-maker::icons.cog class="cursor-pointer" wire:click="show('{{ $row->name }}')"/>
                             </x-laravel-maker::td>
                         </x-laravel-maker::tr>
                     @endforeach
@@ -93,7 +93,7 @@
                                     </x-laravel-maker::td>
                                     @if($index != 0)
                                         <x-laravel-maker::td>
-                                            <x-laravel-maker::icons.x-circle class="cursor-pointer" wire:click="removeFormFieldRow({{ $index }})" />
+                                            <x-laravel-maker::icons.circle class="cursor-pointer" wire:click="removeFormFieldRow({{ $index }})" />
                                         </x-laravel-maker::td>
                                     @endif
                                 </x-laravel-maker::tr>
@@ -134,7 +134,7 @@
                                             <x-laravel-maker::input type="text" wire:model="formRelationalFields.{{ $index }}.local_key"/>
                                         </x-laravel-maker::td>
                                         <x-laravel-maker::td>
-                                            <x-laravel-maker::icons.x-circle class="cursor-pointer" wire:click="removeFormRelationalFieldRow({{ $index }})" />
+                                            <x-laravel-maker::icons.circle class="cursor-pointer" wire:click="removeFormRelationalFieldRow({{ $index }})" />
                                         </x-laravel-maker::td>
                                     </x-laravel-maker::tr>
                                 @endforeach
