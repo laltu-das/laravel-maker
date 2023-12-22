@@ -16,12 +16,14 @@ use Illuminate\Contracts\Foundation\Application;
 use Laltu\LaravelMaker\Livewire\ModuleApiBuilder;
 use Laltu\LaravelMaker\Livewire\ModuleCreate;
 use Laltu\LaravelMaker\Livewire\ModuleFormBuilder;
+use Laltu\LaravelMaker\Livewire\ModuleValidation;
 use Laltu\LaravelMaker\Livewire\SchemaCreate;
 use Laltu\LaravelMaker\Livewire\Generator;
 use Laltu\LaravelMaker\Livewire\ModuleList;
 use Laltu\LaravelMaker\Livewire\Dashboard;
 use Laltu\LaravelMaker\Livewire\SchemaList;
 use Laltu\LaravelMaker\Livewire\Setting;
+use Laltu\LaravelMaker\Livewire\SidePanel;
 use Livewire\Livewire;
 
 use Illuminate\Support\Facades\DB;
@@ -132,6 +134,8 @@ class LaravelMakerServiceProvider extends ServiceProvider
         Livewire::component('laravel-maker.create-module', ModuleCreate::class);
         Livewire::component('laravel-maker.module-form-builder', ModuleFormBuilder::class);
         Livewire::component('laravel-maker.module-api-builder', ModuleApiBuilder::class);
+        Livewire::component('laravel-maker.module-validation', ModuleValidation::class);
+        Livewire::component('laravel-maker.side-panel', SidePanel::class);
     }
 
     /**

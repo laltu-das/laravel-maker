@@ -93,7 +93,21 @@
     </div>
 </div>
 @livewireScripts
+<script>
+    console.log('event')
 
+    document.addEventListener('livewire:init', () => {
+
+        Livewire.on('post-created', (event) => {
+            console.log(event)
+        });
+
+        Livewire.on('module-validation', (event) => {
+            console.log(event)
+        });
+
+    });
+</script>
 {!! LaravelMaker::js() !!}
 </body>
 </html>

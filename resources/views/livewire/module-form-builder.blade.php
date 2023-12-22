@@ -14,57 +14,65 @@
                         <x-laravel-maker::thead class="no-border">
                             <x-laravel-maker::tr>
                                 <x-laravel-maker::th>Field Name</x-laravel-maker::th>
-                                <x-laravel-maker::th>DB Type</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 68px">Primary</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 80px">Is Foreign</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 67px">In Index</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 67px">Nullable</x-laravel-maker::th>
+                                <x-laravel-maker::th>Field Type</x-laravel-maker::th>
+                                <x-laravel-maker::th>Field Label</x-laravel-maker::th>
+                                <x-laravel-maker::th>Field Placeholder</x-laravel-maker::th>
+                                <x-laravel-maker::th style="width: 68px">Row</x-laravel-maker::th>
+                                <x-laravel-maker::th style="width: 80px">Column</x-laravel-maker::th>
+                                <x-laravel-maker::th style="width: 67px">Action</x-laravel-maker::th>
                             </x-laravel-maker::tr>
                         </x-laravel-maker::thead>
                         <x-laravel-maker::tbody class="no-border-x no-border-y ui-sortable">
                             @foreach ($formFields as $index => $row)
                                 <x-laravel-maker::tr>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.field_name" placeholder="Name"/>
+                                        <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.fieldName" placeholder="Field Name"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::select wire:model="fields.{{ $index }}.db_type">
-                                            <option value="increments">Increments</option>
-                                            <option value="integer">Integer</option>
-                                            <option value="smallInteger">SmallInteger</option>
-                                            <option value="longText">LongText</option>
-                                            <option value="bigInteger">BigInteger</option>
-                                            <option value="double">Double</option>
-                                            <option value="float">Float</option>
-                                            <option value="decimal">Decimal</option>
-                                            <option value="boolean">Boolean</option>
-                                            <option value="string">String</option>
-                                            <option value="char">Char</option>
-                                            <option value="text">Text</option>
-                                            <option value="mediumText">MediumText</option>
-                                            <option value="longText">LongText</option>
-                                            <option value="enum">Enum</option>
-                                            <option value="binary">Binary</option>
-                                            <option value="dateTime">DateTime</option>
+                                        <x-laravel-maker::select wire:model="fields.{{ $index }}.fieldType">
+                                            <option value="button">Button</option>
+                                            <option value="checkbox">Checkbox</option>
+                                            <option value="color">Color</option>
                                             <option value="date">Date</option>
-                                            <option value="timestamp">Timestamp</option>
+                                            <option value="datetime-local">Datetime Local</option>
+                                            <option value="email">Email</option>
+                                            <option value="file">File</option>
+                                            <option value="hidden">Hidden</option>
+                                            <option value="image">Image</option>
+                                            <option value="month">Month</option>
+                                            <option value="number">Number</option>
+                                            <option value="password">Password</option>
+                                            <option value="radio">Radio</option>
+                                            <option value="range">Range</option>
+                                            <option value="reset">Reset</option>
+                                            <option value="search">Search</option>
+                                            <option value="submit">Submit</option>
+                                            <option value="tel">Tel</option>
+                                            <option value="text">Text</option>
+                                            <option value="time">Time</option>
+                                            <option value="url">URL</option>
+                                            <option value="week">Week</option>
                                         </x-laravel-maker::select>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox wire:model="formFields.{{ $index }}.primary"></x-laravel-maker::checkbox>
+                                        <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.fieldLabel" placeholder="Label"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox wire:model="formFields.{{ $index }}.is_foreign"></x-laravel-maker::checkbox>
+                                        <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.fieldPlaceholder" placeholder="Placeholder"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox checked wire:model="formFields.{{ $index }}.in_index"></x-laravel-maker::checkbox>
+                                        <x-laravel-maker::checkbox checked="true" name="" wire:model="formFields.{{ $index }}.fieldRow"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox checked wire:model="formFields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
+                                        <x-laravel-maker::input type="number" wire:model="formFields.{{ $index }}.fieldCol" placeholder="Col"/>
+                                    </x-laravel-maker::td>
+                                    <x-laravel-maker::td>
+                                        <x-laravel-maker::icons.cog class="cursor-pointer"  wire:click="show" />
+                                        <livewire:laravel-maker.module-validation />
                                     </x-laravel-maker::td>
                                     @if($index != 0)
                                         <x-laravel-maker::td>
-                                            <x-laravel-maker::icons.circle class="cursor-pointer" wire:click="removeFormFieldRow({{ $index }})" />
+                                            <x-laravel-maker::icons.circle class="cursor-pointer text-red-600" wire:click="removeFormFieldRow({{ $index }})" />
                                         </x-laravel-maker::td>
                                     @endif
                                 </x-laravel-maker::tr>

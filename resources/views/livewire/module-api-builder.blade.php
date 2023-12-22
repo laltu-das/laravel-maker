@@ -13,53 +13,39 @@
                         <x-laravel-maker::thead class="no-border">
                             <x-laravel-maker::tr>
                                 <x-laravel-maker::th>Field Name</x-laravel-maker::th>
-                                <x-laravel-maker::th>DB Type</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 68px">Primary</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 80px">Is Foreign</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 67px">In Index</x-laravel-maker::th>
-                                <x-laravel-maker::th style="width: 67px">Nullable</x-laravel-maker::th>
+                                <x-laravel-maker::th>Field Type</x-laravel-maker::th>
+                                <x-laravel-maker::th>POST Request Validation</x-laravel-maker::th>
+                                <x-laravel-maker::th>PUT Request Validation</x-laravel-maker::th>
+                                <x-laravel-maker::th>Action</x-laravel-maker::th>
                             </x-laravel-maker::tr>
                         </x-laravel-maker::thead>
                         <x-laravel-maker::tbody class="no-border-x no-border-y ui-sortable">
                             @foreach ($apiFields as $index => $row)
                                 <x-laravel-maker::tr>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::input type="text" wire:model="apiFields.{{ $index }}.field_name" placeholder="Name"/>
+                                        <x-laravel-maker::input type="text" wire:model="apiFields.{{ $index }}.fieldName" placeholder="Field Name"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::select wire:model="apiFields.{{ $index }}.db_type">
-                                            <option value="increments">Increments</option>
-                                            <option value="integer">Integer</option>
-                                            <option value="smallInteger">SmallInteger</option>
-                                            <option value="longText">LongText</option>
-                                            <option value="bigInteger">BigInteger</option>
-                                            <option value="double">Double</option>
-                                            <option value="float">Float</option>
-                                            <option value="decimal">Decimal</option>
-                                            <option value="boolean">Boolean</option>
-                                            <option value="string">String</option>
-                                            <option value="char">Char</option>
-                                            <option value="text">Text</option>
-                                            <option value="mediumText">MediumText</option>
-                                            <option value="longText">LongText</option>
-                                            <option value="enum">Enum</option>
-                                            <option value="binary">Binary</option>
-                                            <option value="dateTime">DateTime</option>
-                                            <option value="date">Date</option>
-                                            <option value="timestamp">Timestamp</option>
+                                        <x-laravel-maker::select wire:model="apiFields.{{ $index }}.fieldType">
+                                            <option value="String">String</option>
+                                            <option value="Integer">Integer</option>
+                                            <option value="Float">Float</option>
+                                            <option value="Boolean">Boolean</option>
+                                            <option value="Array">Array</option>
+                                            <option value="Object">Object</option>
+                                            <option value="NULL">NULL</option>
+                                            <option value="Resource">Resource</option>
                                         </x-laravel-maker::select>
                                     </x-laravel-maker::td>
-                                    <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox wire:model="apiFields.{{ $index }}.primary"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::td class="">
+                                        {{ $index }}
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox wire:model="apiFields.{{ $index }}.is_foreign"></x-laravel-maker::checkbox>
+                                        {{ $index }}
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox checked wire:model="apiFields.{{ $index }}.in_index"></x-laravel-maker::checkbox>
-                                    </x-laravel-maker::td>
-                                    <x-laravel-maker::td>
-                                        <x-laravel-maker::checkbox checked wire:model="apiFields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
+                                        <x-laravel-maker::icons.cog class="cursor-pointer" wire:click="show"/>
+                                        <livewire:laravel-maker.side-panel/>
                                     </x-laravel-maker::td>
                                     @if($index != 0)
                                         <x-laravel-maker::td>

@@ -5,6 +5,7 @@ namespace Laltu\LaravelMaker\Livewire;
 use Illuminate\Support\Facades\Route;
 use Laltu\LaravelMaker\Models\Module;
 use Laltu\LaravelMaker\View\Components\AppLayout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ModuleFormBuilder extends Component
@@ -13,8 +14,8 @@ class ModuleFormBuilder extends Component
 
     public $formFields = [
         [
-            "field_name" => "",
-            "validation" => "",
+            "fieldName" => "",
+            "fieldType" => "",
             "primary" => true,
             "is_foreign" => true,
             "searchable" => false,
@@ -35,7 +36,8 @@ class ModuleFormBuilder extends Component
     public function addFormFieldRow(): void
     {
         $this->formFields[] = [
-            "field_name" => "",
+            "fieldName" => "",
+            "fieldType" => "",
             "validation" => "",
             "primary" => true,
             "is_foreign" => true,
@@ -64,6 +66,11 @@ class ModuleFormBuilder extends Component
 
         $this->js("alert('Update saved!')");
 
+    }
+
+    public function show(): void
+    {
+        $this->dispatch('open-side-panel', 'New Title')->component(ModuleValidation::class);
     }
 
     public function render()

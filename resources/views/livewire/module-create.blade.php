@@ -11,7 +11,8 @@
                 <div class="">
                     <div class="grid gap-4 mb-4 sm:grid-cols-5">
                         <div class="form-group col-md-4">
-                            <x-laravel-maker::label for="txtModelName">Model Name<span class="required">*</span>
+                            <x-laravel-maker::label for="txtModelName">
+                                Model Name<span class="required">*</span>
                             </x-laravel-maker::label>
                             <x-laravel-maker::input type="text" wire:model="moduleName" required placeholder="Module name"/>
                         </div>
@@ -22,6 +23,46 @@
                                 <option value="api">API Generator</option>
                                 <option value="scaffold">Scaffold Generator</option>
                             </x-laravel-maker::select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>
+                            <x-laravel-maker::input type="text" wire:model="controllerName" placeholder="Controller Name"/>
                         </div>
                         <div class="form-group col-md-4">
                             <x-laravel-maker::label for="controllerName">Controller Name</x-laravel-maker::label>

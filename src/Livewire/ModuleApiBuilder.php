@@ -2,7 +2,6 @@
 
 namespace Laltu\LaravelMaker\Livewire;
 
-use Illuminate\Support\Facades\Route;
 use Laltu\LaravelMaker\Models\Module;
 use Laltu\LaravelMaker\View\Components\AppLayout;
 use Livewire\Component;
@@ -10,7 +9,6 @@ use Livewire\Component;
 class ModuleApiBuilder extends Component
 {
     public Module $module;
-
 
     public $apiFields = [
         [
@@ -29,7 +27,7 @@ class ModuleApiBuilder extends Component
 
     public function mount(Module $module): void
     {
-        $this->fill(['apiFields' => $module->apiFields??[]]);
+        $this->fill(['apiFields' => $module->apiFields ?? []]);
     }
 
 
@@ -54,7 +52,7 @@ class ModuleApiBuilder extends Component
     {
         unset($this->apiFields[$index]);
 
-        $this->apiFields = array_values($this->apiFields); // Re-index the array
+        $this->apiFields = array_values($this->apiFields);
     }
 
     public function update(Module $module): void
@@ -64,6 +62,11 @@ class ModuleApiBuilder extends Component
         ]);
 
         $this->js("alert('Update saved!')");
+    }
+
+    public function show(): void
+    {
+        $this->dispatch('side-panel', 'New Title','')->component(SidePanel::class);
     }
 
     public function render()

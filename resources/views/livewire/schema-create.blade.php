@@ -24,6 +24,8 @@
                             <x-laravel-maker::th style="width: 80px">Is Foreign</x-laravel-maker::th>
                             <x-laravel-maker::th style="width: 67px">In Index</x-laravel-maker::th>
                             <x-laravel-maker::th style="width: 67px">Nullable</x-laravel-maker::th>
+                            <x-laravel-maker::th>Comment</x-laravel-maker::th>
+                            <x-laravel-maker::th>Default</x-laravel-maker::th>
                         </x-laravel-maker::tr>
                     </x-laravel-maker::thead>
                     <x-laravel-maker::tbody class="no-border-x no-border-y ui-sortable">
@@ -59,13 +61,19 @@
                                     <x-laravel-maker::checkbox wire:model="fields.{{ $index }}.primary"></x-laravel-maker::checkbox>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox wire:model="fields.{{ $index }}.is_foreign"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::checkbox wire:model="fields.{{ $index }}.isForeign"></x-laravel-maker::checkbox>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox checked wire:model="fields.{{ $index }}.in_index"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::checkbox checked wire:model="fields.{{ $index }}.inIndex"></x-laravel-maker::checkbox>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
                                     <x-laravel-maker::checkbox checked wire:model="fields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
+                                </x-laravel-maker::td>
+                                <x-laravel-maker::td>
+                                    <x-laravel-maker::input type="text" wire:model="fields.{{ $index }}.defaultValue" placeholder="Name" required/>
+                                </x-laravel-maker::td>
+                                <x-laravel-maker::td>
+                                    <x-laravel-maker::input type="text" wire:model="fields.{{ $index }}.Comment" placeholder="Name" required/>
                                 </x-laravel-maker::td>
                                 @if($index != 0)
                                     <x-laravel-maker::td>
@@ -82,6 +90,7 @@
                     <x-laravel-maker::table class="table table-striped table-bordered">
                         <x-laravel-maker::thead class="no-border">
                             <x-laravel-maker::tr>
+                                <x-laravel-maker::th>Field Name</x-laravel-maker::th>
                                 <x-laravel-maker::th>Relation Type</x-laravel-maker::th>
                                 <x-laravel-maker::th>Foreign Model<span class="required">*</span>
                                 </x-laravel-maker::th>
@@ -93,7 +102,10 @@
                             @foreach ($relationalFields as $index => $row)
                                 <x-laravel-maker::tr>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::select  wire:model="relationalFields.{{ $index }}.relation_type">
+                                        <x-laravel-maker::input type="text" wire:model="relationalFields.{{ $index }}.fieldName"/>
+                                    </x-laravel-maker::td>
+                                    <x-laravel-maker::td>
+                                        <x-laravel-maker::select  wire:model="relationalFields.{{ $index }}.relationType">
                                             <option value="1t1">One to One</option>
                                             <option value="1tm">One to Many</option>
                                             <option value="mt1">Many to One</option>
@@ -101,13 +113,13 @@
                                         </x-laravel-maker::select>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::input type="text" required  wire:model="relationalFields.{{ $index }}.foreign_model" />
+                                        <x-laravel-maker::input type="text" required  wire:model="relationalFields.{{ $index }}.foreignModel" />
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::input type="text" wire:model="relationalFields.{{ $index }}.foreign_key"/>
+                                        <x-laravel-maker::input type="text" wire:model="relationalFields.{{ $index }}.foreignKey"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::input type="text" wire:model="relationalFields.{{ $index }}.local_key"/>
+                                        <x-laravel-maker::input type="text" wire:model="relationalFields.{{ $index }}.localKey"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
                                         <x-laravel-maker::icons.circle class="cursor-pointer" wire:click="removeFormRelationalFieldRow({{ $index }})" />
