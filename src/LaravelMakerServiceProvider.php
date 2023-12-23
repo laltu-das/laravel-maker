@@ -2,6 +2,7 @@
 
 namespace Laltu\LaravelMaker;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
@@ -46,6 +47,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->registerResources();
         $this->registerLivewireComponents();
+        $this->createDatabase();
         $this->connectToDatabase();
 
         if ($this->app->runningInConsole()) {
@@ -143,18 +145,38 @@ class LaravelMakerServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    private function createDatabase(): void
+    {
+        // Specify the path to the SQLite database file
+        $databasePath = storage_path('laravel-maker.sqlite');
+
+        // Check if the file exists
+        if (!File::exists($databasePath)) {
+            // If not, create an empty SQLite database file
+            File::put($databasePath, '');
+
+            // Output a message indicating that the file has been created
+            echo "SQLite database file created at: {$databasePath}\n";
+        } else {
+            // Output a message indicating that the file already exists
+            echo "SQLite database file already exists at: {$databasePath}\n";
+        }
+    }
+
+    /**
+     * Connect to the SQLite database dynamically.
+     *
+     * @return void
+     */
     private function connectToDatabase(): void
     {
         // SQLite database configuration
         $databaseConfig = [
             'driver' => 'sqlite',
             'database' => storage_path('laravel-maker.sqlite'), // Path to your SQLite database file
-            'prefix' => '',
         ];
 
-        // Establish a dynamic database connection
-        config(['database.connections.dynamic' => $databaseConfig]);
-        DB::purge('sqlite');
-        DB::reconnect('sqlite');
+        // Establish a laravel-maker database connection
+        config(['database.connections.sqlite' => $databaseConfig]);
     }
 }

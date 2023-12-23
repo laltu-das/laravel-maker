@@ -76,32 +76,4 @@ return [
     'middleware' => [
         'web',
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Allowed / Ignored Paths & Commands
-    |--------------------------------------------------------------------------
-    |
-    | The following array lists the URI paths and Artisan commands that will
-    | not be watched by Telescope. In addition to this list, some Laravel
-    | commands, like migrations and queue commands, are always ignored.
-    |
-    */
-
-//    'only_paths' => [
-//        // 'api/*'
-//    ],
-//
-//    'ignore_paths' => [
-//        'nova-api*',
-//    ],
-//
-//    'ignore_commands' => [
-//        //
-//    ],
-
-//    'database' => [
-//        'connection' => 'sqlite',
-//        'database' => storage_path('laravel-maker.sqlite'), // SQLite database file path
-//    ],
 ];

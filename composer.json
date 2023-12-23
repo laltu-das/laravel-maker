@@ -25,8 +25,8 @@
         "livewire/livewire": "^3.3"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.15",
-        "orchestra/testbench-dusk": "^8.15",
+        "orchestra/testbench": "^8.18",
+        "orchestra/testbench-dusk": "^8.18",
         "phpunit/phpunit": "^9.6"
     },
     "autoload": {
@@ -71,6 +71,9 @@
             "@build",
             "@php vendor/bin/testbench serve"
         ],
-        "dusk:install-chromedriver": "@php vendor/bin/dusk-updater detect --auto-update --ansi"
+        "dusk:install-chromedriver": "@php vendor/bin/dusk-updater detect --auto-update --ansi",
+        "test": [
+            "@php vendor/bin/phpunit"
+        ]
     }
 }
