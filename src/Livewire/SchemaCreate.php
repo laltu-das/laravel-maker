@@ -2,7 +2,6 @@
 
 namespace Laltu\LaravelMaker\Livewire;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Laltu\LaravelMaker\Models\Schema;
 use Laltu\LaravelMaker\View\Components\AppLayout;
@@ -12,26 +11,24 @@ class SchemaCreate extends Component
 {
     public Schema $schema;
 
-    public $modelName;
+    public string $modelName;
 
-    public $mode = 'add';
+    public string $mode = 'add';
 
-    public $fields = [
-        [
-            "field_name" => "",
-            "validation" => "",
-            "primary" => true,
-            "is_foreign" => true,
-            "searchable" => false,
-            "fillable" => false,
-            "in_form" => true,
-            "in_index" => true,
-            "db_type" => "",
-            "html_type" => ""
-        ]
-    ];
+    public array $fields = [[
+        "field_name" => "",
+        "validation" => "",
+        "primary" => true,
+        "is_foreign" => true,
+        "searchable" => false,
+        "fillable" => false,
+        "in_form" => true,
+        "in_index" => true,
+        "db_type" => "",
+        "html_type" => ""
+    ]];
 
-    public $relationalFields = [];
+    public array $relationalFields = [];
 
     public function mount(): void
     {

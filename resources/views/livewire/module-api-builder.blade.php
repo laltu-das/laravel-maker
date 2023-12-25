@@ -37,19 +37,18 @@
                                             <option value="Resource">Resource</option>
                                         </x-laravel-maker::select>
                                     </x-laravel-maker::td>
-                                    <x-laravel-maker::td class="">
-                                        {{ $index }}
+                                    <x-laravel-maker::td>
+                                        <x-laravel-maker::input type="text" wire:model="apiFields.{{ $index }}.fieldName" placeholder="Field Name"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        {{ $index }}
+                                        <x-laravel-maker::input type="text" wire:model="apiFields.{{ $index }}.fieldName" placeholder="Field Name"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::icons.cog class="cursor-pointer" wire:click="show"/>
-                                        <livewire:laravel-maker.side-panel/>
+                                        <x-laravel-maker::icons.cog class="cursor-pointer text-blue-600 m-auto text-center" wire:click="show({{ $index }})" />
                                     </x-laravel-maker::td>
                                     @if($index != 0)
                                         <x-laravel-maker::td>
-                                            <x-laravel-maker::icons.circle class="cursor-pointer" wire:click="removeFormFieldRow({{ $index }})" />
+                                            <x-laravel-maker::icons.circle class="cursor-pointer text-red-600 m-auto text-center" wire:click="removeFormFieldRow({{ $index }})" />
                                         </x-laravel-maker::td>
                                     @endif
                                 </x-laravel-maker::tr>

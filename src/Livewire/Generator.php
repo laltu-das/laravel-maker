@@ -11,9 +11,9 @@ class Generator extends Component
 {
 
     public $table_name;
-    public $formRelationalFields = [];
+    public array $formRelationalFields = [];
 
-    public $formFields = [
+    public array $formFields = [
         [
             "field_name" => false,
             "validation" => "Quis aut nisi error ",
@@ -47,6 +47,7 @@ class Generator extends Component
     public function removeFormFieldRow($index): void
     {
         unset($this->formFields[$index]);
+
         $this->formFields = array_values($this->formFields); // Re-index the array
     }
 
@@ -63,6 +64,7 @@ class Generator extends Component
     public function removeFormRelationalFieldRow($index): void
     {
         unset($this->formRelationalFields[$index]);
+
         $this->formRelationalFields = array_values($this->formRelationalFields); // Re-index the array
     }
 

@@ -64,10 +64,10 @@
                                     <x-laravel-maker::checkbox wire:model="fields.{{ $index }}.isForeign"></x-laravel-maker::checkbox>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox checked wire:model="fields.{{ $index }}.inIndex"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::checkbox wire:model="fields.{{ $index }}.inIndex"></x-laravel-maker::checkbox>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox checked wire:model="fields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::checkbox wire:model="fields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
                                     <x-laravel-maker::input type="text" wire:model="fields.{{ $index }}.defaultValue" placeholder="Name" required/>
@@ -77,7 +77,7 @@
                                 </x-laravel-maker::td>
                                 @if($index != 0)
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::icons.circle class="cursor-pointer" wire:click="removeFormFieldRow({{ $index }})" />
+                                        <x-laravel-maker::icons.circle class="cursor-pointer text-red-600" wire:click="removeFormFieldRow({{ $index }})" />
                                     </x-laravel-maker::td>
                                 @endif
                             </x-laravel-maker::tr>
@@ -105,7 +105,7 @@
                                         <x-laravel-maker::input type="text" wire:model="relationalFields.{{ $index }}.fieldName"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::select  wire:model="relationalFields.{{ $index }}.relationType">
+                                        <x-laravel-maker::select wire:model="relationalFields.{{ $index }}.relationType">
                                             <option value="1t1">One to One</option>
                                             <option value="1tm">One to Many</option>
                                             <option value="mt1">Many to One</option>
@@ -122,7 +122,7 @@
                                         <x-laravel-maker::input type="text" wire:model="relationalFields.{{ $index }}.localKey"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::icons.circle class="cursor-pointer" wire:click="removeFormRelationalFieldRow({{ $index }})" />
+                                        <x-laravel-maker::icons.circle class="cursor-pointer text-red-600" wire:click="removeFormRelationalFieldRow({{ $index }})" />
                                     </x-laravel-maker::td>
                                 </x-laravel-maker::tr>
                             @endforeach

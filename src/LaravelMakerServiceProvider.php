@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\DB;
 
 class LaravelMakerServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap the application services.
      */
@@ -148,18 +149,12 @@ class LaravelMakerServiceProvider extends ServiceProvider
     private function createDatabase(): void
     {
         // Specify the path to the SQLite database file
-        $databasePath = storage_path('laravel-maker.sqlite');
+        $databasePath = database_path('database.sqlite');
 
         // Check if the file exists
         if (!File::exists($databasePath)) {
             // If not, create an empty SQLite database file
             File::put($databasePath, '');
-
-            // Output a message indicating that the file has been created
-            echo "SQLite database file created at: {$databasePath}\n";
-        } else {
-            // Output a message indicating that the file already exists
-            echo "SQLite database file already exists at: {$databasePath}\n";
         }
     }
 
@@ -170,13 +165,16 @@ class LaravelMakerServiceProvider extends ServiceProvider
      */
     private function connectToDatabase(): void
     {
-        // SQLite database configuration
-        $databaseConfig = [
-            'driver' => 'sqlite',
-            'database' => storage_path('laravel-maker.sqlite'), // Path to your SQLite database file
-        ];
-
-        // Establish a laravel-maker database connection
-        config(['database.connections.sqlite' => $databaseConfig]);
+//        // SQLite database configuration
+//        $databaseConfig = [
+//            'driver' => 'sqlite',
+//            'database' => database_path('database.sqlite'), // Path to your SQLite database file
+//            'prefix' => '',
+//        ];
+//
+//        // Establish a dynamic database connection
+//        config(['database.connections.dynamic' => $databaseConfig]);
+////        DB::purge('sqlite');
+        DB::reconnect('sqlite');
     }
 }

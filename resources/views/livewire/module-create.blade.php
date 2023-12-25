@@ -3,9 +3,6 @@
         <x-laravel-maker::module :module="$module"/>
     @endif
     <x-laravel-maker::card>
-        <x-laravel-maker::card-header>
-            <h1 class="box-title">Laravel Generator Builder</h1>
-        </x-laravel-maker::card-header>
         <x-laravel-maker::card-body>
             <form id="form">
                 <div class="">

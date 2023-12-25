@@ -12,20 +12,7 @@ class ModuleFormBuilder extends Component
 {
     public Module $module;
 
-    public $formFields = [
-        [
-            "fieldName" => "",
-            "fieldType" => "",
-            "primary" => true,
-            "is_foreign" => true,
-            "searchable" => false,
-            "fillable" => false,
-            "in_form" => true,
-            "in_index" => true,
-            "db_type" => "",
-            "html_type" => ""
-        ]
-    ];
+    public array $formFields = [];
 
     public function mount(Module $module): void
     {
@@ -68,7 +55,7 @@ class ModuleFormBuilder extends Component
 
     }
 
-    public function show(): void
+    public function show($index): void
     {
         $this->dispatch('open-side-panel', 'New Title')->component(ModuleValidation::class);
     }

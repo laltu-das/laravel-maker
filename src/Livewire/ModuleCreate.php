@@ -11,7 +11,7 @@ class ModuleCreate extends Component
 {
     public Module $module;
 
-    public $mode = 'add';
+    public string $mode = 'add';
     public string $moduleName;
     public string $controllerType;
     public string $controllerName;

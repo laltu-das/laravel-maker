@@ -7,8 +7,8 @@ use Livewire\Component;
 
 class FormBuilder extends Component
 {
-    public $formFields = [];
-    public $formRelationalFields = [];
+    public array $formFields = [];
+    public array $formRelationalFields = [];
 
     protected $listeners = ['fieldOrderUpdated'];
 

@@ -8,8 +8,8 @@
     <title inertia>Laravel Maker</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600" rel="stylesheet"/>
+{{--    <link rel="preconnect" href="https://fonts.bunny.net">--}}
+{{--    <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600" rel="stylesheet"/>--}}
 
     {!! LaravelMaker::css() !!}
 
@@ -67,8 +67,8 @@
                 </button>
 
                 <button class="mt-2 rounded-full bg-gray-100">
-                    <img class="h-10 w-10 rounded-full" src="https://avatars.githubusercontent.com/u/35387401?v=4"
-                         alt=""/>
+{{--                    <img class="h-10 w-10 rounded-full" src="https://avatars.githubusercontent.com/u/35387401?v=4"--}}
+{{--                         alt=""/>--}}
                 </button>
             </div>
         </aside>
@@ -93,21 +93,6 @@
     </div>
 </div>
 @livewireScripts
-<script>
-    console.log('event')
-
-    document.addEventListener('livewire:init', () => {
-
-        Livewire.on('post-created', (event) => {
-            console.log(event)
-        });
-
-        Livewire.on('module-validation', (event) => {
-            console.log(event)
-        });
-
-    });
-</script>
 {!! LaravelMaker::js() !!}
 </body>
 </html>

@@ -10,20 +10,18 @@ class ModuleApiBuilder extends Component
 {
     public Module $module;
 
-    public $apiFields = [
-        [
-            "field_name" => "",
-            "validation" => "",
-            "primary" => true,
-            "is_foreign" => true,
-            "searchable" => false,
-            "fillable" => false,
-            "in_form" => true,
-            "in_index" => true,
-            "db_type" => "",
-            "html_type" => ""
-        ]
-    ];
+    public array $apiFields = [[
+        "field_name" => "",
+        "validation" => "",
+        "primary" => true,
+        "is_foreign" => true,
+        "searchable" => false,
+        "fillable" => false,
+        "in_form" => true,
+        "in_index" => true,
+        "db_type" => "",
+        "html_type" => ""
+    ]];
 
     public function mount(Module $module): void
     {
@@ -66,7 +64,7 @@ class ModuleApiBuilder extends Component
 
     public function show(): void
     {
-        $this->dispatch('side-panel', 'New Title','')->component(SidePanel::class);
+        $this->dispatch('side-panel', 'New Title', '')->component(SidePanel::class);
     }
 
     public function render()
