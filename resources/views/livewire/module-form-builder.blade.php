@@ -64,7 +64,7 @@
                                         <x-laravel-maker::checkbox checked="true" name="" wire:model="formFields.{{ $index }}.fieldRow"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
-                                        <x-laravel-maker::input type="number" wire:model="formFields.{{ $index }}.fieldCol" placeholder="Col"/>
+                                        <x-laravel-maker::input type="number" min="1" max="12" wire:model="formFields.{{ $index }}.fieldCol" placeholder="Col"/>
                                     </x-laravel-maker::td>
                                     <x-laravel-maker::td>
                                         <x-laravel-maker::icons.cog class="cursor-pointer text-blue-600 m-auto text-center" wire:click="show({{ $index }})" />

@@ -9,14 +9,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class MakePackageCommand extends GeneratorCommand
+class GeneratePackageCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:package
+    protected $signature = 'generate:package
                             {name : The vendor name part of the namespace}
                             {vendor : The vendor name part of the namespace}
                             {package : The name of package for the namespace}

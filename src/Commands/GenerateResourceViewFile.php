@@ -5,7 +5,7 @@ namespace Laltu\LaravelMaker\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class ResourceFileCreate extends Command
+class GenerateResourceViewFile extends Command
 {
     protected $signature = 'resource-file:create {name : The name of the resource file} {--fields= : The fields for the resource file}';
     protected $description = 'Create a resource file with specified fields';
@@ -27,7 +27,7 @@ class ResourceFileCreate extends Command
         $this->generateApiContent($name, $fieldsArray);
     }
 
-    private function generateContent($name, $fields)
+    private function generateContent($name, $fields): void
     {
 
         $filePath = storage_path("laravel-maker/{$name}.json");
@@ -53,7 +53,7 @@ class ResourceFileCreate extends Command
         $this->info("Resource file '{$name}.json' created successfully.");
     }
 
-    private function generateViewContent($name, $fields)
+    private function generateViewContent($name, $fields): void
     {
 
         $filePath = storage_path("laravel-maker/{$name}-view.json");
@@ -79,7 +79,7 @@ class ResourceFileCreate extends Command
         $this->info("Resource file '{$name}.json' created successfully.");
     }
 
-    private function generateApiContent($name, $fields)
+    private function generateApiContent($name, $fields): void
     {
 
         $filePath = storage_path("laravel-maker/{$name}-api.json");

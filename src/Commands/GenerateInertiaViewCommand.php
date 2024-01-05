@@ -8,14 +8,14 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class MakeInertiaViewCommand extends GeneratorCommand
+class GenerateInertiaViewCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:inertia-view';
+    protected $name = 'generate:inertia-view';
 
     /**
      * The console command description.
@@ -29,7 +29,7 @@ class MakeInertiaViewCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $type = 'Vue template';
+    protected $type = 'Inertia view';
 
     /**
      * Execute the console command.
@@ -95,7 +95,7 @@ class MakeInertiaViewCommand extends GeneratorCommand
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return array_merge(parent::getArguments(), [
             ['model', InputArgument::REQUIRED, 'The model associated with the view.'],

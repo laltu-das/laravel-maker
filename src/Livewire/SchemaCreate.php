@@ -66,10 +66,12 @@ class SchemaCreate extends Component
     public function addFormRelationalFieldRow(): void
     {
         $this->relationalFields[] = [
-            "foreign_model" => "",
-            "foreign_key" => "",
-            "local_key" => "",
-            "relation_type" => "",
+            "relationName" => "",
+            "foreignModel" => "",
+            "foreignKey" => "",
+            "localKey" => "",
+            "relationType" => "",
+            "nullable" => "",
         ];
     }
 

@@ -11,11 +11,13 @@
                 <x-laravel-maker::thead class="no-border">
                     <x-laravel-maker::tr>
                         <x-laravel-maker::th>Model Name</x-laravel-maker::th>
+                        <x-laravel-maker::th>Model</x-laravel-maker::th>
                         <x-laravel-maker::th>Migration</x-laravel-maker::th>
                         <x-laravel-maker::th>Factory</x-laravel-maker::th>
                         <x-laravel-maker::th>Seeder</x-laravel-maker::th>
                         <x-laravel-maker::th>Policy</x-laravel-maker::th>
                         <x-laravel-maker::th>Service</x-laravel-maker::th>
+                        <x-laravel-maker::th>All</x-laravel-maker::th>
                         <x-laravel-maker::th>Action</x-laravel-maker::th>
                     </x-laravel-maker::tr>
                 </x-laravel-maker::thead>
@@ -24,6 +26,12 @@
                         <x-laravel-maker::tr>
                             <x-laravel-maker::td>
                                 {{ $schema->modelName }}
+                            </x-laravel-maker::td>
+                            <x-laravel-maker::td>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="makeModel({{ $schema->id }})"/>
+                            </x-laravel-maker::td>
+                            <x-laravel-maker::td>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer"/>
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
                                 <x-laravel-maker::icons.reload class="m-auto cursor-pointer"/>

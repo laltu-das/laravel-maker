@@ -6,14 +6,14 @@ use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 
-class MakeActionCommand extends GeneratorCommand
+class GenerateActionCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:action {name} {--methods=}';
+    protected $signature = 'generate:action {name} {--methods=}';
 
     /**
      * The console command description.

@@ -18,11 +18,12 @@
     "require": {
         "php": "^8.0|^8.2",
         "illuminate/console": "^10.21",
-        "illuminate/routing": "^10.21",
         "illuminate/filesystem": "^10.21",
+        "illuminate/routing": "^10.21",
         "illuminate/support": "^10.21",
         "illuminate/view": "^10.21",
-        "livewire/livewire": "^3.3"
+        "livewire/livewire": "^3.3",
+        "openai-php/laravel": "^0.8.1"
     },
     "require-dev": {
         "orchestra/testbench": "^8.18",
@@ -43,7 +44,10 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "extra": {
         "laravel": {

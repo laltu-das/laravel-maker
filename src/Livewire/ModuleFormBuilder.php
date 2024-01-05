@@ -19,7 +19,6 @@ class ModuleFormBuilder extends Component
         $this->fill(['formFields' => $module->formFields??[]]);
     }
 
-
     public function addFormFieldRow(): void
     {
         $this->formFields[] = [
@@ -36,7 +35,6 @@ class ModuleFormBuilder extends Component
             "html_type" => ""
         ];
     }
-
 
     public function removeFormFieldRow($index): void
     {

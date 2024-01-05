@@ -14,6 +14,19 @@ return [
     |
     */
 
+    'openai_api_key' => env('OPENAI_API_KEY', null),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Telescope Domain
+    |--------------------------------------------------------------------------
+    |
+    | This is the subdomain where Telescope will be accessible from. If the
+    | setting is null, Telescope will reside under the same domain as the
+    | application. Otherwise, this value will be used as the subdomain.
+    |
+    */
+
     'domain' => env('LARAVEL_MAKER_DOMAIN', null),
 
     /*

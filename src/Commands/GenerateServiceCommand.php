@@ -6,14 +6,14 @@ use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 
-class MakeServiceCommand extends GeneratorCommand
+class GenerateServiceCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:service {name} {--methods=}';
+    protected $signature = 'generate:service {name} {--methods=}';
 
     /**
      * The console command description.
@@ -57,10 +57,10 @@ class MakeServiceCommand extends GeneratorCommand
     /**
      * Resolve the fully qualified path to the stub.
      *
-     * @param  string  $stub
+     * @param string $stub
      * @return string
      */
-    protected function resolveStubPath($stub): string
+    protected function resolveStubPath(string $stub): string
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath

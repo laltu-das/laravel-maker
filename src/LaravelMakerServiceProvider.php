@@ -3,15 +3,17 @@
 namespace Laltu\LaravelMaker;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Laltu\LaravelMaker\Commands\MakeActionCommand;
-use Laltu\LaravelMaker\Commands\MakeControllerCommand;
-use Laltu\LaravelMaker\Commands\MakeInertiaViewCommand;
-use Laltu\LaravelMaker\Commands\MakeModelCommand;
-use Laltu\LaravelMaker\Commands\MakePackageCommand;
-use Laltu\LaravelMaker\Commands\MakeServiceCommand;
-use Laltu\LaravelMaker\Commands\ResourceFileCreate;
+use Laltu\LaravelMaker\Commands\GenerateActionCommand;
+use Laltu\LaravelMaker\Commands\GenerateControllerCommand;
+use Laltu\LaravelMaker\Commands\GenerateInertiaViewCommand;
+use Laltu\LaravelMaker\Commands\GenerateMigrationCommand;
+use Laltu\LaravelMaker\Commands\GenerateModelCommand;
+use Laltu\LaravelMaker\Commands\GeneratePackageCommand;
+use Laltu\LaravelMaker\Commands\GenerateServiceCommand;
+use Laltu\LaravelMaker\Commands\GenerateResourceViewFile;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Foundation\Application;
 use Laltu\LaravelMaker\Livewire\ModuleApiBuilder;
@@ -63,13 +65,14 @@ class LaravelMakerServiceProvider extends ServiceProvider
 
             // Registering package commands.
              $this->commands([
-                 MakeControllerCommand::class,
-                 MakeModelCommand::class,
-                 MakeServiceCommand::class,
-                 MakeActionCommand::class,
-                 MakePackageCommand::class,
-                 MakeInertiaViewCommand::class,
-                 ResourceFileCreate::class,
+                 GenerateControllerCommand::class,
+                 GenerateModelCommand::class,
+                 GenerateServiceCommand::class,
+                 GenerateActionCommand::class,
+                 GeneratePackageCommand::class,
+                 GenerateInertiaViewCommand::class,
+                 GenerateMigrationCommand::class,
+                 GenerateResourceViewFile::class,
              ]);
         }
     }
@@ -82,10 +85,19 @@ class LaravelMakerServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/laravel-maker.php', 'laravel-maker');
 
+        $this->app->bind(GenerateMigrationCommand::class, function ($app) {
+            return new GenerateMigrationCommand(
+                $app['migration.creator'],
+                $app['composer'],
+                $app['files']
+            );
+        });
         // Register the main class to use with the facade
         $this->app->singleton('laravel-maker', function () {
             return new \Laltu\LaravelMaker\Facades\LaravelMaker();
         });
+
+
     }
 
     /**
@@ -149,7 +161,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
     private function createDatabase(): void
     {
         // Specify the path to the SQLite database file
-        $databasePath = database_path('database.sqlite');
+        $databasePath = storage_path('laravel-maker.sqlite');
 
         // Check if the file exists
         if (!File::exists($databasePath)) {
@@ -165,16 +177,25 @@ class LaravelMakerServiceProvider extends ServiceProvider
      */
     private function connectToDatabase(): void
     {
-//        // SQLite database configuration
-//        $databaseConfig = [
-//            'driver' => 'sqlite',
-//            'database' => database_path('database.sqlite'), // Path to your SQLite database file
-//            'prefix' => '',
-//        ];
-//
-//        // Establish a dynamic database connection
-//        config(['database.connections.dynamic' => $databaseConfig]);
-////        DB::purge('sqlite');
-        DB::reconnect('sqlite');
+        try {
+            // SQLite database configuration
+            $databaseConfig = [
+                'driver' => 'sqlite',
+                'database' => storage_path('laravel-maker.sqlite'),
+                'prefix' => '',
+            ];
+
+            // Establish a dynamic database connection
+            config(['database.connections.laravel-maker' => $databaseConfig]);
+
+            DB::reconnect('laravel-maker');
+
+            // Optional: Check if the connection is successful
+            DB::connection('laravel-maker')->getPdo();
+        } catch (\Exception $e) {
+            // Handle the exception
+            Log::error("Failed to connect to the database: " . $e->getMessage());
+            // Optionally rethrow the exception or handle it as per your application's requirement
+        }
     }
 }

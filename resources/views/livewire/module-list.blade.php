@@ -17,6 +17,8 @@
                         <x-laravel-maker::th>Controller</x-laravel-maker::th>
                         <x-laravel-maker::th>Request</x-laravel-maker::th>
                         <x-laravel-maker::th>Response</x-laravel-maker::th>
+                        <x-laravel-maker::th>Service</x-laravel-maker::th>
+                        <x-laravel-maker::th>Action</x-laravel-maker::th>
                         <x-laravel-maker::th>View</x-laravel-maker::th>
                         <x-laravel-maker::th>Route</x-laravel-maker::th>
                         <x-laravel-maker::th>Action</x-laravel-maker::th>
@@ -78,19 +80,25 @@
                                 </x-laravel-maker::select>
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer"/>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateController({{ $module->id }})"/>
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer"/>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateRequest({{ $module->id }})"/>
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer"/>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateResponse({{ $module->id }})"/>
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer"/>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateService({{ $module->id }})"/>
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer"/>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateAction({{ $module->id }})"/>
+                            </x-laravel-maker::td>
+                            <x-laravel-maker::td>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateView({{ $module->id }})"/>
+                            </x-laravel-maker::td>
+                            <x-laravel-maker::td>
+                                <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateRoute({{ $module->id }})"/>
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
                                 <x-laravel-maker::icon-link :href="route('module-view', $module->id)">

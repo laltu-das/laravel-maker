@@ -24,7 +24,6 @@
     <div class="fixed inset-0 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-
                 <div
                         x-show="open"
                         x-cloak

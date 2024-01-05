@@ -2,16 +2,26 @@
 
 namespace Laltu\LaravelMaker\Commands;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Routing\Console\ControllerMakeCommand;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class MakeControllerCommand extends ControllerMakeCommand
+class GenerateControllerCommand extends ControllerMakeCommand
 {
+
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'generate:controller';
+
     /**
      * Execute the console command.
+     * @throws FileNotFoundException
      */
-    public function handle()
+    public function handle(): bool
     {
         parent::handle();
 
@@ -40,7 +50,7 @@ class MakeControllerCommand extends ControllerMakeCommand
         $nameInput = Str::replace('Controller', '', $this->getNameInput());
         $name = Str::studly($nameInput);
 
-        $this->call('make:service', [
+        $this->call('generate:service', [
             'name' => "{$name}Service",
             '--methods' => "get,store,show,update,destroy",
         ]);
@@ -56,7 +66,7 @@ class MakeControllerCommand extends ControllerMakeCommand
         $nameInput = Str::replace('Controller', '', $this->getNameInput());
         $name = Str::studly($nameInput);
 
-        $this->call('make:action', [
+        $this->call('generate:action', [
             'name' => "{$name}Action",
             '--methods' => "get,store,show,update,destroy",
         ]);
@@ -73,7 +83,7 @@ class MakeControllerCommand extends ControllerMakeCommand
         $name = Str::studly($nameInput);
         $fileName = Str::afterLast($name, '/');;
 
-        $this->call('make:inertia-view', [
+        $this->call('generate:inertia-view', [
             'name' => "{$name}/{$fileName}",
             'model' => Str::lower($name),
             'route' => Str::lower($name),
