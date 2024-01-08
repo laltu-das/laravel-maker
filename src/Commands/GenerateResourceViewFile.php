@@ -10,7 +10,7 @@ class GenerateResourceViewFile extends Command
     protected $signature = 'resource-file:create {name : The name of the resource file} {--fields= : The fields for the resource file}';
     protected $description = 'Create a resource file with specified fields';
 
-    public function handle()
+    public function handle(): void
     {
         $name = $this->argument('name');
         $fields = $this->option('fields');

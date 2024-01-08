@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laltu\LaravelMaker\Commands\GenerateActionCommand;
 use Laltu\LaravelMaker\Commands\GenerateControllerCommand;
+use Laltu\LaravelMaker\Commands\GenerateFactoryCommand;
 use Laltu\LaravelMaker\Commands\GenerateInertiaViewCommand;
 use Laltu\LaravelMaker\Commands\GenerateMigrationCommand;
 use Laltu\LaravelMaker\Commands\GenerateModelCommand;
@@ -73,6 +74,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
                  GenerateInertiaViewCommand::class,
                  GenerateMigrationCommand::class,
                  GenerateResourceViewFile::class,
+                 GenerateFactoryCommand::class,
              ]);
         }
     }

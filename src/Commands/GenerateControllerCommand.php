@@ -6,6 +6,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Routing\Console\ControllerMakeCommand;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
+use function Laravel\Prompts\confirm;
 
 class GenerateControllerCommand extends ControllerMakeCommand
 {
@@ -136,16 +137,54 @@ class GenerateControllerCommand extends ControllerMakeCommand
      * @param  string  $name
      * @return string
      */
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
+
+        $modelClass = $this->parseModel($this->option('model'));
+
+        if (! class_exists($modelClass) && confirm("A {$modelClass} model does not exist. Do you want to generate it?", default: true)) {
+            $this->call('make:model', ['name' => $modelClass]);
+        }
+
         $replace = [];
 
         $replace["{{ routePath }}"]  = Str::lower(Str::replace('/', '.', Str::replace('Controller', '', $this->getNameInput())));
         $replace["{{ viewPath }}"]  = Str::replace('Controller', '', $this->getNameInput());
 
+        $replace = $this->buildResourceReplacements($replace, $modelClass);
+
         return str_replace(
             array_keys($replace), array_values($replace), parent::buildClass($name)
         );
     }
+
+    /**
+     * Build the model replacement values for Resource classes.
+     *
+     * @param  array  $replace
+     * @param string $modelClass
+     * @return array
+     */
+    protected function buildResourceReplacements(array $replace, string $modelClass): array
+    {
+        $resourceNamespace = 'App\\Http\\Resources';
+        $resourceClass = class_basename($modelClass) . 'Resource';
+        $resourceCollectionClass = class_basename($modelClass) . 'ResourceCollection';
+
+        $namespacedResource = $resourceNamespace . '\\' . $resourceClass.';';
+        $namespacedResourceCollection = $resourceNamespace . '\\' . $resourceCollectionClass.';';
+
+        return array_merge($replace, [
+            '{{ resourceClass }}' => $resourceClass,
+            '{{resourceClass}}' => $resourceClass,
+            '{{ resourceCollectionClass }}' => $resourceCollectionClass,
+            '{{resourceCollectionClass}}' => $resourceCollectionClass,
+            '{{ namespacedResources }}' => $namespacedResource,
+            '{{namespacedResources}}' => $namespacedResource,
+            '{{ namespacedResourceCollection }}' => $namespacedResourceCollection,
+            '{{namespacedResourceCollection}}' => $namespacedResourceCollection,
+        ]);
+    }
+
 
 }

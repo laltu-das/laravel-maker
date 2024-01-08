@@ -3,6 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 use Laltu\LaravelMaker\Models\Schema;
 use Laltu\LaravelMaker\View\Components\AppLayout;
 use Livewire\Component;
@@ -16,7 +17,7 @@ class SchemaList extends Component
         return view('laravel-maker::livewire.schema-list', compact('schemas'))->layout(AppLayout::class);
     }
 
-    public function makeModel(Schema $schema)
+    public function makeModel(Schema $schema): int
     {
         $modelName = $schema->modelName;
         $fields = [];
@@ -65,7 +66,12 @@ class SchemaList extends Component
 
         $command = "make:model {$modelName} -mfs --force " . implode(' ', $commandOptions);
 
-        dd($command);
-         return Artisan::call("$command");
+//        dump($command);
+
+         return Artisan::call('generate:model', [
+             'name' => $modelName,
+             '--all' => true,
+             '--force' => true
+         ]);
     }
 }

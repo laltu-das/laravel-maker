@@ -39,8 +39,6 @@ class GenerateModelCommand extends ModelMakeCommand
         if ($this->option('fields')) {
             $this->createMigration();
         }
-
-        dump($this->option());
     }
 
     /**
@@ -118,13 +116,14 @@ class GenerateModelCommand extends ModelMakeCommand
             '--test' => $this->option('test'),
             '--pest' => $this->option('pest'),
             '--inertia' => true,
-            '--force' => true,
+            '--force' => $this->option('force'),
         ]));
     }
 
     public function getOptions(): array
     {
         $options = parent::getOptions();
+
         $options[] = ['service', 'S', InputOption::VALUE_NONE, 'Generate a service for the model'];
         $options[] = ['action', 'A', InputOption::VALUE_NONE, 'Generate a service for the model'];
         $options[] = ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields for the model (colon-separated; ex: --fields="name:string:nullable; email:string; phone:string:nullable")'];

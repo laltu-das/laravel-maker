@@ -112,6 +112,7 @@ class GenerateInertiaViewCommand extends GeneratorCommand
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the controller already exists'],
+            ['type', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
             ['framework', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
             ['resource', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
         ];
@@ -137,7 +138,7 @@ class GenerateInertiaViewCommand extends GeneratorCommand
      * @param string $stub
      * @return string
      */
-    protected function resolveStubPath($stub): string
+    protected function resolveStubPath(string $stub): string
     {
         return file_exists($customPath = __DIR__ . $stub) ? $customPath : __DIR__ . $stub;
     }
@@ -145,7 +146,7 @@ class GenerateInertiaViewCommand extends GeneratorCommand
 
     /**
      */
-    private function createResource($framework): bool
+    private function createResource($framework): void
     {
         $files = ['Index' => 'index', 'Create' => 'create', 'Edit' => 'edit', 'Show' => 'show',];
 
@@ -159,7 +160,7 @@ class GenerateInertiaViewCommand extends GeneratorCommand
             if ((!$this->hasOption('force') || !$this->option('force')) && $this->alreadyExists($this->getNameInput())) {
                 $this->components->error($this->type . ' already exists.');
 
-                return false;
+                return;
             }
 
             $this->makeDirectory($path);
@@ -187,6 +188,5 @@ class GenerateInertiaViewCommand extends GeneratorCommand
         }
 
 
-        return true;
     }
 }

@@ -5,6 +5,7 @@ namespace {{ namespace }};
 use {{ namespacedModel }};
 use {{ rootNamespace }}Http\Controllers\Controller;
 use {{ namespacedRequests }}
+use {{ namespacedResources }}
 
 class {{ class }} extends Controller
 {
@@ -15,7 +16,7 @@ class {{ class }} extends Controller
     {
         ${{ modelVariable }} = {{ model }}::latest()->paginate();
 
-        return inertia('{{ viewPath }}/{{ model }}Index', compact('{{ modelVariable }}'));
+        return inertia('{{ viewPath }}/{{ model }}Index', ['{{ modelVariable }}' => {{ model }}Resource::collection(${{ modelVariable }})]);
     }
 
     /**
@@ -41,7 +42,7 @@ class {{ class }} extends Controller
      */
     public function show({{ model }} ${{ modelVariable }})
     {
-        return inertia('{{ viewPath }}/{{ model }}Show');
+        return inertia('{{ viewPath }}/{{ model }}Show', ['{{ modelVariable }}' => {{ model }}Resource::make(${{ modelVariable }})]);
     }
 
     /**
@@ -49,7 +50,7 @@ class {{ class }} extends Controller
      */
     public function edit({{ model }} ${{ modelVariable }})
     {
-        return inertia('{{ viewPath }}/{{ model }}Edit');
+        return inertia('{{ viewPath }}/{{ model }}Edit', ['{{ modelVariable }}' => {{ model }}Resource::make(${{ modelVariable }})]);
     }
 
     /**

@@ -15,18 +15,7 @@ class SchemaCreate extends Component
 
     public string $mode = 'add';
 
-    public array $fields = [[
-        "field_name" => "",
-        "validation" => "",
-        "primary" => true,
-        "is_foreign" => true,
-        "searchable" => false,
-        "fillable" => false,
-        "in_form" => true,
-        "in_index" => true,
-        "db_type" => "",
-        "html_type" => ""
-    ]];
+    public array $fields = [];
 
     public array $relationalFields = [];
 
