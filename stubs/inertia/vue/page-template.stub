@@ -1,0 +1,80 @@
+<script setup>
+import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
+import AdminLayout from "@/Layouts/AdminLayout.vue";
+import FileInput from "@/Components/Core/Form/FileInput.vue";
+import LinkButton from "@/Components/Core/Button/LinkButton.vue";
+import InputError from "@/Components/Core/Form/InputError.vue";
+import SubmitButton from "@/Components/Core/Button/SubmitButton.vue";
+import TextInput from "@/Components/Core/Form/TextInput.vue";
+
+const {{ model }} = usePage().props.{{ model }};
+
+const form = useForm({
+    _method: 'PUT',
+    title: {{ model }}.title ?? '',
+    description: {{ model }}.description ?? '',
+    image: {{ model }}.image ?? '',
+    active_status: {{ model }}.active_status ?? '',
+});
+
+const update = () => form.post(route('{{ route }}.update', {{ model }}.id));
+
+</script>
+
+<template>
+    <Head title="{{ modelUcFirstPlural }}"/>
+
+    <AdminLayout>
+        <template #header>
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <div class="flex items-center gap-x-3">
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ modelUcFirstPlural }} Management</h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-4 gap-x-3">
+                    <Link :href="route('{{ route }}.index')" class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
+                        Back
+                    </Link>
+                </div>
+            </div>
+        </template>
+        <div class="pt-6 pb-20">
+            <div class="mx-auto px-4">
+                <div class="w-full bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-4">
+                    <form class="w-full" @submit.prevent="update">
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <TextInput v-model="form.title" :label="'Title'" type="text"/>
+                                <InputError :message="form.errors.title" class="mt-2"/>
+                            </div>
+                            <div class="w-full md:w-1/2 px-3">
+                                <TextInput v-model="form.description" :label="'Description'" type="text"/>
+                                <InputError :message="form.errors.description" class="mt-2"/>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full px-3 mb-6 md:mb-0">
+                                <FileInput :label="'Image'" type="text" @input="form.image = $event.target.files[0]"/>
+                                <InputError :message="form.errors.description" class="mt-2"/>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap -mx-3 mb-2">
+                            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                <Select v-model="form.active_status" :label="'Active Status'"/>
+                                <InputError :message="form.errors.active_status" class="mt-2"/>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap -mx-3 px-3 mb-6 md:mb-0 gap-3">
+                            <SubmitButton :class="{'opacity-25':form.processing}" :disabled="form.processing" type="submit">
+                                Submit
+                            </SubmitButton>
+                            <LinkButton :href="route('{{ route }}.index')">Cancel</LinkButton>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </AdminLayout>
+</template>

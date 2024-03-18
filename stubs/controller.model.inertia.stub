@@ -1,0 +1,75 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use {{ namespacedRequests }}
+use {{ namespacedResources }}
+
+class {{ class }} extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        ${{ modelVariable }} = {{ model }}::latest()->paginate();
+
+        return inertia('{{ viewPath }}/{{ model }}Index', ['{{ modelVariable }}' => {{ model }}Resource::collection(${{ modelVariable }})]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return inertia('{{ viewPath }}/{{ model }}Create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ storeRequest }} $request)
+    {
+        {{ model }}::create($request->all());
+
+        return redirect()->route('{{ routePath }}.index')->with(['success', 'Created Successfully']);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        return inertia('{{ viewPath }}/{{ model }}Show', ['{{ modelVariable }}' => {{ model }}Resource::make(${{ modelVariable }})]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit({{ model }} ${{ modelVariable }})
+    {
+        return inertia('{{ viewPath }}/{{ model }}Edit', ['{{ modelVariable }}' => {{ model }}Resource::make(${{ modelVariable }})]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
+    {
+        ${{ modelVariable }}->update($request->all());
+
+        return redirect()->route('{{ routePath }}.index')->with(['success', 'Updated Successfully']);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        ${{ modelVariable }}->delete();
+
+        return redirect()->route('{{ routePath }}.index')->with(['success', 'Deleted Successfully']);
+    }
+}

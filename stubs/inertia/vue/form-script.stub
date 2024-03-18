@@ -1,0 +1,20 @@
+<script setup>
+import { useForm, usePage } from '@inertiajs/inertia-vue3';
+import { computed } from 'vue';
+
+{{dynamicImports}}
+
+// Determine if we are in edit mode based on if banner data exists
+const pageProps = usePage().props;
+const isEditMode = computed(() => pageProps.banner && pageProps.banner.data);
+
+// Form setup for both create and edit mode
+const form = useForm(isEditMode.value ? 'put' : 'post',
+    isEditMode.value ? route('admin.banner.update', pageProps.banner.data.id) : route('admin.banner.store'), {
+        title: isEditMode.value ? pageProps.banner.data.title.en ?? '' : '',
+        description: isEditMode.value ? pageProps.banner.data.description.en ?? '' : '',
+        image: '',
+        active_status: isEditMode.value ? pageProps.banner.data.active_status ?? '' : '',
+});
+
+</script>

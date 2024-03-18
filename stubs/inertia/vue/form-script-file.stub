@@ -1,0 +1,55 @@
+<script setup>
+import { useForm, usePage } from '@inertiajs/inertia-vue3';
+import { ref, reactive, computed } from 'vue';
+
+{{dynamicImports}}
+
+const filepondImageInput = ref(null);
+
+const { props } = usePage();
+
+// Assuming the banner might not exist, setting it as reactive to ensure reactivity
+const banner = reactive(props.banner ? props.banner.data : null);
+
+// Determine if we are in edit mode based on if banner data exists
+const isEditMode = computed(() => !!banner);
+
+// Preparing form data, considering multi-locale support and ensuring reactivity
+{{formData}}
+
+const form = useForm({
+    method: isEditMode.value ? 'put' : 'post',
+    url: isEditMode.value ? route('admin.banner.update', banner.id) : route('admin.banner.store'),
+    data: formData.value,
+});
+
+// Watcher to update form data reactively if banner changes, useful for SPA where props might update without remounting the component
+{{watchFormData}}
+
+// Adjust FilePond setup for create/edit mode
+const handleFilePondImageProcess = (error, file) => {
+    const fieldName = isEditMode.value ? 'new_image' : 'image';
+    form[fieldName] = file.serverId;
+};
+
+const handleFilePondImageRemoveFile = (error, file) => {
+    const fieldName = isEditMode.value ? 'new_image' : 'image';
+    form[fieldName] = null;
+};
+
+// Setup for FilePond files reactive state in edit mode
+const files = isEditMode.value ? reactive([{
+    source: pageProps.banner.data.preview_image,
+    options: {
+        type: 'local',
+        file: {
+            name: 'my-file.png', // You might want to dynamically set this based on the actual file name
+            size: 20000, // And possibly the size
+            type: 'image/png', // And the MIME type
+        },
+        metadata: {
+            poster: pageProps.banner.data.preview_image,
+        },
+    },
+}]) : reactive([]);
+</script>

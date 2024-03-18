@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
+
+
+.grid-ruler {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 8px;
+    margin: 20px;
+}
+
+.ruler-column {
+    border-left: 1px solid #ccc;
+    height: 100%;
+}

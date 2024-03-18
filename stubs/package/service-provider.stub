@@ -1,0 +1,31 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Support\ServiceProvider;
+
+class DummyClassServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'dummy-lower');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->publishes([
+            __DIR__.'/../resources/assets' => public_path('vendor/dummy-lower'),
+        ], 'assets');
+        $this->publishes([
+            __DIR__.'/../config/config.php' => config_path('dummy-lower.php'),
+        ], 'config');
+    }
+
+    public function register()
+    {
+        $this->app->singleton('dummy-lower', function ($app) {
+            return new DummyClass;
+        });
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/config.php', 'dummy-lower'
+        );
+    }
+}

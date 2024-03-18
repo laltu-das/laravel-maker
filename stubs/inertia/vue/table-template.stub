@@ -1,0 +1,41 @@
+<script setup>
+{{ dynamicImports }}
+{{ scriptSetupContent }}
+</script>
+
+<template>
+    <Head title="{{ pageTitle }}"/>
+
+    <AdminLayout>
+        <!-- Header Section -->
+        <template #header>
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <h2 class="text-lg font-medium text-gray-800 dark:text-white">Example Page Title</h2>
+                <Link :href="route('category.index')" class="btn btn-default">Back</Link>
+            </div>
+        </template>
+        <div class="pt-6 pb-20">
+            <div class="mx-auto px-4">
+                <div class="flex flex-col">
+                    <Table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <TableHead>
+                            {{ tableColumns }}
+                        </TableHead>
+                        <TableBody>
+                            <TableRow v-for="{{ model }} in {{ modelPlural }}.data" :key="{{ model }}.id">
+                               {{ tableData }}
+                                <TableCell>
+                                    <div class="text-right">
+                                        <LinkButton :href="route('{{route}}.edit',{{model}}.id)">Edit</LinkButton>
+                                        <DeleteButton @click="deleteData({{model}}.id)">Delete</DeleteButton>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+                <Pagination :links="{{ modelPlural }}.meta"/>
+            </div>
+        </div>
+    </AdminLayout>
+</template>

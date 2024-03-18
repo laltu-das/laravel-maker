@@ -1,0 +1,88 @@
+<script setup>
+import {ref, watch} from "vue";
+import {Head, router} from '@inertiajs/vue3';
+import AdminLayout from "@/Layouts/AdminLayout.vue";
+import Table from "@/Components/Core/Table/Table.vue";
+import TableHeadCell from "@/Components/Core/Table/TableHeadCell.vue";
+import TableBody from "@/Components/Core/Table/TableBody.vue";
+import TableRow from "@/Components/Core/Table/TableRow.vue";
+import TableCell from "@/Components/Core/Table/TableCell.vue";
+import TableHead from "@/Components/Core/Table/TableHead.vue";
+import Pagination from "@/Components/Core/Pagination/Pagination.vue";
+import LinkButton from "@/Components/Core/Button/LinkButton.vue";
+import DeleteButton from "@/Components/Core/Button/DeleteButton.vue";
+import TextInput from "@/Components/Core/Form/TextInput.vue";
+
+const props = defineProps({
+    filters: {
+        type: Object,
+        default: () => ({}),
+    },
+    {{ modelPlural }}: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
+})
+
+// pass filters in search
+let search = ref(props.filters.search);
+
+watch(search, (value) => {
+    router.get(route('{{ route }}.index'), {search: value}, {
+        preserveState: true,
+        replace: true,
+    });
+});
+
+const deleteData = (id) => router.delete(route('{{ route }}.destroy', id), {
+    replace: true,
+    onBefore: () => confirm('Are you sure you want to delete this data?'),
+    onSuccess: (page) => alert('Successfully deleted'),
+});
+
+</script>
+
+<template>
+    <Head title="{{ modelUcFirstPlural }}"/>
+
+    <AdminLayout>
+        <template #header>
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <div class="flex items-center gap-x-3">
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ modelUcFirstPlural }} Management</h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-4 gap-x-3">
+                    <TextInput v-model="search" placeholder="Search"/>
+                    <LinkButton :href="route('{{ route }}.create')">Add Banner</LinkButton>
+                </div>
+            </div>
+        </template>
+        <div class="pt-6 pb-20">
+            <div class="mx-auto px-4">
+                <div class="flex flex-col">
+                    <Table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <table-head>
+                            <table-head-cell>Image</table-head-cell>
+                        </table-head>
+                        <table-body>
+                            <table-row v-for="{{ model }} in {{ modelPlural }}.data" :key="{{ model }}.id">
+                                <table-cell></table-cell>
+                                <table-cell>
+                                    <div class="text-right">
+                                        <LinkButton :href="route('{{ route }}.edit',{{ model }}.id)">Edit</LinkButton>
+                                        <DeleteButton @click="deleteData({{ model }}.id)">Delete</DeleteButton>
+                                    </div>
+                                </table-cell>
+                            </table-row>
+                        </table-body>
+                    </Table>
+                </div>
+                <Pagination :links="{{ modelPlural }}.meta"/>
+            </div>
+        </div>
+    </AdminLayout>
+</template>

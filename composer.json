@@ -1,0 +1,57 @@
+{
+    "name": "laltu/laravel-maker",
+    "description": "laravel ui maker",
+    "keywords": [
+        "laltu",
+        "laravel-maker"
+    ],
+    "homepage": "https://github.com/laltu/laravel-maker",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "laltu das",
+            "email": "laltu.lspl@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0",
+        "livewire/livewire": "^3.4"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laltu\\LaravelMaker\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laltu\\LaravelMaker\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Laltu\\LaravelMaker\\LaravelMakerServiceProvider"
+            ],
+            "aliases": {
+                "LaravelMaker": "Laltu\\LaravelMaker\\LaravelMakerFacade"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable" : true
+}

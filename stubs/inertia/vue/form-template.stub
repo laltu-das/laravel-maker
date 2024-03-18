@@ -1,0 +1,34 @@
+{{ scriptTemplate }}
+
+<template>
+    <Head title="{{ pageTitle }}"/>
+
+    <AdminLayout>
+        <!-- Header Section -->
+        <template #header>
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ pageTitle }}</h2>
+                <Link :href="route('{{ routeName }}.index')" class="btn btn-default">Back</Link>
+            </div>
+        </template>
+
+        <div class="pt-6 pb-20">
+            <div class="mx-auto px-4">
+                <div class="w-full bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-4">
+                    <form class="w-full" @submit.prevent="form.submit({onSuccess: () => { form.reset(); filepondImageInput.value.removeFiles()}})">
+                        {{ formTemplate }}
+                        <div class="flex flex-wrap -mx-3 px-3 mb-6 md:mb-0 gap-3">
+                            <SubmitButton
+                                :class="{'opacity-25': form.processing}"
+                                :disabled="form.processing"
+                                type="submit">
+                                Submit
+                            </SubmitButton>
+                            <CancelButton :href="route('{{ routeName }}.index')">Cancel</CancelButton>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </AdminLayout>
+</template>

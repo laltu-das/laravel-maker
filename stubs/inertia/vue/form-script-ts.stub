@@ -1,0 +1,52 @@
+<script setup>
+import { useForm, usePage } from '@inertiajs/inertia-vue3';
+import { ref, reactive, computed } from 'vue';
+
+const filepondImageInput = ref(null);
+
+// Determine if we are in edit mode based on if banner data exists
+const pageProps = usePage().props;
+const isEditMode = computed(() => pageProps.banner && pageProps.banner.data);
+
+// Form setup for both create and edit mode
+const form = useForm(isEditMode.value ? 'put' : 'post',
+    isEditMode.value ? route('admin.banner.update', pageProps.banner.data.id) : route('admin.banner.store'), {
+        title: {
+            en: isEditMode.value ? pageProps.banner.data.title.en ?? '' : '',
+            jp: isEditMode.value ? pageProps.banner.data.title.jp ?? '' : '',
+        },
+        description: {
+            en: isEditMode.value ? pageProps.banner.data.description.en ?? '' : '',
+            jp: isEditMode.value ? pageProps.banner.data.description.jp ?? '' : '',
+        },
+        image: '',
+        active_status: isEditMode.value ? pageProps.banner.data.active_status ?? '' : '',
+});
+
+// Adjust FilePond setup for create/edit mode
+const handleFilePondImageProcess = (error, file) => {
+    const fieldName = isEditMode.value ? 'new_image' : 'image';
+    form[fieldName] = file.serverId;
+};
+
+const handleFilePondImageRemoveFile = (error, file) => {
+    const fieldName = isEditMode.value ? 'new_image' : 'image';
+    form[fieldName] = null;
+};
+
+// Setup for FilePond files reactive state in edit mode
+const files = isEditMode.value ? reactive([{
+    source: pageProps.banner.data.preview_image,
+    options: {
+        type: 'local',
+        file: {
+            name: 'my-file.png', // You might want to dynamically set this based on the actual file name
+            size: 20000, // And possibly the size
+            type: 'image/png', // And the MIME type
+        },
+        metadata: {
+            poster: pageProps.banner.data.preview_image,
+        },
+    },
+}]) : reactive([]);
+</script>
