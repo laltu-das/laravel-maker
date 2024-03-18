@@ -155,7 +155,7 @@ class MakeControllerCommand extends ControllerMakeCommand
      */
     protected function resolveStubPath($stub): string
     {
-        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/'))) ? $customPath : __DIR__ . $stub;
+        return file_exists($customPath = dirname(__FILE__, 3).$stub) ? $customPath : __DIR__ . $stub;
     }
 
 

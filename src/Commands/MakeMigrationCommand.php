@@ -108,7 +108,7 @@ class MakeMigrationCommand extends MigrateMakeCommand
      */
     protected function resolveStubPath(string $stub): string
     {
-        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/'))) ? $customPath : __DIR__ . $stub;
+        return file_exists($customPath = dirname(__FILE__, 3).$stub) ? $customPath : __DIR__ . $stub;
     }
 
     protected function replaceFields($stub, $fields): array|string
