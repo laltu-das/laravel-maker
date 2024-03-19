@@ -20,6 +20,10 @@ composer require laltu/laravel-maker
 // Usage description here
 ```
 
+```php
+php artisan make:model YourModelName --all --fields="name:string; email:string; age:integer" --relations="users:hasMany:App\Models\User"
+```
+
 ### Testing
 
 ```bash

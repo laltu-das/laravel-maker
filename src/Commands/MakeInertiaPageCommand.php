@@ -2,14 +2,19 @@
 
 namespace Laltu\LaravelMaker\Commands;
 
+use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
-use Laltu\LaravelMaker\Commands\Core\InertiaViewBuilderCommand;
 use Laltu\LaravelMaker\Support\VueTableBuilder;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:inertia-page')]
-class MakeInertiaPageCommand extends InertiaViewBuilderCommand
+class MakeInertiaPageCommand extends GeneratorCommand
 {
     /**
      * The console command name.
@@ -30,7 +35,7 @@ class MakeInertiaPageCommand extends InertiaViewBuilderCommand
      *
      * @var string
      */
-    protected string $type = 'Inertia view';
+    protected $type = 'Inertia view';
 
 
     /**
@@ -72,7 +77,7 @@ class MakeInertiaPageCommand extends InertiaViewBuilderCommand
     }
 
 
-    protected function replaceClass(string $stub, string $name): string
+    protected function replaceClass($stub, $name): string
     {
         // Generate component parts using VueFormBuilder.
         $model = $this->option('model');
@@ -100,5 +105,54 @@ class MakeInertiaPageCommand extends InertiaViewBuilderCommand
         })->toArray();
 
         return str_replace(array_keys($replace), array_values($replace), $stub);
+    }
+
+    /**
+     * Perform actions after the user was prompted for missing arguments.
+     */
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        if (!$input->getOption('model')) {
+            $vendorName = text('Vendor name:');
+            $input->setOption('vendor', $vendorName);
+        }
+
+        if (!$input->getOption('route')) {
+            $keywords = text('Package keywords (comma-separated):');
+            $input->setOption('keywords', $keywords);
+        }
+
+        if (!$input->getOption('fields')) {
+            $fields[] = $this->askForFields($input, $output);
+
+            // Set the joined fields as a single option value
+            $input->setOption('fields', join(';', $fields));
+        }
+
+    }
+
+    protected function askForFields(InputInterface $input, OutputInterface $output): string
+    {
+        $fieldTypes = ['string', 'integer', 'bigint', 'boolean', 'date', 'datetime', 'text', 'float', 'decimal', 'enum'];
+
+        $name = text('Enter field name (or leave empty to finish):');
+
+        $type = select('Select field type:', $fieldTypes);
+
+        // Optionally, ask for additional attributes like nullable or default values
+        $attributes = [];
+
+        // Example: Asking for nullable attribute
+        $isNullable = confirm('Is this field nullable?');
+        if ($isNullable) {
+            $attributes[] = 'nullable';
+        }
+
+        // Concatenate attributes if there are any
+        $attributesString = $attributes ? ':' . implode(':', $attributes) : '';
+
+        // Append the new field to the fields array with its type and any attributes
+        return "{$name}:{$type}{$attributesString}";
+
     }
 }

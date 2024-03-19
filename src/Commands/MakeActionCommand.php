@@ -5,8 +5,13 @@ namespace Laltu\LaravelMaker\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use InvalidArgumentException;
+use Symfony\Component\Console\Output\OutputInterface;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:action')]
 class MakeActionCommand extends GeneratorCommand
@@ -156,5 +161,52 @@ class MakeActionCommand extends GeneratorCommand
         }
 
         return implode(PHP_EOL, $methods);
+    }
+
+    /**
+     * Perform actions after the user was prompted for missing arguments.
+     */
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        if (!$input->getOption('vendor')) {
+            $vendorName = text('Vendor name:');
+            $input->setOption('vendor', $vendorName);
+        }
+
+        if (!$input->getOption('keywords')) {
+            $keywords = text('Package keywords (comma-separated):');
+            $input->setOption('keywords', $keywords);
+        }
+
+        if (!$input->getOption('php-version')) {
+            $phpVersion = select(
+                label: 'Required PHP version for the package:',
+                options: ['php-8.1' => 'PHP 8.1','php-8.2' => 'PHP 8.2','php-8.3' => 'PHP 8.3'],
+                default: '',
+                hint: ''
+            );
+            $input->setOption('php-version', $phpVersion);
+        }
+
+        if (!$input->getOption('external-package')) {
+            $externalPackages = collect(multiselect(
+                label: 'Would you like any of the following?',
+                options: [
+                    'all' => 'All',
+                    'seed' => 'Database Seeder',
+                    'factory' => 'Factory',
+                    'requests' => 'Form Requests',
+                    'migration' => 'Migration',
+                    'policy' => 'Policy',
+                    'resource' => 'Resource Controller',
+                    'service' => 'Resource Service',
+                    'action' => 'Resource Action',
+                ],
+                default: ['all'],
+                hint: 'Permissions may be updated at any time.'
+            ));
+
+            $input->setOption('external-package', $externalPackages);
+        }
     }
 }

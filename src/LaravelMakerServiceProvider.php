@@ -2,7 +2,7 @@
 
 namespace Laltu\LaravelMaker;
 
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
@@ -46,8 +46,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-maker');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-maker');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
-        $this->registerDatabase();
 
         $this->registerAuthorization();
         $this->registerRoutes();
@@ -94,13 +92,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
     {
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/laravel-maker.php', 'laravel-maker');
-
-        $this->app->bind(MakeMigrationCommand::class, function ($app) {
-            return new MakeMigrationCommand(
-                $app['migration.creator'],
-                $app['composer'],
-            );
-        });
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-maker', function () {
@@ -199,30 +190,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
     private function registerComponent(string $alias, string $class): void
     {
         Livewire::component($alias, $class);
-    }
-
-
-    protected function registerDatabase(): void
-    {
-        $sqlitePath = database_path('laravel_maker.sqlite');
-
-        if (!file_exists($sqlitePath)) {
-            try {
-                touch($sqlitePath); // Creates the file if it doesn't exist.
-            } catch (\Exception $e) {
-                // Handle exception if the database file could not be created
-                logger()->error("Unable to create SQLite database for Laravel Maker: " . $e->getMessage());
-            }
-        }
-
-        // Ensure the configuration is only set if the file exists or was successfully created
-        if (file_exists($sqlitePath)) {
-            config()->set('database.connections.laravel_maker', [
-                'driver' => 'sqlite',
-                'database' => $sqlitePath,
-                'prefix' => '',
-            ]);
-        }
     }
 
 }

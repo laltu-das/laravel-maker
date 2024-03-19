@@ -5,7 +5,13 @@ namespace Laltu\LaravelMaker\Commands;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 class MakeModelCommand extends ModelMakeCommand
 {
@@ -170,7 +176,7 @@ class MakeModelCommand extends ModelMakeCommand
      */
     protected function resolveStubPath($stub): string
     {
-        return file_exists($customPath = dirname(__FILE__, 3).$stub) ? $customPath : __DIR__ . $stub;
+        return file_exists($customPath = dirname(__FILE__, 3) . $stub) ? $customPath : __DIR__ . $stub;
     }
 
     /**
@@ -303,6 +309,101 @@ class MakeModelCommand extends ModelMakeCommand
     protected function getMethodStub(): string
     {
         return $this->resolveStubPath('/stubs/model.method.stub');
+    }
+
+    /**
+     * Interact further with the user if they were prompted for missing arguments.
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     */
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        if ($this->isReservedName($this->getNameInput()) || $this->didReceiveOptions($input)) {
+            return;
+        }
+
+        // Additional prompts for other options like seeds, factories, etc., can continue here
+        collect(multiselect(
+            label: 'Would you like any of the following?',
+            options: [
+                'all' => 'All',
+                'seed' => 'Database Seeder',
+                'factory' => 'Factory',
+                'requests' => 'Form Requests',
+                'migration' => 'Migration',
+                'policy' => 'Policy',
+                'resource' => 'Resource Controller',
+                'service' => 'Resource Service',
+                'action' => 'Resource Action',
+            ],
+            default: ['all'],
+            hint: 'Permissions may be updated at any time.'
+        ))->each(fn($option) => $input->setOption($option, true));
+
+        $fields = [];
+        $relations = [];
+
+        $option = select('Would you like any of the following?', [
+            'field' => 'Field',
+            'relationship' => 'Relationship',
+            'no' => 'No',
+        ]);
+
+        if ($option == 'field') {
+            $fields[] = $this->askForFields($input, $output);
+
+            // Set the joined fields as a single option value
+            $input->setOption('fields', join(';', $fields));
+        }
+
+        if ($option == 'relationship') {
+            $relations[] = $this->askForRelations($input, $output);
+            // Set the joined relations as a single option value
+            $input->setOption('relations', join(';', $relations));
+        }
+    }
+
+    protected function askForFields(InputInterface $input, OutputInterface $output): string
+    {
+        $fieldTypes = ['string', 'integer', 'bigint', 'boolean', 'date', 'datetime', 'text', 'float', 'decimal', 'enum'];
+
+        $name = text('Enter field name (or leave empty to finish):');
+
+        $type = select('Select field type:', $fieldTypes);
+
+        // Optionally, ask for additional attributes like nullable or default values
+        $attributes = [];
+
+        // Example: Asking for nullable attribute
+        $isNullable = confirm('Is this field nullable?');
+        if ($isNullable) {
+            $attributes[] = 'nullable';
+        }
+
+        // Concatenate attributes if there are any
+        $attributesString = $attributes ? ':' . implode(':', $attributes) : '';
+
+        // Append the new field to the fields array with its type and any attributes
+        return "{$name}:{$type}{$attributesString}";
+
+    }
+
+    protected function askForRelations(InputInterface $input, OutputInterface $output): string
+    {
+        // Asking for relations
+        $relationTypes = ['hasOne', 'hasMany', 'belongsTo', 'belongsToMany', 'morphTo', 'morphMany', 'morphToMany'];
+
+        // Assume we keep asking for relations until the user decides to stop
+
+        $name = text('Enter relation name (or leave empty to finish):');
+
+        $type = select('Select relation type:', $relationTypes);
+        $relatedModel = text('Enter related model (e.g., App\Models\User):');
+
+        // Append the new relation to the relations array
+        return "{$name}:{$type}:{$relatedModel}";
     }
 
 }

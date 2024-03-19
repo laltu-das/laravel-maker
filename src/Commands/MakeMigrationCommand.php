@@ -3,44 +3,25 @@
 namespace Laltu\LaravelMaker\Commands;
 
 use Exception;
+use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
-use Illuminate\Database\Migrations\MigrationCreator;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Composer;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
-class MakeMigrationCommand extends MigrateMakeCommand
+class MakeMigrationCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:migration';
-
-//    /**
-//     * The name and signature of the console command.
-//     *
-//     * @var string
-//     */
-//    protected $signature = 'make:migration {name : The name of the migration}
-//        {--create= : The table to be created}
-//        {--table= : The table to migrate}
-//        {--path= : The location where the migration file should be created}
-//        {--realpath : Indicate any provided migration file paths are pre-resolved absolute paths}
-//        {--fullpath : Output the full path of the migration (Deprecated)}
-//        {--fields= : The fields for the model (colon-separated; ex: --fields="name:string:nullable; email:string; phone:string:nullable")}
-//        {--relations= : The relations fields for the model (colon-separated; ex: --relations="name:users;type:hasOne;params:users|user_id|id,name:products;type:hasMany;params:products|user_id|id}';
-//
-
-    protected Filesystem $files;
-
-    public function __construct(MigrationCreator $creator, Composer $composer)
-    {
-        parent::__construct($creator, $composer);
-    }
-
+    protected $name = 'make:migration';
 
     /**
      * Execute the console command.
@@ -48,7 +29,6 @@ class MakeMigrationCommand extends MigrateMakeCommand
      */
     public function handle(): void
     {
-//        parent::handle();
         $name = Str::snake(trim($this->input->getArgument('name')));
 
         $table = $this->input->getOption('table');
@@ -59,6 +39,30 @@ class MakeMigrationCommand extends MigrateMakeCommand
         $relations = $this->option('relations');
 
         $this->writeMigrationWithFields($name, $table, $create, $fields, $relations);
+    }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments(): array
+    {
+        return [
+            ['name', InputArgument::REQUIRED, 'The name of the migration.'],
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            ['create', null, InputOption::VALUE_REQUIRED, 'The table to be created.'],
+            ['table', null, InputOption::VALUE_REQUIRED, 'The table to migrate.'],
+            ['path', null, InputOption::VALUE_REQUIRED, 'The location where the migration file should be created.'],
+            ['realpath', null, InputOption::VALUE_NONE, 'Indicate any provided migration file paths are pre-resolved absolute paths.'],
+            ['fields', null, InputOption::VALUE_REQUIRED, 'The fields for the model (colon-separated; ex: --fields="name:string:nullable; email:string; phone:string:nullable").'],
+            ['relations', null, InputOption::VALUE_REQUIRED, 'The relations fields for the model (colon-separated; ex: --relations="users:hasOne:users|user_id|id,products:hasMany:products|user_id|id").'],
+        ];
     }
 
     /**
@@ -187,5 +191,82 @@ class MakeMigrationCommand extends MigrateMakeCommand
     {
         return str_replace('{{ table }}', $table, $stub);
     }
+
+    /**
+     * Perform actions after the user was prompted for missing arguments.
+     */
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        $input->setOption('queue', confirm(
+            label: 'Would you like to queue the mail?',
+            default: $this->option('queue')
+        ));
+
+        $fields = [];
+        $relations = [];
+
+        $option = select('Would you like any of the following?', [
+            'field' => 'Field',
+            'relationship' => 'Relationship',
+            'no' => 'No',
+        ]);
+
+        if ($option == 'field') {
+            $fields[] = $this->askForFields($input, $output);
+
+            // Set the joined fields as a single option value
+            $input->setOption('fields', join(';', $fields));
+        }
+
+        if ($option == 'relationship') {
+            $relations[] = $this->askForRelations($input, $output);
+            // Set the joined relations as a single option value
+            $input->setOption('relations', join(';', $relations));
+        }
+    }
+
+    protected function askForFields(InputInterface $input, OutputInterface $output): string
+    {
+        $fieldTypes = ['string', 'integer', 'bigint', 'boolean', 'date', 'datetime', 'text', 'float', 'decimal', 'enum'];
+
+        $name = text('Enter field name (or leave empty to finish):');
+
+        $type = select('Select field type:', $fieldTypes);
+
+        // Optionally, ask for additional attributes like nullable or default values
+        $attributes = [];
+
+        // Example: Asking for nullable attribute
+        $isNullable = confirm('Is this field nullable?');
+        if ($isNullable) {
+            $attributes[] = 'nullable';
+        }
+
+        // Concatenate attributes if there are any
+        $attributesString = $attributes ? ':' . implode(':', $attributes) : '';
+
+        // Append the new field to the fields array with its type and any attributes
+        return "{$name}:{$type}{$attributesString}";
+
+    }
+
+    protected function askForRelations(InputInterface $input, OutputInterface $output): string
+    {
+        // Asking for relations
+        $relationTypes = ['hasOne', 'hasMany', 'belongsTo', 'belongsToMany', 'morphTo', 'morphMany', 'morphToMany'];
+
+        // Assume we keep asking for relations until the user decides to stop
+
+        $name = text('Enter relation name (or leave empty to finish):');
+
+        $type = select('Select relation type:', $relationTypes);
+        $relatedModel = text('Enter related model (e.g., App\Models\User):');
+
+        // Append the new relation to the relations array
+        return "{$name}:{$type}:{$relatedModel}";
+    }
+
+
+
 
 }

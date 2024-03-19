@@ -2,14 +2,19 @@
 
 namespace Laltu\LaravelMaker\Commands;
 
+use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
-use Laltu\LaravelMaker\Commands\Core\InertiaViewBuilderCommand;
 use Laltu\LaravelMaker\Support\VueTableBuilder;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:inertia-view', description: 'Create a new inertia page view')]
-class MakeInertiaViewCommand extends InertiaViewBuilderCommand
+class MakeInertiaViewCommand extends GeneratorCommand
 {
     /**
      * The console command name.
@@ -30,7 +35,7 @@ class MakeInertiaViewCommand extends InertiaViewBuilderCommand
      *
      * @var string
      */
-    protected string $type = 'Inertia view';
+    protected $type = 'Inertia view';
 
 
     /**
@@ -73,7 +78,7 @@ class MakeInertiaViewCommand extends InertiaViewBuilderCommand
     }
 
 
-    protected function replaceClass(string $stub, string $name): string
+    protected function replaceClass($stub, $name): string
     {
         // Generate component parts using VueFormBuilder.
         $model = $this->option('model');
@@ -101,5 +106,52 @@ class MakeInertiaViewCommand extends InertiaViewBuilderCommand
         })->toArray();
 
         return str_replace(array_keys($replace), array_values($replace), $stub);
+    }
+
+    /**
+     * Perform actions after the user was prompted for missing arguments.
+     */
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        if (!$input->getOption('vendor')) {
+            $vendorName = text('Vendor name:');
+            $input->setOption('vendor', $vendorName);
+        }
+
+        if (!$input->getOption('keywords')) {
+            $keywords = text('Package keywords (comma-separated):');
+            $input->setOption('keywords', $keywords);
+        }
+
+        if (!$input->getOption('php-version')) {
+            $phpVersion = select(
+                label: 'Required PHP version for the package:',
+                options: ['php-8.1' => 'PHP 8.1','php-8.2' => 'PHP 8.2','php-8.3' => 'PHP 8.3'],
+                default: '',
+                hint: ''
+            );
+            $input->setOption('php-version', $phpVersion);
+        }
+
+        if (!$input->getOption('external-package')) {
+            $externalPackages = collect(multiselect(
+                label: 'Would you like any of the following?',
+                options: [
+                    'all' => 'All',
+                    'seed' => 'Database Seeder',
+                    'factory' => 'Factory',
+                    'requests' => 'Form Requests',
+                    'migration' => 'Migration',
+                    'policy' => 'Policy',
+                    'resource' => 'Resource Controller',
+                    'service' => 'Resource Service',
+                    'action' => 'Resource Action',
+                ],
+                default: ['all'],
+                hint: 'Permissions may be updated at any time.'
+            ));
+
+            $input->setOption('external-package', $externalPackages);
+        }
     }
 }

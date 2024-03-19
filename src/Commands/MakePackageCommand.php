@@ -10,37 +10,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 #[AsCommand('make:package', 'Create a new Laravel package')]
 class MakePackageCommand extends Command implements PromptsForMissingInput
 {
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments(): array
-    {
-        return [
-            ['name', InputArgument::REQUIRED, 'The package name.'],
-        ];
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions(): array
-    {
-        return [
-            ['vendor', null, InputOption::VALUE_REQUIRED, 'Vendor name'],
-            ['keywords', null, InputOption::VALUE_REQUIRED, 'Package keywords (comma-separated)'],
-            ['php-version', null, InputOption::VALUE_REQUIRED, 'Required PHP version for the package'],
-            ['external-package', null, InputOption::VALUE_NONE, 'Include external packages in composer.json'],
-        ];
-    }
-
     public function handle(): void
     {
         $packageName = $this->argument('name');
@@ -153,7 +129,6 @@ class MakePackageCommand extends Command implements PromptsForMissingInput
         $this->info("Created composer.json with provided structure.");
     }
 
-
     protected function createGitHubWorkflows($basePath): void
     {
         $workflowContent = "name: CI\n\non: [push]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n\n    steps:\n    - uses: actions/checkout@v2\n    - name: Run Tests\n      run: vendor/bin/phpunit";
@@ -193,7 +168,6 @@ class MakePackageCommand extends Command implements PromptsForMissingInput
         $this->info("Created {$type}: " . basename($filePath));
     }
 
-
     /**
      * Resolve the fully qualified path to the stub.
      *
@@ -202,24 +176,80 @@ class MakePackageCommand extends Command implements PromptsForMissingInput
      */
     protected function resolveStubPath(string $stub): string
     {
-        return file_exists($customPath = dirname(__FILE__, 3).$stub) ? $customPath : __DIR__ . $stub;
+        return file_exists($customPath = dirname(__FILE__, 3) . $stub) ? $customPath : __DIR__ . $stub;
     }
 
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments(): array
+    {
+        return [
+            ['name', InputArgument::REQUIRED, 'The package name.'],
+        ];
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions(): array
+    {
+        return [
+            ['vendor', null, InputOption::VALUE_REQUIRED, 'Vendor name'],
+            ['keywords', null, InputOption::VALUE_REQUIRED, 'Package keywords (comma-separated)'],
+            ['php-version', null, InputOption::VALUE_REQUIRED, 'Required PHP version for the package'],
+            ['external-package', null, InputOption::VALUE_NONE, 'Include external packages in composer.json'],
+        ];
+    }
+
+    /**
+     * Perform actions after the user was prompted for missing arguments.
+     */
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
         if (!$input->getOption('vendor')) {
-            $vendorName = $this->ask('Vendor name:');
+            $vendorName = text('Vendor name:');
             $input->setOption('vendor', $vendorName);
         }
 
         if (!$input->getOption('keywords')) {
-            $keywords = $this->ask('Package keywords (comma-separated):');
+            $keywords = text('Package keywords (comma-separated):');
             $input->setOption('keywords', $keywords);
         }
 
         if (!$input->getOption('php-version')) {
-            $phpVersion = $this->ask('Required PHP version for the package:');
+            $phpVersion = select(
+                label: 'Required PHP version for the package:',
+                options: ['php-8.1' => 'PHP 8.1','php-8.2' => 'PHP 8.2','php-8.3' => 'PHP 8.3'],
+                default: '',
+                hint: ''
+            );
             $input->setOption('php-version', $phpVersion);
+        }
+
+        if (!$input->getOption('external-package')) {
+            $externalPackages = collect(multiselect(
+                label: 'Would you like any of the following?',
+                options: [
+                    'all' => 'All',
+                    'seed' => 'Database Seeder',
+                    'factory' => 'Factory',
+                    'requests' => 'Form Requests',
+                    'migration' => 'Migration',
+                    'policy' => 'Policy',
+                    'resource' => 'Resource Controller',
+                    'service' => 'Resource Service',
+                    'action' => 'Resource Action',
+                ],
+                default: ['all'],
+                hint: 'Permissions may be updated at any time.'
+            ));
+
+            $input->setOption('external-package', $externalPackages);
         }
     }
 
