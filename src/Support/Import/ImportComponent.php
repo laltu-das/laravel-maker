@@ -1,6 +1,6 @@
 <?php
 
-namespace Laltu\LaravelMaker\Html\Import;
+namespace Laltu\LaravelMaker\Support\Import;
 
 class ImportComponent
 {

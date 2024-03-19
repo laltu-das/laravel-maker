@@ -1,6 +1,6 @@
 <?php
 
-namespace Laltu\LaravelMaker\Html\Fields;
+namespace Laltu\LaravelMaker\Support\Fields;
 
 class TextField extends FieldGenerator
 {
