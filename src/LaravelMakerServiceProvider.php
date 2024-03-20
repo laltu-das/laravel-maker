@@ -2,7 +2,6 @@
 
 namespace Laltu\LaravelMaker;
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
@@ -16,8 +15,6 @@ use Laltu\LaravelMaker\Commands\MakeMigrationCommand;
 use Laltu\LaravelMaker\Commands\MakeModelCommand;
 use Laltu\LaravelMaker\Commands\MakeResourceCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
-use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Contracts\Foundation\Application;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Livewire\ModuleApiBuilder;
 use Laltu\LaravelMaker\Livewire\ModuleForm;
@@ -47,7 +44,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-maker');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
-        $this->registerAuthorization();
         $this->registerRoutes();
         $this->registerResources();
         $this->registerLivewireComponents();
@@ -63,24 +59,24 @@ class LaravelMakerServiceProvider extends ServiceProvider
                 __DIR__.'/../dist' => public_path('vendor/laravel-maker'),
             ], ['assets', 'laravel-assets']);
 
+            // Registering package commands.
+            $this->commands([
+                MakeServiceCommand::class,
+                MakeActionCommand::class,
+                MakeControllerCommand::class,
+                \Laltu\LaravelMaker\Commands\MakeMigrationCommand::class,
+                MakeModelCommand::class,
+                MakeResourceCommand::class,
+                MakeFactoryCommand::class,
+
+                MakeInertiaViewCommand::class,
+                MakeInertiaPageCommand::class,
+                MakeInertiaFormCommand::class,
+                MakeInertiaTableCommand::class,
+
+                MakePackageCommand::class,
+            ]);
         }
-
-        // Registering package commands.
-        $this->commands([
-            MakeServiceCommand::class,
-            MakeActionCommand::class,
-            MakeControllerCommand::class,
-            MakeModelCommand::class,
-            MakeMigrationCommand::class,
-            MakeResourceCommand::class,
-            MakeFactoryCommand::class,
-
-            MakeInertiaViewCommand::class,
-            MakeInertiaPageCommand::class,
-            MakeInertiaFormCommand::class,
-            MakeInertiaTableCommand::class,
-            MakePackageCommand::class,
-        ]);
     }
 
     /**
@@ -96,18 +92,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
         // Register the main class to use with the facade
         $this->app->singleton('laravel-maker', function () {
             return new \Laltu\LaravelMaker\Facades\LaravelMaker();
-        });
-    }
-
-    /**
-     * Register the authorization permissions.
-     *
-     * @return void
-     */
-    protected function registerAuthorization(): void
-    {
-        $this->callAfterResolving(Gate::class, function (Gate $gate, Application $app) {
-            $gate->define('viewPulse', fn ($user = null) => $app->environment('local'));
         });
     }
 

@@ -3,13 +3,14 @@
 namespace Laltu\LaravelMaker\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Laltu\LaravelMaker\Support\VueTableBuilder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use function Laravel\Prompts\multiselect;
+use Symfony\Component\Finder\Finder;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
@@ -46,7 +47,7 @@ class MakeInertiaTableCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        $framework = $this->getFrameworkInput();
+        $framework = $this->option('stack');
 
         return $this->resolveStubPath("/stubs/inertia/$framework/table-template.stub");
     }
@@ -59,7 +60,22 @@ class MakeInertiaTableCommand extends GeneratorCommand
      */
     protected function resolveStubPath(string $stub): string
     {
-        return file_exists($customPath = dirname(__FILE__, 3).$stub) ? $customPath : __DIR__ . $stub;
+        return file_exists($customPath = dirname(__FILE__, 3) . $stub) ? $customPath : __DIR__ . $stub;
+    }
+
+    /**
+     * Get the destination class path.
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function getPath($name): string
+    {
+        $framework = $this->option('stack');
+
+        $extension = $framework == 'vue' ? '.vue' : '.js';
+
+        return $this->laravel['path.resources'] . '/js/Pages/' . str_replace('\\', '/', $name) . $extension;
     }
 
     /**
@@ -70,11 +86,13 @@ class MakeInertiaTableCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         // Merge the parent options with the additional options
-        return array_merge(parent::getOptions(), [
+        return [
+            ['stack', 's', InputOption::VALUE_REQUIRED, 'The framework associated with the view.'],
             ['model', 'm', InputOption::VALUE_OPTIONAL, 'The model associated with the view.'],
             ['route', 'r', InputOption::VALUE_OPTIONAL, 'The route name associated with the view.'],
-            ['fields', 'f', InputOption::VALUE_OPTIONAL, 'Additional fields for the view in format: "name:name,type:text,default:null,col:12; name:email,type:email,col:6; name:city,type:select,col:6,options:blue|yellow|green|red|white"'],
-        ]);
+            ['fields', null, InputOption::VALUE_OPTIONAL, 'Additional fields for the view in format: "name:name,type:text,default:null,col:12; name:email,type:email,col:6; name:city,type:select,col:6,options:blue|yellow|green|red|white"'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the controller already exists'],
+        ];
     }
 
 
@@ -113,45 +131,93 @@ class MakeInertiaTableCommand extends GeneratorCommand
      */
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
-        if (!$input->getOption('vendor')) {
-            $vendorName = text('Vendor name:');
-            $input->setOption('vendor', $vendorName);
+        $fields = [];
+
+        if (!$input->getOption('stack')) {
+            $vendorName = select('Framework name:', [
+                'vue' => 'Vue Js',
+                'react' => 'React Js',
+            ], 'vue');
+            $input->setOption('stack', $vendorName);
         }
 
-        if (!$input->getOption('keywords')) {
-            $keywords = text('Package keywords (comma-separated):');
-            $input->setOption('keywords', $keywords);
+        if (!$input->getOption('model')) {
+            $models = $this->getAllModels();
+
+            $vendorName = select('Model name:', $models);
+            $input->setOption('model', $vendorName);
         }
 
-        if (!$input->getOption('php-version')) {
-            $phpVersion = select(
-                label: 'Required PHP version for the package:',
-                options: ['php-8.1' => 'PHP 8.1','php-8.2' => 'PHP 8.2','php-8.3' => 'PHP 8.3'],
-                default: '',
-                hint: ''
-            );
-            $input->setOption('php-version', $phpVersion);
+        if (!$input->getOption('route')) {
+            $routes = $this->getAllRoutes();
+
+            $keywords = select('Route name:', $routes);
+            $input->setOption('route', $keywords);
         }
 
-        if (!$input->getOption('external-package')) {
-            $externalPackages = collect(multiselect(
-                label: 'Would you like any of the following?',
-                options: [
-                    'all' => 'All',
-                    'seed' => 'Database Seeder',
-                    'factory' => 'Factory',
-                    'requests' => 'Form Requests',
-                    'migration' => 'Migration',
-                    'policy' => 'Policy',
-                    'resource' => 'Resource Controller',
-                    'service' => 'Resource Service',
-                    'action' => 'Resource Action',
-                ],
-                default: ['all'],
-                hint: 'Permissions may be updated at any time.'
-            ));
+        if (!$input->getOption('fields')) {
+            $fields[] = $this->askForFields();
 
-            $input->setOption('external-package', $externalPackages);
+            // Set the joined fields as a single option value
+            $input->setOption('fields', join(';', $fields));
         }
+
+
+        // Loop until the user chooses not to add more fields.
+        while (true) {
+            // Ask for more fields.
+            if ($this->confirmFieldAddition() === 'yes') {
+                $fieldDetails = $this->askForFields();
+                $fields[] = $fieldDetails; // Add the details to the fields array.
+            } else {
+                break; // Exit the loop if the user chooses "no".
+            }
+        }
+    }
+
+    protected function getAllModels(): array
+    {
+        $models = [];
+        $finder = new Finder();
+        $finder->files()->in(app_path('Models'))->name('*.php');
+
+        foreach ($finder as $file) {
+            $className = str_replace(['/', '.php'], ['\\', ''], $file->getRelativePathname());
+            $models[] = 'App\\Models\\' . Str::replaceLast('.php', '', $className);
+        }
+
+        return $models;
+    }
+
+    protected function getAllRoutes(): array
+    {
+        return collect(Route::getRoutes())->map->getName()->filter()->sort()->toArray();
+    }
+
+    protected function askForFields(): string
+    {
+        $htmlInputTypes = [
+            'text', 'number', 'date', 'datetime-local', 'email', 'password', 'checkbox', 'radio', 'file',
+            'hidden', 'image', 'month', 'range', 'search', 'tel', 'time', 'url', 'color', 'button', 'submit', 'reset',
+        ];
+
+        $cols = array_map(function ($i) {
+            return "col-$i";
+        }, range(1, 12));
+
+        $name = text('Enter field name (or leave empty to finish):');
+        $type = select('Select field type:', $htmlInputTypes);
+        $default = text('Field default value:');
+        $col = select('Select field column:', $cols);
+
+        return "name:$name,type:$type,default:$default,col:$col;";
+    }
+
+    protected function confirmFieldAddition(): int|string
+    {
+        return select('Would you like to add more fields?', [
+            'yes' => 'Yes',
+            'no' => 'No',
+        ], 'yes');
     }
 }

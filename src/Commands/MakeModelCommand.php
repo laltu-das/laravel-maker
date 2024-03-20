@@ -99,7 +99,7 @@ class MakeModelCommand extends ModelMakeCommand
             $table = Str::singular($table);
         }
 
-        $this->call('make:migration', [
+        $this->call('make:schema', [
             'name' => "create_{$table}_table",
             '--create' => $table,
             '--table' => $table,
@@ -246,18 +246,11 @@ class MakeModelCommand extends ModelMakeCommand
      */
     protected function getLaravelCastType(string $fieldType): string
     {
-        switch ($fieldType) {
-            case 'integer':
-            case 'bigint':
-                return 'integer';
-            case 'decimal':
-            case 'float':
-            case 'double':
-                return 'float';
-            // Add other cases as needed
-            default:
-                return 'string';
-        }
+        return match ($fieldType) {
+            'integer', 'bigint' => 'integer',
+            'decimal', 'float', 'double' => 'float',
+            default => 'string',
+        };
     }
 
     /**
@@ -338,34 +331,68 @@ class MakeModelCommand extends ModelMakeCommand
                 'service' => 'Resource Service',
                 'action' => 'Resource Action',
             ],
-            default: ['all'],
-            hint: 'Permissions may be updated at any time.'
         ))->each(fn($option) => $input->setOption($option, true));
+
+
+        $option = select('Would you like any of the following?', [
+            'fields' => 'Field',
+            'relations' => 'Relationship',
+        ]);
 
         $fields = [];
         $relations = [];
 
-        $option = select('Would you like any of the following?', [
-            'field' => 'Field',
-            'relationship' => 'Relationship',
-            'no' => 'No',
-        ]);
 
-        if ($option == 'field') {
-            $fields[] = $this->askForFields($input, $output);
-
+        if ($option == 'fields' && !$input->getOption('fields')) {
+            $fields[] = $this->askForFields();
             // Set the joined fields as a single option value
             $input->setOption('fields', join(';', $fields));
         }
 
-        if ($option == 'relationship') {
-            $relations[] = $this->askForRelations($input, $output);
+        if ($option == 'relations' && !$input->getOption('relations')) {
+            $relations[] = $this->askForRelations();
             // Set the joined relations as a single option value
             $input->setOption('relations', join(';', $relations));
         }
+
+        // Loop until the user chooses not to add more fields.
+        while (true) {
+            // Ask for more fields.
+            if ($this->confirmFieldAddition() === 'yes') {
+
+                $option = select('Would you like any of the following?', [
+                    'fields' => 'Field',
+                    'relations' => 'Relationship',
+                    'no' => 'No',
+                ]);
+
+                if ($option == 'fields') {
+                    $fields[] = $this->askForFields($input, $output);
+                    // Set the joined fields as a single option value
+                    $input->setOption('fields', join(';', $fields));
+                }
+
+                if ($option == 'relations') {
+                    $relations[] = $this->askForRelations($input, $output);
+                    // Set the joined relations as a single option value
+                    $input->setOption('relations', join(';', $relations));
+                }
+            } else {
+                break; // Exit the loop if the user chooses "no".
+            }
+        }
     }
 
-    protected function askForFields(InputInterface $input, OutputInterface $output): string
+
+    protected function confirmFieldAddition(): int|string
+    {
+        return select('Would you like to add more fields?', [
+            'yes' => 'Yes',
+            'no' => 'No',
+        ], 'yes');
+    }
+
+    protected function askForFields(): string
     {
         $fieldTypes = ['string', 'integer', 'bigint', 'boolean', 'date', 'datetime', 'text', 'float', 'decimal', 'enum'];
 
@@ -390,7 +417,7 @@ class MakeModelCommand extends ModelMakeCommand
 
     }
 
-    protected function askForRelations(InputInterface $input, OutputInterface $output): string
+    protected function askForRelations(): string
     {
         // Asking for relations
         $relationTypes = ['hasOne', 'hasMany', 'belongsTo', 'belongsToMany', 'morphTo', 'morphMany', 'morphToMany'];

@@ -38,33 +38,6 @@ class MakeInertiaFormCommand extends GeneratorCommand
      */
     protected $type = 'Resource View File create';
 
-    public function handle()
-    {
-        $this->info('Starting to create an Inertia form...');
-
-        // Initialize fields array to collect field details from the user.
-        $fields = [];
-
-        // Loop until the user chooses not to add more fields.
-        while (true) {
-            // Ask for more fields.
-            if ($this->confirmFieldAddition() === 'yes') {
-                $fieldDetails = $this->askForFields();
-                $fields[] = $fieldDetails; // Add the details to the fields array.
-            } else {
-                break; // Exit the loop if the user chooses "no".
-            }
-        }
-
-        // If fields are added, set the 'fields' option.
-        if (!empty($fields)) {
-            $this->input->setOption('fields', implode(';', $fields));
-        }
-
-        // Continue with the rest of the command's handle logic.
-        parent::handle();
-    }
-
 
     /**
      * Retrieves the path to the stub file for creating a form template using the Inertia framework.
@@ -116,6 +89,7 @@ class MakeInertiaFormCommand extends GeneratorCommand
             ['model', 'm', InputOption::VALUE_OPTIONAL, 'The model associated with the view.'],
             ['route', 'r', InputOption::VALUE_OPTIONAL, 'The route name associated with the view.'],
             ['fields', null, InputOption::VALUE_OPTIONAL, 'Additional fields for the view in format: "name:name,type:text,default:null,col:12; name:email,type:email,col:6; name:city,type:select,col:6,options:blue|yellow|green|red|white"'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the controller already exists'],
         ];
     }
 
@@ -175,16 +149,6 @@ class MakeInertiaFormCommand extends GeneratorCommand
     {
         $fields = [];
 
-        while (true) {
-            // Ask for more fields.
-            if ($this->confirmFieldAddition() === 'yes') {
-                $fieldDetails = $this->askForFields();
-                $fields[] = $fieldDetails; // Add the details to the fields array.
-            } else {
-                break; // Exit the loop if the user chooses "no".
-            }
-        }
-
         if (!$input->getOption('stack')) {
             $vendorName = select('Framework name:', [
                 'vue' => 'Vue Js',
@@ -212,6 +176,19 @@ class MakeInertiaFormCommand extends GeneratorCommand
 
             // Set the joined fields as a single option value
             $input->setOption('fields', join(';', $fields));
+        }
+
+
+
+        // Loop until the user chooses not to add more fields.
+        while (true) {
+            // Ask for more fields.
+            if ($this->confirmFieldAddition() === 'yes') {
+                $fieldDetails = $this->askForFields();
+                $fields[] = $fieldDetails; // Add the details to the fields array.
+            } else {
+                break; // Exit the loop if the user chooses "no".
+            }
         }
     }
 
