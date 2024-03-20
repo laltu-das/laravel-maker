@@ -10,6 +10,7 @@ use Laltu\LaravelMaker\Livewire\ModuleFormBuilder;
 use Laltu\LaravelMaker\Livewire\ModuleList;
 use Laltu\LaravelMaker\Livewire\ModuleValidation;
 use Laltu\LaravelMaker\Livewire\SchemaForm;
+use Laltu\LaravelMaker\Livewire\SchemaImportFromSql;
 use Laltu\LaravelMaker\Livewire\SchemaList;
 use Laltu\LaravelMaker\Livewire\Setting;
 use Laltu\LaravelMaker\Livewire\Generator;
@@ -17,8 +18,9 @@ use Laltu\LaravelMaker\Livewire\Generator;
 Route::get('/', Dashboard::class)->name('dashboard');
 
 Route::get('/schema', SchemaList::class)->name('schema');
-Route::get('/schema/create', SchemaForm::class)->name('schema-create');
-Route::get('/schema/{schemaId}', SchemaForm::class)->name('schema-view');
+Route::get('/schema/import-sql', SchemaImportFromSql::class)->name('schema.import-sql');
+Route::get('/schema/create', SchemaForm::class)->name('schema.create');
+Route::get('/schema/{schemaId}', SchemaForm::class)->name('schema.view');
 
 Route::get('/setting', Setting::class)->name('setting');
 Route::get('/generator', Generator::class)->name('generator');

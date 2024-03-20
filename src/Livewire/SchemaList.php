@@ -12,25 +12,48 @@ class SchemaList extends Component
 
     public function render()
     {
-        $schemas = Schema::latest()->paginate();
+        $schemas = Schema::paginate();
 
         return view('laravel-maker::livewire.schema-list', compact('schemas'))->layout(AppLayout::class);
     }
 
 
-    public function makeModel($schemaName): void
+    public function makeModel(Schema $schema): void
     {
+        $fieldsString = collect($schema->fields)->map(function ($field) {
+            $parts = [
+                "name:{$field['fieldName']}",
+                "type:{$field['dataType']}",
+            ];
+
+            // Nullable
+            if ($field['nullable']) {
+                $parts[] = 'nullable:true';
+            }
+
+            // Relationships
+            if ($field['fieldType'] === 'relationship') {
+                $parts[] = "type:{$field['relationType']}";
+                $params = "params:{$field['foreignModel']}|{$field['foreignKey']}|{$field['localKey']}";
+                $parts[] = $params;
+            }
+
+            return implode(';', $parts);
+        })->implode(', ');
+
         $commandOptions = [
             'name' => $schema->modelName,
+            '--fields' => $fieldsString,
             '--force' => true
         ];
 
-        Artisan::call('generate:model', $commandOptions);
+        Artisan::call('make:model', $commandOptions);
 
         $this->js("alert('Schema saved!')");
     }
 
-    public function makeFactory($schemaName): void
+
+    public function makeFactory(Schema $schema): void
     {
         [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
 
@@ -53,7 +76,7 @@ class SchemaList extends Component
         $this->js("alert('Schema saved!')");
     }
 
-    public function makeSeeder($schemaName): void
+    public function makeSeeder(Schema $schema): void
     {
         [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
 
@@ -76,7 +99,7 @@ class SchemaList extends Component
         $this->js("alert('Schema saved!')");
     }
 
-    public function makeService($schemaName): void
+    public function makeService(Schema $schema): void
     {
         [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
 
@@ -99,7 +122,7 @@ class SchemaList extends Component
         $this->js("alert('Schema saved!')");
     }
 
-    public function makeResource($schemaName): void
+    public function makeResource(Schema $schema): void
     {
         [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
 
@@ -122,7 +145,7 @@ class SchemaList extends Component
         $this->js("alert('Schema saved!')");
     }
 
-    public function makeAll($schemaName): void
+    public function makeAll(Schema $schema): void
     {
         $schema = $this->getSchema($schemaName);
 
@@ -155,7 +178,7 @@ class SchemaList extends Component
         }
     }
 
-    public function makePolicy($schemaName): void
+    public function makePolicy(Schema $schema): void
     {
         $modelName = $schema->modelName;
         [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
@@ -179,7 +202,7 @@ class SchemaList extends Component
         $this->js("alert('Schema saved!')");
     }
 
-    private function prepareFieldsAndRelations($schemaName): array
+    private function prepareFieldsAndRelations(Schema $schema): array
     {
         return [
             $this->prepareFields($schema->fields),

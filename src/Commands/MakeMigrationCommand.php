@@ -5,6 +5,7 @@ namespace Laltu\LaravelMaker\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
+use Laltu\LaravelMaker\Support\FieldParser;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,17 +21,23 @@ class MakeMigrationCommand extends GeneratorCommand implements PromptsForMissing
 
     public function handle(): void
     {
+//        $fieldParser = new FieldParser();
+//        $fieldsString = "name:name;type:string;nullable:true, name:email;type:string, name:phone;type:string;nullable:true, name:users;type:hasOne;params:users|user_id|id, name:products;type:hasMany;params:products|user_id|id"; // Your example string
+//
+////        $fieldsArray = $fieldParser->parseFieldsToArray($fieldsString);
+//        $fieldsArray = $fieldParser->processFields($fieldsString);
+//        dd($fieldsArray);
+
         // Retrieving command arguments and options using getArgument and getOption methods
         $name = Str::snake(trim($this->argument('name')));
         $table = $this->option('table') ?: false;
         $create = $this->option('create') ?: false;
         $fields = $this->option('fields');
-        $relations = $this->option('relations');
 
         $stub = $this->files->get($this->getStub());
 
         // Replace placeholders in the stub
-        $stub = $this->replacePlaceholders($stub, $name, $table, $fields, $relations);
+        $stub = $this->replacePlaceholders($stub, $name, $table, $fields);
 
         // Determine the file path and name
         $fileName = date('Y_m_d_His') . '_' . $name . '.php';
@@ -40,35 +47,6 @@ class MakeMigrationCommand extends GeneratorCommand implements PromptsForMissing
         $this->files->put($filePath, $stub);
 
         $this->info("Migration {$fileName} created successfully.");
-    }
-
-    protected function getArguments(): array
-    {
-        return [
-            ['name', InputArgument::REQUIRED, 'The name of the migration'],
-        ];
-    }
-
-    protected function getOptions(): array
-    {
-        return [
-            ['create', null, InputOption::VALUE_OPTIONAL, 'The table to be created', null],
-            ['table', null, InputOption::VALUE_OPTIONAL, 'The table to migrate', null],
-            ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields for the model', null],
-            ['relations', null, InputOption::VALUE_OPTIONAL, 'The relations fields for the model', null],
-        ];
-    }
-
-    protected function replacePlaceholders($stub, $name, $table, $fields, $relations): string
-    {
-        // Replace the table placeholder
-        $stub = str_replace('{{ table }}', $table ?: 'your_table_name', $stub);
-
-        // Replace the fields placeholder
-        $stub = $this->replaceFields($stub, $fields);
-
-        // Replace the relations placeholder
-        return $this->replaceRelations($stub, $relations);
     }
 
     /**
@@ -96,73 +74,42 @@ class MakeMigrationCommand extends GeneratorCommand implements PromptsForMissing
         return file_exists($customPath = dirname(__FILE__, 3) . $stub) ? $customPath : __DIR__ . $stub;
     }
 
+    protected function replacePlaceholders($stub, $name, $table, $fields): string
+    {
+        // Replace the table placeholder
+        $stub = str_replace('{{ table }}', $table ?: 'your_table_name', $stub);
+
+        // Replace the fields placeholder
+        return $this->replaceFields($stub, $fields);
+    }
+
     protected function replaceFields($stub, $fields): array|string
     {
         if (!$fields) {
             return str_replace(['{{ fields }}', '{{ fields_area }}'], '', $stub);
         }
 
-        $fieldArray = array_map('trim', explode(';', $fields));
+        $fieldParser = new FieldParser();
 
-        $formattedFields = collect($fieldArray)->map(function ($field) {
-            return $this->processField($field);
-        })->implode("\n            ");
+        $formattedFields = $fieldParser->processFields($fields);
 
         return str_replace(['{{ fields }}', '{{ fields_area }}'], [$formattedFields, ''], $stub);
     }
 
-    protected function processField($fieldDefinition): string
+    protected function getArguments(): array
     {
-        $parts = explode(':', $fieldDefinition);
-        $fieldName = $parts[0];
-        $fieldType = $parts[1] ?? 'string';
-        $fieldOptions = $parts[2] ?? null;
-
-        $fieldLine = "\$table->$fieldType('$fieldName')";
-
-        if (Str::startsWith($fieldOptions, 'nullable')) {
-            $fieldLine .= "->{$fieldOptions}()";
-        }
-
-        if (Str::startsWith($fieldOptions, 'unique')) {
-            $fieldLine .= "->{$fieldOptions}()";
-        }
-
-        return $fieldLine . ';';
+        return [
+            ['name', InputArgument::REQUIRED, 'The name of the migration'],
+        ];
     }
 
-    protected function processRelationField($relations): string
+    protected function getOptions(): array
     {
-        // Split the relation string by commas and then find the part with "params:"
-        $parts = explode(',', $relations);
-        $paramsPart = collect($parts)->first(function ($part) {
-            return Str::startsWith($part, 'params:');
-        });
-
-        // Extract the params values
-        if ($paramsPart) {
-            $params = explode(':', $paramsPart)[1];
-            list($foreignTable, $foreignKey, $localKey) = explode('|', $params);
-
-            // Construct the foreign key line
-            return "\$table->foreignId('$foreignKey')->constrained('$foreignTable', '$localKey')->cascadeOnUpdate()->cascadeOnDelete();";
-        }
-
-        return '';
-    }
-
-    protected function replaceRelations($stub, $relations): array|string
-    {
-        // New logic for handling relations (foreign keys)
-        if ($relations) {
-            $relationFields = collect(explode(';', $relations))->map(function ($relation) {
-                return $this->processRelationField($relation);
-            })->implode("\n            ");
-
-            return str_replace('{{ relations }}', $relationFields, $stub);
-        } else {
-            return str_replace('{{ relations }}', '', $stub);
-        }
+        return [
+            ['create', null, InputOption::VALUE_OPTIONAL, 'The table to be created', null],
+            ['table', null, InputOption::VALUE_OPTIONAL, 'The table to migrate', null],
+            ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields for the model (colon-separated; ex: --fields="name:name;type:string;nullable:true; name:email;type:string; name:phone;type:string;nullable:true,name:users;type:hasOne;params:users|user_id|id,name:products;type:hasMany;params:products|user_id|id")'],
+        ];
     }
 
     protected function replaceTable($stub, $table): array|string
@@ -199,12 +146,6 @@ class MakeMigrationCommand extends GeneratorCommand implements PromptsForMissing
             $input->setOption('fields', join(';', $fields));
         }
 
-        if ($option == 'relations' && !$input->getOption('relations')) {
-            $relations[] = $this->askForRelations();
-            // Set the joined relations as a single option value
-            $input->setOption('relations', join(';', $relations));
-        }
-
         // Loop until the user chooses not to add more fields.
         while (true) {
             // Ask for more fields.
@@ -222,24 +163,10 @@ class MakeMigrationCommand extends GeneratorCommand implements PromptsForMissing
                     $input->setOption('fields', join(';', $fields));
                 }
 
-                if ($option == 'relations') {
-                    $relations[] = $this->askForRelations($input, $output);
-                    // Set the joined relations as a single option value
-                    $input->setOption('relations', join(';', $relations));
-                }
             } else {
                 break; // Exit the loop if the user chooses "no".
             }
         }
-    }
-
-
-    protected function confirmFieldAddition(): int|string
-    {
-        return select('Would you like to add more fields?', [
-            'yes' => 'Yes',
-            'no' => 'No',
-        ], 'yes');
     }
 
     protected function askForFields(): string
@@ -281,5 +208,13 @@ class MakeMigrationCommand extends GeneratorCommand implements PromptsForMissing
 
         // Append the new relation to the relations array
         return "{$name}:{$type}:{$relatedModel}";
+    }
+
+    protected function confirmFieldAddition(): int|string
+    {
+        return select('Would you like to add more fields?', [
+            'yes' => 'Yes',
+            'no' => 'No',
+        ], 'yes');
     }
 }

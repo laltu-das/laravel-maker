@@ -1,6 +1,7 @@
 <div class="mx-auto">
     <div class="flex gap-2">
-        <x-laravel-maker::link :href="route('schema-create')"> {{ __('Add Schema') }} </x-laravel-maker::link>
+        <x-laravel-maker::link :href="route('schema.create')"> {{ __('Add Schema') }} </x-laravel-maker::link>
+        <x-laravel-maker::link :href="route('schema.import-sql')"> {{ __('Import Sql Schema') }} </x-laravel-maker::link>
     </div>
     <div x-on:post-created="alert('New post: ' + $event.detail.title)"></div>
     <x-laravel-maker::card>
@@ -50,7 +51,7 @@
                                 <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="makeAll({{ $schema->id }})" wire:loading.class="animate-spin" />
                             </x-laravel-maker::td>
                             <x-laravel-maker::td class="flex justify-center">
-                                <x-laravel-maker::icon-link :href="route('schema-view',$schema->id)">
+                                <x-laravel-maker::icon-link :href="route('schema.view',$schema->id)">
                                     <x-laravel-maker::icons.cog/>
                                 </x-laravel-maker::icon-link>
                             </x-laravel-maker::td>

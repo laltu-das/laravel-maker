@@ -2,6 +2,7 @@
 
 namespace Laltu\LaravelMaker\Livewire;
 
+use Illuminate\Support\Str;
 use Laltu\LaravelMaker\Models\Schema;
 use Laltu\LaravelMaker\View\Components\AppLayout;
 use Livewire\Component;
@@ -15,8 +16,7 @@ class SchemaForm extends Component
 
     protected $rules = [
         'modelName' => 'required|string|max:255',
-        'fields.*.field_name' => 'required|string|max:255',
-        // Extend validation rules for the fields array as necessary
+        'fields.*.fieldName' => 'required|string|max:255',
     ];
 
     public function mount(?int $schemaId = null): void
@@ -33,24 +33,42 @@ class SchemaForm extends Component
         }
     }
 
-    public function addFormFieldRow(): void
+    public function updatedModelName($value): void
+    {
+        $this->modelName = Str::studly($value);
+    }
+
+    public function updated($propertyName, $value): void
+    {
+        if(str_starts_with($propertyName, 'fields.')) {
+            // Assuming the update is to a field_name within fields
+            $parts = explode('.', $propertyName);
+            if (count($parts) === 3 && $parts[2] === 'fieldName') {
+                $index = $parts[1];
+                $this->fields[$index]['fieldName'] = Str::camel($value);
+            }
+        }
+    }
+
+    public function addFieldRow(): void
     {
         $this->fields[] = $this->emptyField();
     }
 
-    protected function emptyField(): array
+    public function addRelationshipFieldRow(): void
+    {
+        $this->fields[] = $this->emptyField('relationship');
+    }
+
+    protected function emptyField($field_type = ''): array
     {
         return [
-            "field_name" => "",
+            "fieldType" => $field_type,
+            "fieldName" => "",
+            "dataType" => "",
             "validation" => "",
-            "primary" => false,
-            "is_foreign" => false,
             "searchable" => false,
             "fillable" => false,
-            "in_form" => true,
-            "in_index" => true,
-            "db_type" => "",
-            "html_type" => "",
             "relationName" => "",
             "foreignModel" => "",
             "foreignKey" => "",

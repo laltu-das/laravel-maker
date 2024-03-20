@@ -73,7 +73,7 @@
             </div>
         </aside>
         <main class="w-full">
-            <header class="px-5 bg-white border-b border-gray-200">
+            <header class="px-5 bg-white dark:bg-gray-950 border-b border-gray-200">
                 <div class="py-3 sm:py-5 mx-auto dark:border-gray-900">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">

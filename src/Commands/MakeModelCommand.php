@@ -4,6 +4,7 @@ namespace Laltu\LaravelMaker\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\ModelMakeCommand;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -91,7 +92,6 @@ class MakeModelCommand extends ModelMakeCommand
     protected function createMigration(): void
     {
         $fields = $this->option('fields');
-        $relations = $this->option('relations');
 
         $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
 
@@ -104,7 +104,6 @@ class MakeModelCommand extends ModelMakeCommand
             '--create' => $table,
             '--table' => $table,
             '--fields' => $fields,
-            '--relations' => $relations,
         ]);
     }
 
@@ -119,7 +118,7 @@ class MakeModelCommand extends ModelMakeCommand
         return array_merge(parent::getOptions(), [
             ['service', 'S', InputOption::VALUE_NONE, 'Generate a service for the model'],
             ['action', 'A', InputOption::VALUE_NONE, 'Generate a service for the model'],
-            ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields for the model (colon-separated; ex: --fields="name:string:nullable; email:string; phone:string:nullable")'],
+            ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields for the model (colon-separated; ex: --fields="name:name;type:string;nullable:true; name:email;type:string; name:phone;type:string;nullable:true")'],
             ['relations', null, InputOption::VALUE_OPTIONAL, 'The relations fields for the model (colon-separated; ex: --relations="name:users;type:hasOne;params:users|user_id|id,name:products;type:hasMany;params:products|user_id|id")'],
             ['with-inertia-resource', null, InputOption::VALUE_NONE, 'Generates a controller with resources(collection) for Inertia.js'],
             ['with-inertia-vue', null, InputOption::VALUE_NONE, 'Generates a controller with Vue.js support for Inertia.js'],
@@ -203,54 +202,60 @@ class MakeModelCommand extends ModelMakeCommand
         return str_replace(array_keys($replace), array_values($replace), parent::buildClass($name));
     }
 
-    /**
-     * Builds a string of fillable fields from a given string of fields separated by ";"
-     *
-     * @param string $fields The string of fields separated by ";"
-     * @return string The built string of fillable fields
-     */
     protected function buildFillableFields(string $fields): string
     {
-        return collect(explode(';', $fields))
-            ->map(function ($field) {
-                return "'" . trim(explode(':', $field)[0]) . "'";
+        // Split the input string by ", " to get individual field definitions
+        $fieldDefinitions = explode(', ', $fields);
+
+        $parsedFields = collect($fieldDefinitions)
+            ->map(function ($fieldDefinition) {
+                // Split the field definition into its attributes
+                $attributes = explode(';', $fieldDefinition);
+
+                // Filter and transform the attributes
+                return collect($attributes)
+                    ->filter(function ($attribute) {
+                        // Keep only attributes that start with 'name:'
+                        return str_starts_with($attribute, 'name:');
+                    })
+                    ->map(function ($nameAttribute) {
+                        // Remove 'name:' prefix from each attribute
+                        return substr($nameAttribute, 5);
+                    });
             })
-            ->implode(', ');
+            ->flatten();
+
+        // Assuming all fields are fillable
+        return $parsedFields->map(function ($name) {
+            return "'$name'";
+        })->implode(', ');
     }
 
-    /**
-     * Builds a string of cast fields from a given string of fields separated by ";"
-     *
-     * @param string $fields The string of fields separated by ";"
-     * @return string The built string of cast fields
-     */
     protected function buildCasts(string $fields): string
     {
-        return collect(explode(';', $fields))
-            ->mapWithKeys(function ($field) {
-                [$fieldName, $fieldType] = array_pad(explode(':', trim($field)), 2, 'string');
-                $castType = $this->getLaravelCastType($fieldType);
-                return [$fieldName => "'$castType'"];
-            })
-            ->map(function ($cast, $field) {
-                return "'$field' => $cast";
-            })
-            ->implode(', ');
-    }
+        // Split the input string by ", " to get individual field definitions
+        $fieldDefinitions = explode(', ', $fields);
 
-    /**
-     * Retrieves the corresponding Laravel cast type for a given field type
-     *
-     * @param string $fieldType The field type
-     * @return string The corresponding Laravel cast type
-     */
-    protected function getLaravelCastType(string $fieldType): string
-    {
-        return match ($fieldType) {
-            'integer', 'bigint' => 'integer',
-            'decimal', 'float', 'double' => 'float',
-            default => 'string',
-        };
+        $parsedFields = collect($fieldDefinitions)
+            ->map(function ($fieldDefinition) {
+                // Split the field definition into its attributes
+                $attributes = collect(explode(';', $fieldDefinition));
+
+                return $attributes->reduce(function ($carry, $attribute) {
+                    if (Str::startsWith($attribute, 'name:')) {
+                        $carry['name'] = Str::substr($attribute, 5);
+                    } elseif (Str::startsWith($attribute, 'type:')) {
+                        $carry['type'] = Str::substr($attribute, 5);
+                    }
+                    return $carry;
+                }, ['name' => '', 'type' => '']);
+            });
+
+        return collect($parsedFields)->map(function ($attribute) {
+            // Correctly concatenate the 'name' and 'type' with proper quotation handling
+            return "'".$attribute['name']."' => '".$attribute['type']."'";
+        })->implode(', ');
+
     }
 
     /**
@@ -302,6 +307,30 @@ class MakeModelCommand extends ModelMakeCommand
     protected function getMethodStub(): string
     {
         return $this->resolveStubPath('/stubs/model.method.stub');
+    }
+
+    protected function parseFields(string $fields): Collection
+    {
+        // Split the input string by ", " to get individual field definitions
+        $fieldDefinitions = explode(', ', $fields);
+
+        return collect($fieldDefinitions)
+            ->map(function ($fieldDefinition) {
+                // Split the field definition into its attributes
+                $attributes = explode(';', $fieldDefinition);
+
+                // Filter and transform the attributes
+                return collect($attributes)
+                    ->filter(function ($attribute) {
+                        // Keep only attributes that start with 'name:'
+                        return str_starts_with($attribute, 'name:');
+                    })
+                    ->map(function ($nameAttribute) {
+                        // Remove 'name:' prefix from each attribute
+                        return substr($nameAttribute, 5);
+                    });
+            })
+            ->flatten();
     }
 
     /**
@@ -383,15 +412,6 @@ class MakeModelCommand extends ModelMakeCommand
         }
     }
 
-
-    protected function confirmFieldAddition(): int|string
-    {
-        return select('Would you like to add more fields?', [
-            'yes' => 'Yes',
-            'no' => 'No',
-        ], 'yes');
-    }
-
     protected function askForFields(): string
     {
         $fieldTypes = ['string', 'integer', 'bigint', 'boolean', 'date', 'datetime', 'text', 'float', 'decimal', 'enum'];
@@ -431,6 +451,14 @@ class MakeModelCommand extends ModelMakeCommand
 
         // Append the new relation to the relations array
         return "{$name}:{$type}:{$relatedModel}";
+    }
+
+    protected function confirmFieldAddition(): int|string
+    {
+        return select('Would you like to add more fields?', [
+            'yes' => 'Yes',
+            'no' => 'No',
+        ], 'yes');
     }
 
 }

@@ -24,6 +24,7 @@ use Laltu\LaravelMaker\Livewire\SchemaForm;
 use Laltu\LaravelMaker\Livewire\Generator;
 use Laltu\LaravelMaker\Livewire\ModuleList;
 use Laltu\LaravelMaker\Livewire\Dashboard;
+use Laltu\LaravelMaker\Livewire\SchemaImportFromSql;
 use Laltu\LaravelMaker\Livewire\SchemaList;
 use Laltu\LaravelMaker\Livewire\Setting;
 use Laltu\LaravelMaker\Livewire\SidePanel;
@@ -56,55 +57,28 @@ class LaravelMakerServiceProvider extends ServiceProvider
 
             // Publishing assets.
             $this->publishes([
-                __DIR__.'/../dist' => public_path('vendor/laravel-maker'),
+                __DIR__ . '/../dist' => public_path('vendor/laravel-maker'),
             ], ['assets', 'laravel-assets']);
-
-            // Registering package commands.
-            $this->commands([
-                MakeServiceCommand::class,
-                MakeActionCommand::class,
-                MakeControllerCommand::class,
-                \Laltu\LaravelMaker\Commands\MakeMigrationCommand::class,
-                MakeModelCommand::class,
-                MakeResourceCommand::class,
-                MakeFactoryCommand::class,
-
-                MakeInertiaViewCommand::class,
-                MakeInertiaPageCommand::class,
-                MakeInertiaFormCommand::class,
-                MakeInertiaTableCommand::class,
-
-                MakePackageCommand::class,
-            ]);
         }
-    }
 
-    /**
-     * Register the package's services and configurations.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-maker.php', 'laravel-maker');
 
-        // Register the main class to use with the facade
-        $this->app->singleton('laravel-maker', function () {
-            return new \Laltu\LaravelMaker\Facades\LaravelMaker();
-        });
-    }
+        // Registering package commands.
+        $this->commands([
+            MakeServiceCommand::class,
+            MakeActionCommand::class,
+            MakeControllerCommand::class,
+            MakeMigrationCommand::class,
+            MakeModelCommand::class,
+            MakeResourceCommand::class,
+            MakeFactoryCommand::class,
 
-    /**
-     * Register the package resources.
-     *
-     * This method is responsible for loading the package's views from the specified directory.
-     *
-     * @return void
-     */
-    protected function registerResources(): void
-    {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-maker');
+            MakeInertiaViewCommand::class,
+            MakeInertiaPageCommand::class,
+            MakeInertiaFormCommand::class,
+            MakeInertiaTableCommand::class,
+
+            MakePackageCommand::class,
+        ]);
     }
 
     /**
@@ -136,6 +110,18 @@ class LaravelMakerServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the package resources.
+     *
+     * This method is responsible for loading the package's views from the specified directory.
+     *
+     * @return void
+     */
+    protected function registerResources(): void
+    {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-maker');
+    }
+
+    /**
      * Registers Livewire components.
      *
      * This method registers Livewire components using the provided aliases and classes.
@@ -147,9 +133,10 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $components = [
             'laravel-maker.dashboard' => Dashboard::class,
             'laravel-maker.schema' => SchemaList::class,
+            'laravel-maker.schema-sql-import' => SchemaImportFromSql::class,
+            'laravel-maker.create-form' => SchemaForm::class,
             'laravel-maker.generator' => Generator::class,
             'laravel-maker.setting' => Setting::class,
-            'laravel-maker.create-schema' => SchemaForm::class,
             'laravel-maker.list-module' => ModuleList::class,
             'laravel-maker.create-module' => ModuleForm::class,
             'laravel-maker.module-form-builder' => ModuleFormBuilder::class,
@@ -174,6 +161,22 @@ class LaravelMakerServiceProvider extends ServiceProvider
     private function registerComponent(string $alias, string $class): void
     {
         Livewire::component($alias, $class);
+    }
+
+    /**
+     * Register the package's services and configurations.
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+        // Automatically apply the package configuration
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-maker.php', 'laravel-maker');
+
+        // Register the main class to use with the facade
+        $this->app->singleton('laravel-maker', function () {
+            return new \Laltu\LaravelMaker\Facades\LaravelMaker();
+        });
     }
 
 }
