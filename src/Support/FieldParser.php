@@ -35,7 +35,13 @@ class FieldParser
 
     private function buildFieldLine(array $fieldData): string
     {
-        $fieldLine = "\$table->{$fieldData['type']}('{$fieldData['name']}')";
+
+        $relationshipDetails = $this->getRelationshipDetails($fieldData);
+        if ($relationshipDetails) {
+            $fieldLine = $this->buildRelationshipFieldLine($relationshipDetails);
+        }else{
+            $fieldLine = "\$table->{$fieldData['type']}('{$fieldData['name']}')";
+        }
 
         if ($this->shouldBeNullable($fieldData)) {
             $fieldLine .= "->nullable()";
@@ -57,11 +63,6 @@ class FieldParser
             $fieldLine .= "->enum(" . implode(',', explode('|', $fieldData['options'])) . ")";
         }
 
-        $relationshipDetails = $this->getRelationshipDetails($fieldData);
-        if ($relationshipDetails) {
-            $fieldLine .= $this->buildRelationshipFieldLine($relationshipDetails);
-        }
-
         return $fieldLine . ';';
     }
 
@@ -79,7 +80,7 @@ class FieldParser
 
     private function getRelationshipDetails(array $field): array
     {
-        if (!in_array($field['type'], ['hasOne', 'hasMany'])) {
+        if (!in_array($field['type'], ['hasOne', 'hasMany', 'belongsTo', 'hasOneThrough', 'hasManyThrough'])) {
             return [];
         }
 
