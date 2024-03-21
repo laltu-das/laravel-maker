@@ -6,6 +6,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Laltu\LaravelMaker\Support\Fields\FieldBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -91,19 +92,23 @@ class MakeModelCommand extends ModelMakeCommand
      */
     protected function createMigration(): void
     {
-        $fields = $this->option('fields');
-
         $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
 
         if ($this->option('pivot')) {
             $table = Str::singular($table);
         }
 
+        $fieldsString = $this->option('fields');
+
+        if ($fieldsString) {
+            $fieldsString = (new FieldBuilder($this->fields))->buildFields();
+        }
+
         $this->call('make:schema', [
             'name' => "create_{$table}_table",
             '--create' => $table,
             '--table' => $table,
-            '--fields' => $fields,
+            '--fields' => $fieldsString,
         ]);
     }
 

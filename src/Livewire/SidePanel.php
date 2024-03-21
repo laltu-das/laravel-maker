@@ -21,6 +21,6 @@ class SidePanel extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.side-panel');
+        return view('laravel-maker::livewire.side-panel')->layout('laravel-maker::components.layouts.app');
     }
 }

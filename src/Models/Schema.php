@@ -3,6 +3,7 @@
 namespace Laltu\LaravelMaker\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Schema extends Model
@@ -13,10 +14,10 @@ class Schema extends Model
 
     protected $fillable = [
         'modelName',
-        'fields',
     ];
 
-    protected $casts = [
-        'fields' => 'json',
-    ];
+    public function fields(): HasMany
+    {
+        return $this->hasMany(SchemaField::class);
+    }
 }

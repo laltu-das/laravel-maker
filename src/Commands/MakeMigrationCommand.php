@@ -5,13 +5,12 @@ namespace Laltu\LaravelMaker\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
-use Laltu\LaravelMaker\Support\FieldParser;
+use Laltu\LaravelMaker\Support\Fields\FieldParser;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 

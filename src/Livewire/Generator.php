@@ -4,7 +4,7 @@ namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Laltu\LaravelMaker\View\Components\AppLayout;
+
 use Livewire\Component;
 
 class Generator extends Component
@@ -178,6 +178,6 @@ class Generator extends Component
     {
         $schemas = $this->getFileContent();
 
-        return view('laravel-maker::livewire.generator', compact('schemas'))->layout(AppLayout::class);
+        return view('laravel-maker::livewire.generator', compact('schemas'))->layout('laravel-maker::components.layouts.app');
     }
 }

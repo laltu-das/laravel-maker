@@ -2,7 +2,7 @@
 
 namespace Laltu\LaravelMaker\Livewire;
 
-use Laltu\LaravelMaker\View\Components\AppLayout;
+
 use Livewire\Component;
 
 class FormBuilder extends Component
@@ -34,6 +34,6 @@ class FormBuilder extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.form-builder')->layout(AppLayout::class);
+        return view('laravel-maker::livewire.form-builder')->layout('laravel-maker::components.layouts.app');
     }
 }

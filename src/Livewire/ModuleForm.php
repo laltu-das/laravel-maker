@@ -3,7 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Laltu\LaravelMaker\Models\Module;
-use Laltu\LaravelMaker\View\Components\AppLayout;
+
 use Livewire\Component;
 
 class ModuleForm extends Component
@@ -46,6 +46,6 @@ class ModuleForm extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.module-form')->layout(AppLayout::class);
+        return view('laravel-maker::livewire.module-form')->layout('laravel-maker::components.layouts.app');
     }
 }

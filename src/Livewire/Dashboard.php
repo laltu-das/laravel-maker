@@ -3,7 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Contracts\Support\Renderable;
-use Laltu\LaravelMaker\View\Components\AppLayout;
+
 use Livewire\Component;
 
 class Dashboard extends Component
@@ -13,6 +13,6 @@ class Dashboard extends Component
      */
     public function render(): Renderable
     {
-        return view('laravel-maker::livewire.dashboard')->layout(AppLayout::class);
+        return view('laravel-maker::livewire.dashboard')->layout('laravel-maker::components.layouts.app');
     }
 }

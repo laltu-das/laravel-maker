@@ -4,6 +4,7 @@ namespace Laltu\LaravelMaker;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
 use Laltu\LaravelMaker\Commands\MakeControllerCommand;
 use Laltu\LaravelMaker\Commands\MakeFactoryCommand;
@@ -20,7 +21,7 @@ use Laltu\LaravelMaker\Livewire\ModuleApiBuilder;
 use Laltu\LaravelMaker\Livewire\ModuleForm;
 use Laltu\LaravelMaker\Livewire\ModuleFormBuilder;
 use Laltu\LaravelMaker\Livewire\ModuleValidation;
-use Laltu\LaravelMaker\Livewire\SchemaForm;
+use Laltu\LaravelMaker\Livewire\SchemaCreate;
 use Laltu\LaravelMaker\Livewire\Generator;
 use Laltu\LaravelMaker\Livewire\ModuleList;
 use Laltu\LaravelMaker\Livewire\Dashboard;
@@ -48,7 +49,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->registerResources();
         $this->registerLivewireComponents();
-
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -134,7 +134,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
             'laravel-maker.dashboard' => Dashboard::class,
             'laravel-maker.schema' => SchemaList::class,
             'laravel-maker.schema-sql-import' => SchemaImportFromSql::class,
-            'laravel-maker.create-form' => SchemaForm::class,
+            'laravel-maker.create-form' => SchemaCreate::class,
             'laravel-maker.generator' => Generator::class,
             'laravel-maker.setting' => Setting::class,
             'laravel-maker.list-module' => ModuleList::class,
@@ -146,7 +146,14 @@ class LaravelMakerServiceProvider extends ServiceProvider
         ];
 
         foreach ($components as $alias => $class) {
-            $this->registerComponent($alias, $class);
+            $this->callAfterResolving(BladeCompiler::class, function ()use($alias, $class) {
+                Livewire::component('*', function ($component) {
+                    $component->layout('laravel-maker::components.layouts.app');
+                });
+
+                Livewire::component($alias, $class);
+         });
+//            $this->registerComponent($alias, $class);
         }
     }
 

@@ -3,7 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Laltu\LaravelMaker\Facades\LaravelMaker;
-use Laltu\LaravelMaker\View\Components\AppLayout;
+
 use Livewire\Component;
 
 class ModuleApiBuilder extends Component
@@ -73,6 +73,6 @@ class ModuleApiBuilder extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.module-api-builder')->layout(AppLayout::class);
+        return view('laravel-maker::livewire.module-api-builder')->layout('laravel-maker::components.layouts.app');
     }
 }

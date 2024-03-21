@@ -4,7 +4,7 @@ namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Support\Str;
 use Laltu\LaravelMaker\Models\Schema;
-use Laltu\LaravelMaker\View\Components\AppLayout;
+
 use Livewire\Component;
 
 class SchemaImportFromSql extends Component
@@ -109,6 +109,6 @@ class SchemaImportFromSql extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.schema-import-sql')->layout(AppLayout::class);
+        return view('laravel-maker::livewire.schema-import-sql')->layout('laravel-maker::components.layouts.app');
     }
 }

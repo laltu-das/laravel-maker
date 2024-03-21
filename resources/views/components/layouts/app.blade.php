@@ -8,8 +8,8 @@
     <title inertia>Laravel Maker</title>
 
     <!-- Fonts -->
-{{--    <link rel="preconnect" href="https://fonts.bunny.net">--}}
-{{--    <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600" rel="stylesheet"/>--}}
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600" rel="stylesheet"/>
 
     {!! LaravelMaker::css() !!}
 
@@ -23,7 +23,7 @@
                 <x-laravel-maker::icons.application/>
             </div>
             <nav class="flex flex-1 flex-col gap-y-4 pt-10">
-                <a href="{{ route('dashboard') }}" wire:navigate
+                <a href="{{ route('laravel-maker.dashboard') }}" wire:navigate
                    :class="{ 'bg-blue-500': navActiveTab === 'tab1', 'text-white': navActiveTab === 'tab1' }"
                    class="cursor-pointer group relative rounded-xl bg-gray-100 p-2 text-blue-600 hover:bg-gray-50">
                     <svg class="h-6 w-6 stroke-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -34,22 +34,22 @@
                               stroke-linejoin="round"/>
                     </svg>
                 </a>
-                <a href="{{ route('schema') }}" wire:navigate
+                <a href="{{ route('laravel-maker.schema') }}" wire:navigate
                    :class="{ 'bg-blue-500': navActiveTab === 'tab2', 'text-white': navActiveTab === 'tab2' }"
                    class="cursor-pointer text-gary-400 group relative rounded-xl p-2 hover:bg-gray-50">
                     <x-laravel-maker::icons.menu-setting/>
                 </a>
-                <a href="{{ route('module') }}" wire:navigate
+                <a href="{{ route('laravel-maker.module') }}" wire:navigate
                    :class="{ 'bg-blue-500': navActiveTab === 'tab3', 'text-white': navActiveTab === 'tab3' }"
                    class="cursor-pointer text-gary-400 group relative rounded-xl p-2 hover:bg-gray-50">
                     <x-laravel-maker::icons.menu-setting/>
                 </a>
-                <a href="{{ route('setting') }}" wire:navigate
+                <a href="{{ route('laravel-maker.setting') }}" wire:navigate
                    :class="{ 'bg-blue-500': navActiveTab === 'tab3', 'text-white': navActiveTab === 'tab3' }"
                    class="cursor-pointer text-gary-400 group relative rounded-xl p-2 hover:bg-gray-50">
                     <x-laravel-maker::icons.menu-setting/>
                 </a>
-                <a href="{{ route('generator') }}" wire:navigate
+                <a href="{{ route('laravel-maker.generator') }}" wire:navigate
                    :class="{ 'bg-blue-500': navActiveTab === 'tab3', 'text-white': navActiveTab === 'tab3' }"
                    class="cursor-pointer text-gary-400 group relative rounded-xl p-2 hover:bg-gray-50">
                     <x-laravel-maker::icons.menu-setting/>
@@ -67,8 +67,8 @@
                 </button>
 
                 <button class="mt-2 rounded-full bg-gray-100">
-{{--                    <img class="h-10 w-10 rounded-full" src="https://avatars.githubusercontent.com/u/35387401?v=4"--}}
-{{--                         alt=""/>--}}
+                                        <img class="h-10 w-10 rounded-full" src="https://avatars.githubusercontent.com/u/35387401?v=4"
+                                             alt=""/>
                 </button>
             </div>
         </aside>
@@ -92,7 +92,7 @@
         </main>
     </div>
 </div>
-@livewireScripts
+@livewireScriptConfig
 {!! LaravelMaker::js() !!}
 </body>
 </html>

@@ -4,17 +4,16 @@ namespace Laltu\LaravelMaker\Livewire;
 
 use Illuminate\Support\Facades\Artisan;
 use Laltu\LaravelMaker\Models\Schema;
-use Laltu\LaravelMaker\View\Components\AppLayout;
+
 use Livewire\Component;
 
 class SchemaList extends Component
 {
-
     public function render()
     {
         $schemas = Schema::paginate();
 
-        return view('laravel-maker::livewire.schema-list', compact('schemas'))->layout(AppLayout::class);
+        return view('laravel-maker::livewire.schema-list', compact('schemas'))->layout('laravel-maker::components.layouts.app');
     }
 
 
@@ -41,6 +40,7 @@ class SchemaList extends Component
             return implode(';', $parts);
         })->implode(', ');
 
+        dd($fieldsString);
         $commandOptions = [
             'name' => $schema->modelName,
             '--fields' => $fieldsString,

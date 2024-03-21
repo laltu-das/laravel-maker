@@ -20,6 +20,6 @@ class ModuleValidation extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.module-validation');
+        return view('laravel-maker::livewire.module-validation')->layout('laravel-maker::components.layouts.app');
     }
 }
