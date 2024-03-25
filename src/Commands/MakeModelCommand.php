@@ -4,9 +4,8 @@ namespace Laltu\LaravelMaker\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\ModelMakeCommand;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Laltu\LaravelMaker\Support\Fields\FieldBuilder;
+use Laltu\LaravelMaker\Services\ModelBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -100,10 +99,6 @@ class MakeModelCommand extends ModelMakeCommand
 
         $fieldsString = $this->option('fields');
 
-        if ($fieldsString) {
-            $fieldsString = (new FieldBuilder($this->fields))->buildFields();
-        }
-
         $this->call('make:schema', [
             'name' => "create_{$table}_table",
             '--create' => $table,
@@ -193,115 +188,19 @@ class MakeModelCommand extends ModelMakeCommand
     protected function buildClass($name): array|string
     {
         $replace = [];
+        $modelBuilder = new ModelBuilder($this->option('fields'), $this->option('relations'));
 
-        if ($fields = $this->option('fields')) {
-            $replace['{{ fillableFields }}'] = $this->buildFillableFields($fields);
+        if ($this->option('fields')) {
+            $replace['{{ fillableFields }}'] = $modelBuilder->buildFillableFields();
 
-            $replace['{{ casts }}'] = $this->buildCasts($fields);
+            $replace['{{ casts }}'] = $modelBuilder->buildCasts();
         }
 
-        if ($relations = $this->option('relations')) {
-            $replace['{{ relations }}'] = $this->buildRelationMethods($relations);
+        if ($this->option('relations')) {
+            $replace['{{ relations }}'] = $modelBuilder->buildRelationMethods();
         }
 
         return str_replace(array_keys($replace), array_values($replace), parent::buildClass($name));
-    }
-
-    protected function buildFillableFields(string $fields): string
-    {
-        // Split the input string by ", " to get individual field definitions
-        $fieldDefinitions = explode(', ', $fields);
-
-        $parsedFields = collect($fieldDefinitions)
-            ->map(function ($fieldDefinition) {
-                // Split the field definition into its attributes
-                $attributes = explode(';', $fieldDefinition);
-
-                // Filter and transform the attributes
-                return collect($attributes)
-                    ->filter(function ($attribute) {
-                        // Keep only attributes that start with 'name:'
-                        return str_starts_with($attribute, 'name:');
-                    })
-                    ->map(function ($nameAttribute) {
-                        // Remove 'name:' prefix from each attribute
-                        return substr($nameAttribute, 5);
-                    });
-            })
-            ->flatten();
-
-        // Assuming all fields are fillable
-        return $parsedFields->map(function ($name) {
-            return "'$name'";
-        })->implode(', ');
-    }
-
-    protected function buildCasts(string $fields): string
-    {
-        // Split the input string by ", " to get individual field definitions
-        $fieldDefinitions = explode(', ', $fields);
-
-        $parsedFields = collect($fieldDefinitions)
-            ->map(function ($fieldDefinition) {
-                // Split the field definition into its attributes
-                $attributes = collect(explode(';', $fieldDefinition));
-
-                return $attributes->reduce(function ($carry, $attribute) {
-                    if (Str::startsWith($attribute, 'name:')) {
-                        $carry['name'] = Str::substr($attribute, 5);
-                    } elseif (Str::startsWith($attribute, 'type:')) {
-                        $carry['type'] = Str::substr($attribute, 5);
-                    }
-                    return $carry;
-                }, ['name' => '', 'type' => '']);
-            });
-
-        return collect($parsedFields)->map(function ($attribute) {
-            // Correctly concatenate the 'name' and 'type' with proper quotation handling
-            return "'".$attribute['name']."' => '".$attribute['type']."'";
-        })->implode(', ');
-
-    }
-
-    /**
-     * Builds relation methods based on the given string of relations separated by ";"
-     *
-     * @param string $relations The string of relations separated by ";"
-     * @return string The built relation methods
-     */
-    protected function buildRelationMethods(string $relations): string
-    {
-        if (empty($relations)) {
-            return '';
-        }
-
-        return collect(explode(';', $relations))
-            ->map(function ($relation) {
-                return collect(explode(',', trim($relation)))
-                    ->mapWithKeys(function ($part) {
-                        [$key, $value] = explode(':', $part);
-                        return [$key => $value];
-                    });
-            })
-            ->filter(function ($details) {
-                return isset($details['name'], $details['type'], $details['params']);
-            })
-            ->map(function ($details) {
-                [$relatedModel, $foreignKey, $ownerKey] = array_pad(explode('|', $details['params']), 3, null);
-
-                $methodBody = "\$this->{$details['type']}($relatedModel::class";
-                if (!is_null($foreignKey)) {
-                    $methodBody .= ", '$foreignKey'";
-                    if (!is_null($ownerKey)) {
-                        $methodBody .= ", '$ownerKey'";
-                    }
-                }
-                $methodBody .= ');';
-
-                $methodStub = $this->getMethodStub();
-                return str_replace(['{{ method_name }}', '{{ method_body }}'], [$details['name'], $methodBody], $methodStub);
-            })
-            ->implode(PHP_EOL);
     }
 
     /**
@@ -314,29 +213,6 @@ class MakeModelCommand extends ModelMakeCommand
         return $this->resolveStubPath('/stubs/model.method.stub');
     }
 
-    protected function parseFields(string $fields): Collection
-    {
-        // Split the input string by ", " to get individual field definitions
-        $fieldDefinitions = explode(', ', $fields);
-
-        return collect($fieldDefinitions)
-            ->map(function ($fieldDefinition) {
-                // Split the field definition into its attributes
-                $attributes = explode(';', $fieldDefinition);
-
-                // Filter and transform the attributes
-                return collect($attributes)
-                    ->filter(function ($attribute) {
-                        // Keep only attributes that start with 'name:'
-                        return str_starts_with($attribute, 'name:');
-                    })
-                    ->map(function ($nameAttribute) {
-                        // Remove 'name:' prefix from each attribute
-                        return substr($nameAttribute, 5);
-                    });
-            })
-            ->flatten();
-    }
 
     /**
      * Interact further with the user if they were prompted for missing arguments.
@@ -403,13 +279,13 @@ class MakeModelCommand extends ModelMakeCommand
                 if ($option == 'fields') {
                     $fields[] = $this->askForFields($input, $output);
                     // Set the joined fields as a single option value
-                    $input->setOption('fields', join(';', $fields));
+                    $input->setOption('fields', join(',', $fields));
                 }
 
                 if ($option == 'relations') {
                     $relations[] = $this->askForRelations($input, $output);
                     // Set the joined relations as a single option value
-                    $input->setOption('relations', join(';', $relations));
+                    $input->setOption('relations', join(',', $relations));
                 }
             } else {
                 break; // Exit the loop if the user chooses "no".
@@ -438,7 +314,7 @@ class MakeModelCommand extends ModelMakeCommand
         $attributesString = $attributes ? ':' . implode(':', $attributes) : '';
 
         // Append the new field to the fields array with its type and any attributes
-        return "{$name}:{$type}{$attributesString}";
+        return "name:{$name};type:{$type};{$attributesString}";
 
     }
 
@@ -455,7 +331,7 @@ class MakeModelCommand extends ModelMakeCommand
         $relatedModel = text('Enter related model (e.g., App\Models\User):');
 
         // Append the new relation to the relations array
-        return "{$name}:{$type}:{$relatedModel}";
+        return "name:{$name};type:{$type}:{$relatedModel}";
     }
 
     protected function confirmFieldAddition(): int|string

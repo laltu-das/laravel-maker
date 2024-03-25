@@ -18,7 +18,7 @@ use Laltu\LaravelMaker\Commands\MakeResourceCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Livewire\ModuleApiBuilder;
-use Laltu\LaravelMaker\Livewire\ModuleForm;
+use Laltu\LaravelMaker\Livewire\ModuleCreate;
 use Laltu\LaravelMaker\Livewire\ModuleFormBuilder;
 use Laltu\LaravelMaker\Livewire\ModuleValidation;
 use Laltu\LaravelMaker\Livewire\SchemaCreate;
@@ -27,6 +27,7 @@ use Laltu\LaravelMaker\Livewire\ModuleList;
 use Laltu\LaravelMaker\Livewire\Dashboard;
 use Laltu\LaravelMaker\Livewire\SchemaImportFromSql;
 use Laltu\LaravelMaker\Livewire\SchemaList;
+use Laltu\LaravelMaker\Livewire\SchemaUpdate;
 use Laltu\LaravelMaker\Livewire\Setting;
 use Laltu\LaravelMaker\Livewire\SidePanel;
 use Livewire\Livewire;
@@ -134,11 +135,12 @@ class LaravelMakerServiceProvider extends ServiceProvider
             'laravel-maker.dashboard' => Dashboard::class,
             'laravel-maker.schema' => SchemaList::class,
             'laravel-maker.schema-sql-import' => SchemaImportFromSql::class,
-            'laravel-maker.create-form' => SchemaCreate::class,
+            'laravel-maker.schema-create' => SchemaCreate::class,
+            'laravel-maker.schema-update' => SchemaUpdate::class,
             'laravel-maker.generator' => Generator::class,
             'laravel-maker.setting' => Setting::class,
             'laravel-maker.list-module' => ModuleList::class,
-            'laravel-maker.create-module' => ModuleForm::class,
+            'laravel-maker.create-module' => ModuleCreate::class,
             'laravel-maker.module-form-builder' => ModuleFormBuilder::class,
             'laravel-maker.module-api-builder' => ModuleApiBuilder::class,
             'laravel-maker.module-validation' => ModuleValidation::class,

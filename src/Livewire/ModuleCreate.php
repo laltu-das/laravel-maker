@@ -6,7 +6,7 @@ use Laltu\LaravelMaker\Models\Module;
 
 use Livewire\Component;
 
-class ModuleForm extends Component
+class ModuleCreate extends Component
 {
     public Module $module;
     public string $moduleName;

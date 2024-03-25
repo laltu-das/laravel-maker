@@ -88,9 +88,6 @@ class VueComponentBuilder
         return $this;
     }
 
-
-
-
     /**
      * Enhances the method to include parameters and support a dynamic method body.
      *

@@ -3,7 +3,6 @@
 namespace Laltu\LaravelMaker\Livewire;
 
 use Laltu\LaravelMaker\Livewire\Forms\SchemaForm;
-use Laltu\LaravelMaker\Models\Schema;
 
 use Livewire\Component;
 
@@ -28,13 +27,9 @@ class SchemaCreate extends Component
 
     public function save()
     {
-        $this->validate();
+        $this->form->store();
 
-        Schema::create(
-            $this->form->all()
-        );
-
-        return redirect()->route('schema');
+        return redirect()->route('laravel-maker.schema');
     }
 
     public function render()

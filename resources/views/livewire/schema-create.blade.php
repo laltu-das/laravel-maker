@@ -1,6 +1,6 @@
 <x-laravel-maker::card>
     <x-laravel-maker::card-body>
-        <form wire:submit="submit">
+        <form wire:submit="save">
             <div class="flex">
                 <x-laravel-maker::button type="submit" wire:click="save"> Save</x-laravel-maker::button>
                 <x-laravel-maker::button type="button"> Reset</x-laravel-maker::button>
@@ -31,27 +31,25 @@
                     </x-laravel-maker::thead>
                     <x-laravel-maker::tbody class="no-border-x no-border-y">
                         @foreach ($form->fields as $index => $field)
-{{--                            @dd($field)--}}
                             <x-laravel-maker::tr>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::input type="text" wire:model="form.fields.{{ $index }}.fieldName"
-                                                            placeholder="Name" required/>
+                                    <x-laravel-maker::input type="text" wire:model="form.fields.{{ $index }}.fieldName" placeholder="Name" required/>
+                                    @error("form.fields.{$index}.fieldName") <span>{{ $message }}</span> @enderror
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::select wire:model="form.fields.{{ $index }}.dataType"
-                                                             :options="$form->dataTypeOptions"/>
+                                    <x-laravel-maker::select wire:model="form.fields.{{ $index }}.dataType" :options="$form->dataTypeOptions"/>
+                                    @error("form.fields.{$index}.dataType") <span>{{ $message }}</span> @enderror
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox
-                                            wire:model="form.fields.{{ $index }}.primary"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::checkbox wire:model="form.fields.{{ $index }}.primary"></x-laravel-maker::checkbox>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox
-                                            wire:model="form.fields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::checkbox wire:model="form.fields.{{ $index }}.unique"></x-laravel-maker::checkbox>
+                                    <p>@error("form.fields.{$index}.unique") <span class="error">{{ $message }}</span> @enderror</p>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox
-                                            wire:model="form.fields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
+                                    <x-laravel-maker::checkbox wire:model="form.fields.{{ $index }}.nullable"></x-laravel-maker::checkbox>
+                                    <p>@error("form.fields.{$index}.nullable") <span class="error">{{ $message }}</span> @enderror</p>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td> {{ $field['fieldType']  }}                                </x-laravel-maker::td>
                                 <x-laravel-maker::td>

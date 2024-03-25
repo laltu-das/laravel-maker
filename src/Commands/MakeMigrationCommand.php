@@ -5,7 +5,7 @@ namespace Laltu\LaravelMaker\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
-use Laltu\LaravelMaker\Support\Fields\FieldParser;
+use Laltu\LaravelMaker\Services\MigrationBuilder;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -88,9 +88,9 @@ class MakeMigrationCommand extends GeneratorCommand implements PromptsForMissing
             return str_replace(['{{ fields }}', '{{ fields_area }}'], '', $stub);
         }
 
-        $fieldParser = new FieldParser();
+        $migrationBuilder = new MigrationBuilder($this->option('fields'));
 
-        $formattedFields = $fieldParser->processFields($fields);
+        $formattedFields = $migrationBuilder->processFields();
 
         return str_replace(['{{ fields }}', '{{ fields_area }}'], [$formattedFields, ''], $stub);
     }

@@ -2,14 +2,15 @@
 
 namespace Laltu\LaravelMaker\Livewire\Forms;
 
-use Laltu\LaravelMaker\Models\Schema;
+use Laltu\LaravelMaker\Models\Module;
 use Livewire\Form;
 
-class SchemaForm extends Form
+class ModuleForm extends Form
 {
-    public ?Schema $schema;
 
-    public $modelName = '';
+    public ?Module $module;
+
+    public $controllerName = '';
     public array $fields = [];
 
     public array $relationshipOptions = [
@@ -78,7 +79,7 @@ class SchemaForm extends Form
 
     public function addRelationshipFieldRow(): void
     {
-        $this->fields[] = $this->emptyField('relationship') + ['id' => uniqid(), 'foreignModelOptions' => Schema::pluck('modelName', 'id')];
+        $this->fields[] = $this->emptyField('relationship') + ['id' => uniqid(), 'foreignModelOptions' => module::pluck('modelName', 'id')];
     }
 
     public function removeFormFieldRow(int $index): void
@@ -87,26 +88,26 @@ class SchemaForm extends Form
         $this->fields = array_values($this->fields);
     }
 
-    public function setSchema(Schema $schema): void
+    public function setmodule(Module $module): void
     {
-        $this->schema = $schema;
+        $this->module = $module;
 
-        $this->modelName = $schema->modelName;
-        $this->fields = $schema->fields->toarray();
+        $this->modelName = $module->modelName;
+        $this->fields = $module->fields->toarray();
     }
 
     public function store(): void
     {
         $this->validate();
 
-        Schema::create($this->only(['modelName']));
+        module::create($this->only(['modelName']));
     }
 
     public function update(): void
     {
         $this->validate();
 
-        $this->schema->update(
+        $this->module->update(
             $this->all()
         );
 
