@@ -3,7 +3,6 @@
 namespace Laltu\LaravelMaker\Livewire\Forms;
 
 use Laltu\LaravelMaker\Models\Schema;
-use Laltu\LaravelMaker\Models\SchemaField;
 use Livewire\Form;
 
 class SchemaForm extends Form

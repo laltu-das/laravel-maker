@@ -145,32 +145,11 @@ class LaravelMakerServiceProvider extends ServiceProvider
             'laravel-maker.module-update' => ModuleUpdate::class,
             'laravel-maker.module-form-builder' => ModuleFormBuilder::class,
             'laravel-maker.module-api-builder' => ModuleApiBuilder::class,
-            'laravel-maker.module-validation' => ModuleValidation::class,
         ];
 
         foreach ($components as $alias => $class) {
-            $this->callAfterResolving(BladeCompiler::class, function ()use($alias, $class) {
-                Livewire::component('*', function ($component) {
-                    $component->layout('laravel-maker::components.layouts.app');
-                });
-
-                Livewire::component($alias, $class);
-         });
-//            $this->registerComponent($alias, $class);
+            $this->registerComponent($alias, $class);
         }
-    }
-
-    /**
-     * Register a Livewire component.
-     *
-     * @param string $alias The alias for the component.
-     * @param string $class The fully qualified class name of the component.
-     *
-     * @return void
-     */
-    private function registerComponent(string $alias, string $class): void
-    {
-        Livewire::component($alias, $class);
     }
 
     /**
@@ -187,6 +166,19 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->app->singleton('laravel-maker', function () {
             return new \Laltu\LaravelMaker\Facades\LaravelMaker();
         });
+    }
+
+    /**
+     * Register a Livewire component.
+     *
+     * @param string $alias The alias for the component.
+     * @param string $class The fully qualified class name of the component.
+     *
+     * @return void
+     */
+    private function registerComponent(string $alias, string $class): void
+    {
+        Livewire::component($alias, $class);
     }
 
 }

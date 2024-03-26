@@ -15,5 +15,16 @@ class Module extends Model
         'module_name',
         'controller_type',
         'controller_name',
+        'form_fields',
+        'api_fields',
     ];
+
+
+    protected function casts(): array
+    {
+        return [
+            'form_fields' => 'json',
+            'api_fields' => 'json',
+        ];
+    }
 }

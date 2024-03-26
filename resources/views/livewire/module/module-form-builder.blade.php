@@ -2,7 +2,7 @@
     <x-laravel-maker::card-body>
         <form id="form">
             <div class="flex">
-                <x-laravel-maker::button type="submit" wire:click="update({{ $module->id  }})"> Update</x-laravel-maker::button>
+                <x-laravel-maker::button type="submit" wire:click="update()"> Update</x-laravel-maker::button>
                 <x-laravel-maker::button type="button"> Reset</x-laravel-maker::button>
                 <x-laravel-maker::button type="button" wire:click="addFormFieldRow"> Add Field</x-laravel-maker::button>
             </div>
@@ -20,13 +20,13 @@
                         </x-laravel-maker::tr>
                     </x-laravel-maker::thead>
                     <x-laravel-maker::tbody class="no-border-x no-border-y ui-sortable">
-                        @foreach ($formFields as $index => $row)
+                        @foreach ($form->form_fields as $index => $row)
                             <x-laravel-maker::tr>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.fieldName" placeholder="Field Name"/>
+                                    <x-laravel-maker::input type="text" wire:model="form.form_fields.{{ $index }}.fieldName" placeholder="Field Name"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::select wire:model="formFields.{{ $index }}.fieldType">
+                                    <x-laravel-maker::select wire:model="form_fields.{{ $index }}.fieldType">
                                         <option value="button">Button</option>
                                         <option value="checkbox">Checkbox</option>
                                         <option value="color">Color</option>
@@ -52,16 +52,16 @@
                                     </x-laravel-maker::select>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.fieldLabel" placeholder="Label"/>
+                                    <x-laravel-maker::input type="text" wire:model="form.form_fields.{{ $index }}.fieldLabel" placeholder="Label"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::input type="text" wire:model="formFields.{{ $index }}.fieldPlaceholder" placeholder="Placeholder"/>
+                                    <x-laravel-maker::input type="text" wire:model="form.form_fields.{{ $index }}.fieldPlaceholder" placeholder="Placeholder"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::checkbox checked="true" name="" wire:model="formFields.{{ $index }}.fieldRow"/>
+                                    <x-laravel-maker::checkbox checked="true" name="" wire:model="form.form_fields.{{ $index }}.fieldRow"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::input type="number" min="1" max="12" wire:model="formFields.{{ $index }}.fieldCol" placeholder="Col"/>
+                                    <x-laravel-maker::input type="number" min="1" max="12" wire:model="form.form_fields.{{ $index }}.fieldCol" placeholder="Col"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
                                     <x-laravel-maker::icons.cog class="cursor-pointer text-blue-600 m-auto text-center" wire:click="show({{ $index }})" />

@@ -1,6 +1,6 @@
 <div class="mx-auto">
     <div class="flex gap-2">
-        <x-laravel-maker::link :href="route('laravel-maker.module.create')"> {{ __('Add Module') }} </x-laravel-maker::link>
+        @livewire(\Laltu\LaravelMaker\Livewire\Module\ModuleCreate::class)
     </div>
     <x-laravel-maker::card>
         <x-laravel-maker::card-header>
@@ -60,8 +60,14 @@
                             <x-laravel-maker::td>
                                 <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateRoute({{ $module->id }})" wire:loading.class="animate-spin"/>
                             </x-laravel-maker::td>
-                            <x-laravel-maker::td>
+                            <x-laravel-maker::td class="flex">
                                 <x-laravel-maker::icon-link :href="route('laravel-maker.module.edit', $module->id)">
+                                    <x-laravel-maker::icons.cog class="m-auto cursor-pointer"/>
+                                </x-laravel-maker::icon-link>
+                                <x-laravel-maker::icon-link :href="route('laravel-maker.module.form', $module->id)">
+                                    <x-laravel-maker::icons.cog class="m-auto cursor-pointer"/>
+                                </x-laravel-maker::icon-link>
+                                <x-laravel-maker::icon-link :href="route('laravel-maker.module.api', $module->id)">
                                     <x-laravel-maker::icons.cog class="m-auto cursor-pointer"/>
                                 </x-laravel-maker::icon-link>
                             </x-laravel-maker::td>

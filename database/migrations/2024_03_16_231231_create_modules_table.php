@@ -9,11 +9,11 @@ return new class extends Migration {
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-            $table->string('moduleName');
-            $table->string('controllerType');
-            $table->string('controllerName');
-            $table->string('fields')->nullable();
-            $table->string('relationalFields')->nullable();
+            $table->string('module_name');
+            $table->string('controller_type');
+            $table->string('controller_name');
+            $table->string('form_fields')->nullable();
+            $table->string('api_fields')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

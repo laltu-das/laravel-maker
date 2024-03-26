@@ -7,62 +7,25 @@ use Livewire\Form;
 
 class ModuleForm extends Form
 {
-
     public ?Module $module;
+    public string $module_name = '';
+    public string $controller_name = '';
+    public string $controller_type = '';
+    public array $form_fields = [];
+    public array $api_fields = [];
 
-    public $model_name = '';
-    public $controller_name = '';
-    public $controller_type = '';
-
-    public array $controllerTypeOptions = [
-        "increments" => "Increments",
-        "integer" => "Integer",
+    public $rules = [
+        'module_name' => 'required|string|max:255',
+        'controller_name' => 'required|string|max:255',
+        'controller_type' => 'required|string|max:255',
+        'form_fields' => 'nullable',
+        'api_fields' => 'nullable',
     ];
 
-    public function rules(): array
-    {
-        return [
-            'model_name' => 'required|string|max:255',
-            'controller_type' => 'required|string|max:255',
-            'controller_name' => 'required|string|max:255',
-        ];
-    }
-
-    public function addFieldRow(): void
-    {
-        $this->fields[] = $this->emptyField() + ['id' => uniqid()];
-    }
-
-    protected function emptyField($field_type = ''): array
-    {
-        return [
-            'id' => uniqid(),
-            "fieldType" => $field_type,
-            "fieldName" => "",
-            "dataType" => "",
-            "validation" => "",
-            "searchable" => false,
-            "fillable" => false,
-            "relationName" => "",
-            "foreignModelOptions" => [],
-            "foreignModel" => "",
-            "foreignKey" => "",
-            "localKey" => "",
-            "relationType" => "",
-            "nullable" => false,
-        ];
-    }
-
-    public function addRelationshipFieldRow(): void
-    {
-        $this->fields[] = $this->emptyField('relationship') + ['id' => uniqid(), 'foreignModelOptions' => module::pluck('modelName', 'id')];
-    }
-
-    public function removeFormFieldRow(int $index): void
-    {
-        unset($this->fields[$index]);
-        $this->fields = array_values($this->fields);
-    }
+    public $controllerTypeOptions = [
+        'increments' => 'Increments',
+        'integer' => 'Integer',
+    ];
 
     public function setModule(Module $module): void
     {
@@ -71,20 +34,76 @@ class ModuleForm extends Form
         $this->fill($module);
     }
 
+    public function addFormFieldRow(): void
+    {
+        $this->form_fields[] = $this->emptyFormField();
+    }
+
+    public function removeFormFieldRow(int $index): void
+    {
+        unset($this->form_fields[$index]);
+        $this->form_fields = array_values($this->form_fields);
+    }
+
+    public function addApiFieldRow(): void
+    {
+        $this->api_fields[] = $this->emptyApiField();
+    }
+
+    public function removeApiFieldRow(int $index): void
+    {
+        unset($this->api_fields[$index]);
+        $this->api_fields = array_values($this->api_fields);
+    }
+
+    private function emptyFormField(): array
+    {
+        return [
+            'fieldName' => '',
+            'fieldType' => '',
+            'validation' => '',
+            'primary' => false,
+            'is_foreign' => false,
+            'searchable' => false,
+            'fillable' => false,
+            'in_form' => true,
+            'in_index' => true,
+            'db_type' => '',
+            'html_type' => ''
+        ];
+    }
+
+    private function emptyApiField(): array
+    {
+        return [
+            'fieldName' => '',
+            'fieldType' => '',
+            'validation' => '',
+            'primary' => false,
+            'is_foreign' => false,
+            'searchable' => false,
+            'fillable' => false,
+            'in_form' => true,
+            'in_index' => true,
+            'db_type' => '',
+            'html_type' => ''
+        ];
+    }
+
     public function store(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        Module::create($this->only(['model_name', 'controller_type', 'controller_type']));
+        Module::create($validatedData);
+
+        $this->reset();
     }
 
     public function update(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->module->update(
-            $this->all()
-        );
+        $this->module->update($validatedData);
 
         $this->reset();
     }

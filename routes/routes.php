@@ -9,7 +9,6 @@ use Laltu\LaravelMaker\Livewire\Module\ModuleCreate;
 use Laltu\LaravelMaker\Livewire\Module\ModuleFormBuilder;
 use Laltu\LaravelMaker\Livewire\Module\ModuleList;
 use Laltu\LaravelMaker\Livewire\Module\ModuleUpdate;
-use Laltu\LaravelMaker\Livewire\Module\ModuleValidation;
 use Laltu\LaravelMaker\Livewire\Schema\SchemaCreate;
 use Laltu\LaravelMaker\Livewire\Schema\SchemaImportFromSql;
 use Laltu\LaravelMaker\Livewire\Schema\SchemaList;
@@ -31,7 +30,6 @@ Route::name('laravel-maker.')->group(function () {
     Route::get('/module', ModuleList::class)->name('module');
     Route::get('/module/create', ModuleCreate::class)->name('module.create');
     Route::get('/module/{module}', ModuleUpdate::class)->name('module.edit');
-    Route::get('/module/{module}/validation', ModuleValidation::class)->name('module.validation');
     Route::get('/module/{module}/form', ModuleFormBuilder::class)->name('module.form');
     Route::get('/module/{module}/api', ModuleApiBuilder::class)->name('module.api');
 });
