@@ -45,10 +45,6 @@ class MakeModelCommand extends ModelMakeCommand
         if ($this->option('action')) {
             $this->createAction();
         }
-
-        if ($this->option('fields')) {
-            $this->createMigration();
-        }
     }
 
     /**
@@ -83,30 +79,6 @@ class MakeModelCommand extends ModelMakeCommand
         ]);
     }
 
-
-    /**
-     * Creates a migration for the specified table with the specified fields and relations
-     *
-     * @return void
-     */
-    protected function createMigration(): void
-    {
-        $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
-
-        if ($this->option('pivot')) {
-            $table = Str::singular($table);
-        }
-
-        $fieldsString = $this->option('fields') . "," . $this->option('relations');
-
-        $this->call('make:schema', [
-            'name' => "create_{$table}_table",
-            '--create' => $table,
-            '--table' => $table,
-            '--fields' => $fieldsString,
-        ]);
-    }
-
     /**
      * Retrieves an array containing the options for the current command
      *
@@ -123,6 +95,32 @@ class MakeModelCommand extends ModelMakeCommand
             ['with-inertia-resource', null, InputOption::VALUE_NONE, 'Generates a controller with resources(collection) for Inertia.js'],
             ['with-inertia-vue', null, InputOption::VALUE_NONE, 'Generates a controller with Vue.js support for Inertia.js'],
             ['with-inertia-react', null, InputOption::VALUE_NONE, 'Generates a controller with React.js support for Inertia.js'],
+        ]);
+    }
+
+    /**
+     * Creates a migration for the specified table with the specified fields and relations
+     *
+     * @return void
+     */
+    protected function createMigration(): void
+    {
+        $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
+
+        if ($this->option('pivot')) {
+            $table = Str::singular($table);
+        }
+
+        $fieldsString = Str::of($this->option('fields'))
+            ->when($this->option('relations'), function ($string, $relations) {
+                return $string->append(',', $relations);
+            });
+
+        $this->call('make:schema', [
+            'name' => "create_{$table}_table",
+            '--create' => $table,
+            '--table' => $table,
+            '--fields' => $fieldsString,
         ]);
     }
 

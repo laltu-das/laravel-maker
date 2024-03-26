@@ -44,7 +44,7 @@ class SchemaList extends Component
         })->implode(', ');
 
         $commandOptions = [
-            'name' => $schema->modelName,
+            'name' => $schema->model_name,
             '--fields' => $fieldsString,
             '--force' => true
         ];
@@ -59,8 +59,8 @@ class SchemaList extends Component
         [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
 
         $commandOptions = [
-            'name' => "{$schema->modelName}Resource",
-            '--model' => $schema->modelName,
+            'name' => "{$schema->model_name}Resource",
+            '--model' => $schema->model_name,
             '--force' => true
         ];
 
@@ -77,137 +77,11 @@ class SchemaList extends Component
         $this->js("alert('Schema saved!')");
     }
 
-    public function makeSeeder(Schema $schema): void
-    {
-        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
-
-        $commandOptions = [
-            'name' => "{$schema->modelName}Resource",
-            '--model' => $schema->modelName,
-            '--force' => true
-        ];
-
-        if (!empty($fieldsString)) {
-            $commandOptions["--fields"] = $fieldsString;
-        }
-
-        if (!empty($relationsString)) {
-            $commandOptions["--relations"] = $relationsString;
-        }
-
-        Artisan::call('generate:seeder', $commandOptions);
-
-        $this->js("alert('Schema saved!')");
-    }
-
-    public function makeService(Schema $schema): void
-    {
-        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
-
-        $commandOptions = [
-            'name' => "{$schema->modelName}Resource",
-            '--model' => $schema->modelName,
-            '--force' => true
-        ];
-
-        if (!empty($fieldsString)) {
-            $commandOptions["--fields"] = $fieldsString;
-        }
-
-        if (!empty($relationsString)) {
-            $commandOptions["--relations"] = $relationsString;
-        }
-
-        Artisan::call('generate:service', $commandOptions);
-
-        $this->js("alert('Schema saved!')");
-    }
-
-    public function makeResource(Schema $schema): void
-    {
-        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
-
-        $commandOptions = [
-            'name' => "{$schema->modelName}Resource",
-            '--model' => $schema->modelName,
-            '--force' => true
-        ];
-
-        if (!empty($fieldsString)) {
-            $commandOptions["--fields"] = $fieldsString;
-        }
-
-        if (!empty($relationsString)) {
-            $commandOptions["--relations"] = $relationsString;
-        }
-
-        Artisan::call('generate:resource', $commandOptions);
-
-        $this->js("alert('Schema saved!')");
-    }
-
-    public function makeAll(Schema $schema): void
-    {
-        $schema = $this->getSchema($schemaName);
-
-        if ($schema) {
-            // Your existing logic here...
-            $modelName = $schema['modelName'];
-            // Call Artisan commands or any other operations based on the schema
-            $modelName = $schema->modelName;
-            [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
-
-            $commandOptions = [
-                'name' => $modelName,
-                '--all' => true,
-                '--force' => true
-            ];
-
-            if (!empty($fieldsString)) {
-                $commandOptions["--fields"] = $fieldsString;
-            }
-
-            if (!empty($relationsString)) {
-                $commandOptions["--relations"] = $relationsString;
-            }
-
-            Artisan::call('generate:model', $commandOptions);
-
-            $this->js("alert('Schema saved!')");
-        } else {
-            $this->js("alert('Schema not found!')");
-        }
-    }
-
-    public function makePolicy(Schema $schema): void
-    {
-        $modelName = $schema->modelName;
-        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
-
-        $commandOptions = [
-            'name' => "{$modelName}Policy",
-            '--model' => $modelName,
-            '--force' => true
-        ];
-
-        if (!empty($fieldsString)) {
-            $commandOptions["--fields"] = $fieldsString;
-        }
-
-        if (!empty($relationsString)) {
-            $commandOptions["--relations"] = $relationsString;
-        }
-
-        Artisan::call('generate:policy', $commandOptions);
-
-        $this->js("alert('Schema saved!')");
-    }
-
     private function prepareFieldsAndRelations(Schema $schema): array
     {
         return [
             $this->prepareFields($schema->fields),
-            $this->prepareRelations($schema->relationalFields)
+            $this->prepareRelations($schema->fields)
         ];
     }
 
@@ -241,5 +115,134 @@ class SchemaList extends Component
                 return "name:{$name};type:{$type};params:{$params}";
             })
             ->implode(',');
+    }
+
+    public function makeSeeder(Schema $schema): void
+    {
+        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
+
+        $commandOptions = [
+            'name' => "{$schema->model_name}Resource",
+            '--model' => $schema->model_name,
+            '--force' => true
+        ];
+
+        if (!empty($fieldsString)) {
+            $commandOptions["--fields"] = $fieldsString;
+        }
+
+        if (!empty($relationsString)) {
+            $commandOptions["--relations"] = $relationsString;
+        }
+
+        Artisan::call('generate:seeder', $commandOptions);
+
+        $this->js("alert('Schema saved!')");
+    }
+
+    public function makeService(Schema $schema): void
+    {
+        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
+
+        $commandOptions = [
+            'name' => "{$schema->model_name}Resource",
+            '--model' => $schema->model_name,
+            '--force' => true
+        ];
+
+        if (!empty($fieldsString)) {
+            $commandOptions["--fields"] = $fieldsString;
+        }
+
+        if (!empty($relationsString)) {
+            $commandOptions["--relations"] = $relationsString;
+        }
+
+        Artisan::call('generate:service', $commandOptions);
+
+        $this->js("alert('Schema saved!')");
+    }
+
+    public function makeResource(Schema $schema): void
+    {
+        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
+
+        $commandOptions = [
+            'name' => "{$schema->model_name}Resource",
+            '--model' => $schema->model_name,
+            '--force' => true
+        ];
+
+        if (!empty($fieldsString)) {
+            $commandOptions["--fields"] = $fieldsString;
+        }
+
+        if (!empty($relationsString)) {
+            $commandOptions["--relations"] = $relationsString;
+        }
+
+        Artisan::call('generate:resource', $commandOptions);
+
+        $this->js("alert('Schema saved!')");
+    }
+
+    public function makeAll(Schema $schema): void
+    {
+
+        $fieldsString = collect($schema->fields)->map(function ($field) {
+            $parts = [
+                "name:{$field['fieldName']}",
+                "type:{$field['dataType']}",
+            ];
+
+            // Nullable
+            if ($field['nullable']) {
+                $parts[] = 'nullable:true';
+            }
+
+            // Relationships
+            if ($field['fieldType'] === 'relationship') {
+                $parts[] = "type:{$field['relationType']}";
+                $params = "params:{$field['foreignModel']}|{$field['foreignKey']}|{$field['localKey']}";
+                $parts[] = $params;
+            }
+
+            return implode(';', $parts);
+        })->implode(', ');
+
+        $commandOptions = [
+            'name' => $schema->model_name,
+            '--fields' => $fieldsString,
+            '--all' => true,
+            '--force' => true
+        ];
+
+        Artisan::call('make:model', $commandOptions);
+
+        $this->js("alert('Schema saved!')");
+    }
+
+    public function makePolicy(Schema $schema): void
+    {
+        $modelName = $schema->model_name;
+        [$fieldsString, $relationsString] = $this->prepareFieldsAndRelations($schema);
+
+        $commandOptions = [
+            'name' => "{$modelName}Policy",
+            '--model' => $modelName,
+            '--force' => true
+        ];
+
+        if (!empty($fieldsString)) {
+            $commandOptions["--fields"] = $fieldsString;
+        }
+
+        if (!empty($relationsString)) {
+            $commandOptions["--relations"] = $relationsString;
+        }
+
+        Artisan::call('make:policy', $commandOptions);
+
+        $this->js("alert('Schema saved!')");
     }
 }

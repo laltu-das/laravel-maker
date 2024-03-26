@@ -10,7 +10,7 @@ class SchemaForm extends Form
 {
     public ?Schema $schema;
 
-    public $modelName = '';
+    public $model_name = '';
     public array $fields = [];
 
     public array $relationshipOptions = [
@@ -42,7 +42,7 @@ class SchemaForm extends Form
 
     public function rules(): array
     {
-        $rules = ['modelName' => 'required|string|max:255',];
+        $rules = ['model_name' => 'required|string|max:255',];
 
         foreach ($this->fields as $index => $field) {
             $rules["fields.{$index}.fieldName"] = 'required|string';

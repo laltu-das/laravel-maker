@@ -27,7 +27,7 @@
                     @foreach ($schemas as $schema)
                         <x-laravel-maker::tr>
                             <x-laravel-maker::td>
-                                {{ $schema->modelName }}
+                                {{ $schema->model_name }}
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
                                 <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="makeModel({{ $schema->id }})" wire:loading.class="animate-spin" />
