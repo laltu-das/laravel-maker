@@ -27,6 +27,44 @@ class ModuleForm extends Form
         'integer' => 'Integer',
     ];
 
+
+    public $formFieldsFieldTypeOptions = [
+        'button' => 'Button',
+        'checkbox' => 'Checkbox',
+        'color' => 'Color',
+        'date' => 'Date',
+        'datetime-local' => 'Datetime Local',
+        'email' => 'Email',
+        'file' => 'File',
+        'hidden' => 'Hidden',
+        'image' => 'Image',
+        'month' => 'Month',
+        'number' => 'Number',
+        'password' => 'Password',
+        'radio' => 'Radio',
+        'range' => 'Range',
+        'reset' => 'Reset',
+        'search' => 'Search',
+        'submit' => 'Submit',
+        'tel' => 'Tel',
+        'text' => 'Text',
+        'time' => 'Time',
+        'url' => 'URL',
+        'week' => 'Week',
+    ];
+
+
+    public $apiFieldsFieldTypeOptions = [
+        'String' => 'String',
+        'Integer' => 'Integer',
+        'Float' => 'Float',
+        'Boolean' => 'Boolean',
+        'Array' => 'Array',
+        'Object' => 'Object',
+        'NULL' => 'NULL',
+        'Resource' => 'Resource',
+    ];
+
     public function setModule(Module $module): void
     {
         $this->module = $module;

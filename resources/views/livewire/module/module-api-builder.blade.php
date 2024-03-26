@@ -24,16 +24,7 @@
                                     <x-laravel-maker::input type="text" wire:model="form.api_fields.{{ $index }}.fieldName" placeholder="Field Name"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::select wire:model="form.api_fields.{{ $index }}.fieldType">
-                                        <option value="String">String</option>
-                                        <option value="Integer">Integer</option>
-                                        <option value="Float">Float</option>
-                                        <option value="Boolean">Boolean</option>
-                                        <option value="Array">Array</option>
-                                        <option value="Object">Object</option>
-                                        <option value="NULL">NULL</option>
-                                        <option value="Resource">Resource</option>
-                                    </x-laravel-maker::select>
+                                    <x-laravel-maker::select wire:model="form.api_fields.{{ $index }}.fieldType" :options="$form->apiFieldsFieldTypeOptions"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
                                     <x-laravel-maker::input type="text" wire:model="form.api_fields.{{ $index }}.fieldName" placeholder="Field Name"/>

@@ -26,30 +26,7 @@
                                     <x-laravel-maker::input type="text" wire:model="form.form_fields.{{ $index }}.fieldName" placeholder="Field Name"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
-                                    <x-laravel-maker::select wire:model="form_fields.{{ $index }}.fieldType">
-                                        <option value="button">Button</option>
-                                        <option value="checkbox">Checkbox</option>
-                                        <option value="color">Color</option>
-                                        <option value="date">Date</option>
-                                        <option value="datetime-local">Datetime Local</option>
-                                        <option value="email">Email</option>
-                                        <option value="file">File</option>
-                                        <option value="hidden">Hidden</option>
-                                        <option value="image">Image</option>
-                                        <option value="month">Month</option>
-                                        <option value="number">Number</option>
-                                        <option value="password">Password</option>
-                                        <option value="radio">Radio</option>
-                                        <option value="range">Range</option>
-                                        <option value="reset">Reset</option>
-                                        <option value="search">Search</option>
-                                        <option value="submit">Submit</option>
-                                        <option value="tel">Tel</option>
-                                        <option value="text">Text</option>
-                                        <option value="time">Time</option>
-                                        <option value="url">URL</option>
-                                        <option value="week">Week</option>
-                                    </x-laravel-maker::select>
+                                    <x-laravel-maker::select wire:model="form_fields.{{ $index }}.fieldType" :options="$form->formFieldsFieldTypeOptions"/>
                                 </x-laravel-maker::td>
                                 <x-laravel-maker::td>
                                     <x-laravel-maker::input type="text" wire:model="form.form_fields.{{ $index }}.fieldLabel" placeholder="Label"/>
