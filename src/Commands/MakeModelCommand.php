@@ -97,7 +97,7 @@ class MakeModelCommand extends ModelMakeCommand
             $table = Str::singular($table);
         }
 
-        $fieldsString = $this->option('fields');
+        $fieldsString = $this->option('fields') . "," . $this->option('relations');
 
         $this->call('make:schema', [
             'name' => "create_{$table}_table",
@@ -158,13 +158,16 @@ class MakeModelCommand extends ModelMakeCommand
      */
     protected function getStub(): string
     {
+
+        if ($this->option('relations')) {
+            return $this->resolveStubPath('/stubs/model.relation.stub');
+        }
+
         if ($this->option('fields')) {
             return $this->resolveStubPath('/stubs/model.field.stub');
-        } elseif ($this->option('relations')) {
-            return $this->resolveStubPath('/stubs/model.relation.stub');
-        } else {
-            return parent::getStub();
         }
+
+        parent::getStub();
     }
 
     /**
@@ -192,25 +195,15 @@ class MakeModelCommand extends ModelMakeCommand
 
         if ($this->option('fields')) {
             $replace['{{ fillableFields }}'] = $modelBuilder->buildFillableFields();
-
-            $replace['{{ casts }}'] = $modelBuilder->buildCasts();
         }
 
         if ($this->option('relations')) {
             $replace['{{ relations }}'] = $modelBuilder->buildRelationMethods();
         }
 
-        return str_replace(array_keys($replace), array_values($replace), parent::buildClass($name));
-    }
+        $replace['{{ casts }}'] = $modelBuilder->buildCasts();
 
-    /**
-     * Retrieves the method stub from the specified path
-     *
-     * @return string The content of the method stub file
-     */
-    protected function getMethodStub(): string
-    {
-        return $this->resolveStubPath('/stubs/model.method.stub');
+        return str_replace(array_keys($replace), array_values($replace), parent::buildClass($name));
     }
 
 
@@ -291,6 +284,8 @@ class MakeModelCommand extends ModelMakeCommand
                 break; // Exit the loop if the user chooses "no".
             }
         }
+
+        dd($fields, $relations);
     }
 
     protected function askForFields(): string
@@ -305,13 +300,19 @@ class MakeModelCommand extends ModelMakeCommand
         $attributes = [];
 
         // Example: Asking for nullable attribute
-        $isNullable = confirm('Is this field nullable?');
-        if ($isNullable) {
-            $attributes[] = 'nullable';
+        $isNull = confirm('Is this field nullable?');
+        if ($isNull) {
+            $attributes[] = ['nullable' => true];
+        }
+
+        // Example: Asking for nullable attribute
+        $isUnique = confirm('Is this field isUnique?');
+        if ($isUnique) {
+            $attributes[] = ['unique' => true];
         }
 
         // Concatenate attributes if there are any
-        $attributesString = $attributes ? ':' . implode(':', $attributes) : '';
+        $attributesString = collect($attributes)->implode(';', $attributes);
 
         // Append the new field to the fields array with its type and any attributes
         return "name:{$name};type:{$type};{$attributesString}";

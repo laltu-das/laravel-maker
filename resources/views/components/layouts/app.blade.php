@@ -73,8 +73,8 @@
             </div>
         </aside>
         <main class="w-full">
-            <header class="px-5 bg-white dark:bg-gray-950 border-b border-gray-200">
-                <div class="py-3 sm:py-5 mx-auto dark:border-gray-900">
+            <header class="px-5 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                <div class="py-3 sm:py-5 mx-auto">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="ml-2 text-lg sm:text-2xl text-gray-700 dark:text-gray-300 font-medium"><b

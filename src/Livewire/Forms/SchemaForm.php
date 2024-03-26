@@ -3,6 +3,7 @@
 namespace Laltu\LaravelMaker\Livewire\Forms;
 
 use Laltu\LaravelMaker\Models\Schema;
+use Laltu\LaravelMaker\Models\SchemaField;
 use Livewire\Form;
 
 class SchemaForm extends Form
@@ -41,7 +42,7 @@ class SchemaForm extends Form
 
     public function rules(): array
     {
-        $rules = [ 'modelName' => 'required|string|max:255',];
+        $rules = ['modelName' => 'required|string|max:255',];
 
         foreach ($this->fields as $index => $field) {
             $rules["fields.{$index}.fieldName"] = 'required|string';
@@ -91,15 +92,14 @@ class SchemaForm extends Form
     {
         $this->schema = $schema;
 
-        $this->modelName = $schema->modelName;
-        $this->fields = $schema->fields->toarray();
+        $this->fill($schema);
     }
 
     public function store(): void
     {
         $this->validate();
 
-        Schema::create($this->only(['modelName']));
+        Schema::create($this->only(['model_name', 'fields']));
     }
 
     public function update(): void

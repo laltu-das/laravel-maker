@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::connection('sqlite')->create('schemas', function (Blueprint $table) {
             $table->id();
-            $table->string('modelName');
+            $table->string('model_name');
             $table->json('fields')->nullable();
             $table->softDeletes();
             $table->timestamps();

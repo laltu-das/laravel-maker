@@ -1,10 +1,9 @@
 <?php
 
-namespace Laltu\LaravelMaker\Livewire;
+namespace Laltu\LaravelMaker\Livewire\Schema;
 
 use Illuminate\Support\Facades\Artisan;
 use Laltu\LaravelMaker\Models\Schema;
-
 use Livewire\Component;
 
 class SchemaList extends Component
@@ -13,9 +12,13 @@ class SchemaList extends Component
     {
         $schemas = Schema::paginate();
 
-        return view('laravel-maker::livewire.schema-list', compact('schemas'))->layout('laravel-maker::components.layouts.app');
+        return view('laravel-maker::livewire.schema.schema-list', compact('schemas'))->layout('laravel-maker::components.layouts.app');
     }
 
+    public function deleteSchema(Schema $schema): void
+    {
+        $schema->delete();
+    }
 
     public function makeModel(Schema $schema): void
     {
@@ -40,7 +43,6 @@ class SchemaList extends Component
             return implode(';', $parts);
         })->implode(', ');
 
-        dd($fieldsString);
         $commandOptions = [
             'name' => $schema->modelName,
             '--fields' => $fieldsString,
@@ -51,7 +53,6 @@ class SchemaList extends Component
 
         $this->js("alert('Schema saved!')");
     }
-
 
     public function makeFactory(Schema $schema): void
     {

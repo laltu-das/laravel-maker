@@ -12,8 +12,8 @@ class Module extends Model
     protected $connection = 'sqlite';
 
     protected $fillable = [
-        'moduleName',
-        'controllerType',
-        'controllerName',
+        'module_name',
+        'controller_type',
+        'controller_name',
     ];
 }

@@ -18,12 +18,11 @@ class MigrationBuilder
 
     public function processFields(): string
     {
-        // Removed debugging statement (dd($this->fields)); Use logging if needed
         return $this->fields->map(function ($fieldData) {
             return $this->isRelationship($fieldData)
                 ? $this->buildRelationshipFieldLine($fieldData)
                 : $this->buildFieldLine($fieldData);
-        })->implode("\n");
+        })->implode("\n            ");
     }
 
     public function buildFieldLine($fieldData): string
@@ -107,15 +106,13 @@ class MigrationBuilder
 
     private function isRelationship($fieldData): bool
     {
+        $validRelationships = ['hasOne', 'hasMany', 'belongsTo', 'belongsToMany', 'hasOneThrough', 'hasManyThrough', 'morphTo', 'morphOne', 'morphMany', 'morphToMany', 'morphedByMany'];
+
         // Check if the field data represents a valid Laravel relationship
-        if (in_array($fieldData['type'], $this->validLaravelRelationships())) {
+        if (in_array($fieldData['type'], $validRelationships)) {
             return true;
         }
-        return false;
-    }
 
-    private function validLaravelRelationships(): array
-    {
-        return ['hasOne', 'hasMany', 'belongsTo', 'belongsToMany', 'hasOneThrough', 'hasManyThrough', 'morphTo', 'morphOne', 'morphMany', 'morphToMany', 'morphedByMany'];
+        return false;
     }
 }

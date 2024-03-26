@@ -54,6 +54,9 @@
                                 <x-laravel-maker::icon-link :href="route('laravel-maker.schema.edit',$schema->id)">
                                     <x-laravel-maker::icons.cog/>
                                 </x-laravel-maker::icon-link>
+
+                                <x-laravel-maker::icons.circle class="cursor-pointer text-red-600"
+                                                               wire:click="deleteSchema({{ $schema->id }})"/>
                             </x-laravel-maker::td>
                         </x-laravel-maker::tr>
                     @endforeach

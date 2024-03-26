@@ -1,6 +1,6 @@
 <?php
 
-namespace Laltu\LaravelMaker\Livewire;
+namespace Laltu\LaravelMaker\Livewire\Schema;
 
 use Laltu\LaravelMaker\Livewire\Forms\SchemaForm;
 use Laltu\LaravelMaker\Models\Schema;
@@ -10,22 +10,22 @@ class SchemaUpdate extends Component
 {
     public SchemaForm $form;
 
-    public function mount(Schema $schema)
+    public function mount(Schema $schema): void
     {
         $this->form->setSchema($schema);
     }
 
-    public function addFieldRow()
+    public function addFieldRow(): void
     {
         $this->form->addFieldRow();
     }
 
-    public function addRelationshipFieldRow()
+    public function addRelationshipFieldRow(): void
     {
         $this->form->addRelationshipFieldRow();
     }
 
-    public function removeFormFieldRow(int $index)
+    public function removeFormFieldRow(int $index): void
     {
         $this->form->removeFormFieldRow($index);
     }
@@ -39,6 +39,6 @@ class SchemaUpdate extends Component
 
     public function render()
     {
-        return view('laravel-maker::livewire.schema-create')->layout('laravel-maker::components.layouts.app');
+        return view('laravel-maker::livewire.schema.schema-form')->layout('laravel-maker::components.layouts.app');
     }
 }

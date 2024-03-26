@@ -1,6 +1,6 @@
 <?php
 
-namespace Laltu\LaravelMaker\Livewire;
+namespace Laltu\LaravelMaker\Livewire\Module;
 
 use Livewire\Attributes\On;
 use Livewire\Component;

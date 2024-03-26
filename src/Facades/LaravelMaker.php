@@ -16,6 +16,6 @@ class LaravelMaker extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return \Laltu\LaravelMaker\Services\LaravelMakerManager::class;
+        return \Laltu\LaravelMaker\LaravelMaker::class;
     }
 }

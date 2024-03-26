@@ -1,26 +1,25 @@
 <?php
 
-namespace Laltu\LaravelMaker\Livewire;
+namespace Laltu\LaravelMaker\Livewire\Schema;
 
 use Laltu\LaravelMaker\Livewire\Forms\SchemaForm;
-
 use Livewire\Component;
 
 class SchemaCreate extends Component
 {
     public SchemaForm $form;
 
-    public function addFieldRow()
+    public function addFieldRow(): void
     {
         $this->form->addFieldRow();
     }
 
-    public function addRelationshipFieldRow()
+    public function addRelationshipFieldRow(): void
     {
         $this->form->addRelationshipFieldRow();
     }
 
-    public function removeFormFieldRow(int $index)
+    public function removeFormFieldRow(int $index): void
     {
         $this->form->removeFormFieldRow($index);
     }
@@ -29,11 +28,13 @@ class SchemaCreate extends Component
     {
         $this->form->store();
 
+        session()->flash('message', 'Schema created successfully.');
+
         return redirect()->route('laravel-maker.schema');
     }
 
     public function render()
     {
-        return view('laravel-maker::livewire.schema-create')->layout('laravel-maker::components.layouts.app');
+        return view('laravel-maker::livewire.schema.schema-form')->layout('laravel-maker::components.layouts.app');
     }
 }

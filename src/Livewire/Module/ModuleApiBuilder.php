@@ -1,9 +1,9 @@
 <?php
 
-namespace Laltu\LaravelMaker\Livewire;
+namespace Laltu\LaravelMaker\Livewire\Module;
 
 use Laltu\LaravelMaker\Facades\LaravelMaker;
-
+use Laltu\LaravelMaker\Livewire\SidePanel;
 use Livewire\Component;
 
 class ModuleApiBuilder extends Component

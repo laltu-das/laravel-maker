@@ -10,16 +10,17 @@ return new class extends Migration {
     {
         Schema::create('schema_fields', function (Blueprint $table) {
             $table->id();
-            $table->string('fieldName');
-            $table->string('dataType');
-            $table->string('validation')->nullable();
-            $table->string('searchable')->nullable();
+            $table->foreignId('schema_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('field_name');
+            $table->string('data_type');
             $table->string('fillable')->nullable();
+            $table->string('guarded')->nullable();
             $table->string('nullable')->nullable();
-            $table->string('relationType')->nullable();
-            $table->string('foreignModel')->nullable();
-            $table->string('foreignKey')->nullable();
-            $table->string('localKey')->nullable();
+            $table->string('unique')->nullable();
+            $table->string('relation_type')->nullable();
+            $table->string('foreign_model')->nullable();
+            $table->string('foreign_key')->nullable();
+            $table->string('local_key')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

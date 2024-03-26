@@ -5,6 +5,7 @@ namespace Laltu\LaravelMaker\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laltu\LaravelMaker\Casts\SchemaFieldsCast;
 
 class Schema extends Model
 {
@@ -13,11 +14,14 @@ class Schema extends Model
     protected $connection = 'sqlite';
 
     protected $fillable = [
-        'modelName',
+        'model_name',
+        'fields',
     ];
 
-    public function fields(): HasMany
+    protected function casts(): array
     {
-        return $this->hasMany(SchemaField::class);
+        return [
+            'fields' => SchemaFieldsCast::class
+        ];
     }
 }

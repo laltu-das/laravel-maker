@@ -14,20 +14,21 @@ use Laltu\LaravelMaker\Commands\MakeInertiaTableCommand;
 use Laltu\LaravelMaker\Commands\MakeInertiaViewCommand;
 use Laltu\LaravelMaker\Commands\MakeMigrationCommand;
 use Laltu\LaravelMaker\Commands\MakeModelCommand;
+use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Commands\MakeResourceCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
-use Laltu\LaravelMaker\Commands\MakePackageCommand;
-use Laltu\LaravelMaker\Livewire\ModuleApiBuilder;
-use Laltu\LaravelMaker\Livewire\ModuleCreate;
-use Laltu\LaravelMaker\Livewire\ModuleFormBuilder;
-use Laltu\LaravelMaker\Livewire\ModuleValidation;
-use Laltu\LaravelMaker\Livewire\SchemaCreate;
-use Laltu\LaravelMaker\Livewire\Generator;
-use Laltu\LaravelMaker\Livewire\ModuleList;
 use Laltu\LaravelMaker\Livewire\Dashboard;
-use Laltu\LaravelMaker\Livewire\SchemaImportFromSql;
-use Laltu\LaravelMaker\Livewire\SchemaList;
-use Laltu\LaravelMaker\Livewire\SchemaUpdate;
+use Laltu\LaravelMaker\Livewire\Generator;
+use Laltu\LaravelMaker\Livewire\Module\ModuleApiBuilder;
+use Laltu\LaravelMaker\Livewire\Module\ModuleCreate;
+use Laltu\LaravelMaker\Livewire\Module\ModuleFormBuilder;
+use Laltu\LaravelMaker\Livewire\Module\ModuleList;
+use Laltu\LaravelMaker\Livewire\Module\ModuleUpdate;
+use Laltu\LaravelMaker\Livewire\Module\ModuleValidation;
+use Laltu\LaravelMaker\Livewire\Schema\SchemaCreate;
+use Laltu\LaravelMaker\Livewire\Schema\SchemaImportFromSql;
+use Laltu\LaravelMaker\Livewire\Schema\SchemaList;
+use Laltu\LaravelMaker\Livewire\Schema\SchemaUpdate;
 use Laltu\LaravelMaker\Livewire\Setting;
 use Laltu\LaravelMaker\Livewire\SidePanel;
 use Livewire\Livewire;
@@ -140,11 +141,11 @@ class LaravelMakerServiceProvider extends ServiceProvider
             'laravel-maker.generator' => Generator::class,
             'laravel-maker.setting' => Setting::class,
             'laravel-maker.list-module' => ModuleList::class,
-            'laravel-maker.create-module' => ModuleCreate::class,
+            'laravel-maker.module-create' => ModuleCreate::class,
+            'laravel-maker.module-update' => ModuleUpdate::class,
             'laravel-maker.module-form-builder' => ModuleFormBuilder::class,
             'laravel-maker.module-api-builder' => ModuleApiBuilder::class,
             'laravel-maker.module-validation' => ModuleValidation::class,
-            'laravel-maker.side-panel' => SidePanel::class,
         ];
 
         foreach ($components as $alias => $class) {

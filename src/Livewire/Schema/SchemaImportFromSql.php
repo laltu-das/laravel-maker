@@ -1,9 +1,6 @@
 <?php
 
-namespace Laltu\LaravelMaker\Livewire;
-
-use Illuminate\Support\Str;
-use Laltu\LaravelMaker\Models\Schema;
+namespace Laltu\LaravelMaker\Livewire\Schema;
 
 use Livewire\Component;
 
@@ -19,10 +16,7 @@ class SchemaImportFromSql extends Component
     {
         $this->validate();
 
-
-        $schemaData = $this->parseSql($this->sqlData);
-
-        dd($this->sqlData,$schemaData);
+        $this->parseSql($this->sqlData);
 
         $this->schema->fill([
             'modelName' => $this->modelName,

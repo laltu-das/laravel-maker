@@ -10,46 +10,22 @@ class ModuleForm extends Form
 
     public ?Module $module;
 
-    public $controllerName = '';
-    public array $fields = [];
+    public $model_name = '';
+    public $controller_name = '';
+    public $controller_type = '';
 
-    public array $relationshipOptions = [
+    public array $controllerTypeOptions = [
         "increments" => "Increments",
         "integer" => "Integer",
-    ];
-
-    public array $dataTypeOptions = [
-        "increments" => "Increments",
-        "integer" => "Integer",
-        "smallInteger" => "SmallInteger",
-        "longText" => "LongText",
-        "bigInteger" => "BigInteger",
-        "double" => "Double",
-        "float" => "Float",
-        "decimal" => "Decimal",
-        "boolean" => "Boolean",
-        "string" => "String",
-        "char" => "Char",
-        "text" => "Text",
-        "json" => "Json",
-        "mediumText" => "MediumText",
-        "enum" => "Enum",
-        "binary" => "Binary",
-        "dateTime" => "DateTime",
-        "date" => "Date",
-        "timestamp" => "Timestamp",
     ];
 
     public function rules(): array
     {
-        $rules = [ 'modelName' => 'required|string|max:255',];
-
-        foreach ($this->fields as $index => $field) {
-            $rules["fields.{$index}.fieldName"] = 'required|string';
-            $rules["fields.{$index}.dataType"] = 'required|string';
-        }
-
-        return $rules;
+        return [
+            'model_name' => 'required|string|max:255',
+            'controller_type' => 'required|string|max:255',
+            'controller_name' => 'required|string|max:255',
+        ];
     }
 
     public function addFieldRow(): void
@@ -88,19 +64,18 @@ class ModuleForm extends Form
         $this->fields = array_values($this->fields);
     }
 
-    public function setmodule(Module $module): void
+    public function setModule(Module $module): void
     {
         $this->module = $module;
 
-        $this->modelName = $module->modelName;
-        $this->fields = $module->fields->toarray();
+        $this->fill($module);
     }
 
     public function store(): void
     {
         $this->validate();
 
-        module::create($this->only(['modelName']));
+        Module::create($this->only(['model_name', 'controller_type', 'controller_type']));
     }
 
     public function update(): void

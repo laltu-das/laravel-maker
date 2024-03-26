@@ -9,7 +9,7 @@
                 </x-laravel-maker::button>
             </div>
             <div class="grid gap-4 mb-4 sm:grid-cols-1">
-                <x-laravel-maker::input type="text" wire:model="form.modelName" placeholder="Model Name" required/>
+                <x-laravel-maker::input type="text" wire:model="form.model_name" placeholder="Model Name" required/>
                 <div>
                     @error('form.modelName') <span class="error">{{ $message }}</span> @enderror
                 </div>

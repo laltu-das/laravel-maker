@@ -15,8 +15,13 @@ class ModelBuilder
         $this->fieldParser = new FieldParser();
 
         // Instantiated FieldParser object to parse fields and relations
-        $this->fields = collect($this->fieldParser->parseFields($fieldsString));
-        $this->relations = collect($this->fieldParser->parseRelationships($relationsString));
+        if ($fieldsString){
+            $this->fields = collect($this->fieldParser->parseFields($fieldsString));
+        }
+
+        if ($relationsString){
+            $this->relations = collect($this->fieldParser->parseRelationships($relationsString));
+        }
     }
 
     public function buildFillableFields(): string
@@ -44,15 +49,9 @@ class ModelBuilder
     public function buildCasts(): string
     {
         return $this->fields
-            ->mapWithKeys(function ($field) {
-                if (!empty($field['type'])) {
-                    return ["'" . $field['name'] . "'" => "'" . $field['type'] . "'"];
-                }
-
-                return [];
-            })
-            ->filter()
-            ->implode(', ');
+            ->map(function ($attribute) {
+                return "'".$attribute['name']."' => '".$attribute['type']."'";
+            })->implode(', ');
     }
 
     public function buildRelationMethods(): string
@@ -83,10 +82,10 @@ class ModelBuilder
     private function generateMethodStub(string $methodName, string $methodBody): string
     {
         return <<<STUB
-public function $methodName()
-{
-    $methodBody
-}
-STUB;
+    public function $methodName()
+    {
+        $methodBody
+    }
+    STUB;
     }
 }

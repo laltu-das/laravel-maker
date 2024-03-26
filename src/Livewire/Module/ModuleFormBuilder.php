@@ -1,9 +1,8 @@
 <?php
 
-namespace Laltu\LaravelMaker\Livewire;
+namespace Laltu\LaravelMaker\Livewire\Module;
 
 use Laltu\LaravelMaker\Facades\LaravelMaker;
-
 use Livewire\Component;
 
 class ModuleFormBuilder extends Component

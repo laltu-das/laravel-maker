@@ -11,9 +11,9 @@
                 <x-laravel-maker::thead class="no-border">
                     <x-laravel-maker::tr>
                         <x-laravel-maker::th>Module Name</x-laravel-maker::th>
-                        <x-laravel-maker::th>Controller Name</x-laravel-maker::th>
                         <x-laravel-maker::th>Model Name</x-laravel-maker::th>
                         <x-laravel-maker::th>Controller Type</x-laravel-maker::th>
+                        <x-laravel-maker::th>Controller Name</x-laravel-maker::th>
                         <x-laravel-maker::th>Controller</x-laravel-maker::th>
                         <x-laravel-maker::th>Request</x-laravel-maker::th>
                         <x-laravel-maker::th>Response</x-laravel-maker::th>
@@ -28,16 +28,16 @@
                     @foreach ($modules as $module)
                         <x-laravel-maker::tr>
                             <x-laravel-maker::td>
-                                {{ $module->moduleName }}
+                                {{ $module->module_name }}
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                {{ $module->controllerType }}
+                                {{ $module->model_name }}
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                {{ $module->controllerName }}
+                                {{ $module->controller_type }}
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
-                                {{ $module->moduleName }}
+                                {{ $module->controller_name }}
                             </x-laravel-maker::td>
                             <x-laravel-maker::td>
                                 <x-laravel-maker::icons.reload class="m-auto cursor-pointer" wire:click="generateController({{ $module->id }})" wire:loading.class="animate-spin"/>
