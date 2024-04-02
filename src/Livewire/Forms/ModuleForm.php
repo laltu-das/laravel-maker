@@ -2,6 +2,7 @@
 
 namespace Laltu\LaravelMaker\Livewire\Forms;
 
+use Illuminate\Support\Str;
 use Laltu\LaravelMaker\Models\Module;
 use Livewire\Form;
 
@@ -9,6 +10,8 @@ class ModuleForm extends Form
 {
     public ?Module $module;
     public string $module_name = '';
+    public string $model_name = '';
+    public string $route_name = '';
     public string $controller_name = '';
     public string $controller_type = '';
     public array $form_fields = [];
@@ -16,6 +19,8 @@ class ModuleForm extends Form
 
     public $rules = [
         'module_name' => 'required|string|max:255',
+        'model_name' => 'required|string|max:255',
+        'route_name' => 'required|string|max:255',
         'controller_name' => 'required|string|max:255',
         'controller_type' => 'required|string|max:255',
         'form_fields' => 'nullable',
@@ -51,6 +56,7 @@ class ModuleForm extends Form
         'time' => 'Time',
         'url' => 'URL',
         'week' => 'Week',
+        'select' => 'Select',
     ];
 
 
@@ -97,25 +103,21 @@ class ModuleForm extends Form
     private function emptyFormField(): array
     {
         return [
-            'fieldName' => '',
-            'fieldType' => '',
+            'field_name' => '',
+            'field_type' => '',
+            'field_label' => '',
+            'field_placeholder' => '',
             'validation' => '',
-            'primary' => false,
-            'is_foreign' => false,
-            'searchable' => false,
-            'fillable' => false,
-            'in_form' => true,
-            'in_index' => true,
-            'db_type' => '',
-            'html_type' => ''
+            'field_row' => '',
+            'field_col' => '',
         ];
     }
 
     private function emptyApiField(): array
     {
         return [
-            'fieldName' => '',
-            'fieldType' => '',
+            'field_name' => '',
+            'field_type' => '',
             'validation' => '',
             'primary' => false,
             'is_foreign' => false,
@@ -133,8 +135,6 @@ class ModuleForm extends Form
         $validatedData = $this->validate();
 
         Module::create($validatedData);
-
-        $this->reset();
     }
 
     public function update(): void
@@ -142,7 +142,18 @@ class ModuleForm extends Form
         $validatedData = $this->validate();
 
         $this->module->update($validatedData);
-
-        $this->reset();
     }
+
+    protected function transformFieldNameToKebabCase($propertyName, $value)
+    {
+        $parts = explode('.', $propertyName);
+        $type = $parts[0]; // 'form_fields' or 'api_fields'
+        $index = $parts[1];
+        $attribute = $parts[2];
+
+        if ($type && $index !== null && $attribute === 'field_name') {
+            $this->{$type}[$index][$attribute] = Str::kebab($value);
+        }
+    }
+
 }

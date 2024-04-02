@@ -1,10 +1,32 @@
-import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
-import Clipboard from '@ryangjchandler/alpine-clipboard'
-import collapse from '@alpinejs/collapse'
-import ui from '@alpinejs/ui'
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+import './bootstrap';
+import '../css/laravel-maker.css';
 
-Alpine.plugin(Clipboard)
-Alpine.plugin(collapse)
-Alpine.plugin(ui)
+import {createApp, h} from 'vue'
+import {createInertiaApp} from '@inertiajs/vue3'
+import AppLayout from "@/AppLayout.vue";
+import {ZiggyVue} from '../../vendor/tightenco/ziggy';
 
-Livewire.start()
+createInertiaApp({
+    title: (title) => `${title} - ${process.env.MIX_APP_NAME} Laravel Maker`,
+    resolve: (name) => {
+        const page = require(`./Pages/${name}`).default;
+        if (!page.layout) {
+            page.layout = AppLayout;
+        }
+        return page;
+    },
+    setup({el, App, props, plugin}) {
+        createApp({render: () => h(App, props)})
+            .use(plugin)
+            .use(ZiggyVue)
+            .mount(el)
+    },
+    progress: {
+        color: '#4B5563',
+    },
+}).then(r => console.log(r))

@@ -1,0 +1,29 @@
+providers:
+  - Laltu\LaravelMaker\LaravelMakerServiceProvider
+  - Workbench\App\Providers\WorkbenchServiceProvider
+
+migrations:
+  - workbench/database/migrations
+
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder
+
+workbench:
+  welcome: true,
+  start: '/laravel-maker'
+  install: true
+  health: false
+  discovers:
+    web: true
+    api: false
+    commands: false
+    components: true
+    views: true
+  build:
+    - asset-publish
+    - create-sqlite-db
+    - migrate:refresh
+  assets: []
+  sync:
+    - from: ./public
+      to: public/vendor/laravel-maker

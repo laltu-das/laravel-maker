@@ -4,7 +4,7 @@ namespace Laltu\LaravelMaker;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Compilers\BladeCompiler;
+use Inertia\Inertia;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
 use Laltu\LaravelMaker\Commands\MakeControllerCommand;
 use Laltu\LaravelMaker\Commands\MakeFactoryCommand;
@@ -17,21 +17,6 @@ use Laltu\LaravelMaker\Commands\MakeModelCommand;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
 use Laltu\LaravelMaker\Commands\MakeResourceCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
-use Laltu\LaravelMaker\Livewire\Dashboard;
-use Laltu\LaravelMaker\Livewire\Generator;
-use Laltu\LaravelMaker\Livewire\Module\ModuleApiBuilder;
-use Laltu\LaravelMaker\Livewire\Module\ModuleCreate;
-use Laltu\LaravelMaker\Livewire\Module\ModuleFormBuilder;
-use Laltu\LaravelMaker\Livewire\Module\ModuleList;
-use Laltu\LaravelMaker\Livewire\Module\ModuleUpdate;
-use Laltu\LaravelMaker\Livewire\Module\ModuleValidation;
-use Laltu\LaravelMaker\Livewire\Schema\SchemaCreate;
-use Laltu\LaravelMaker\Livewire\Schema\SchemaImportFromSql;
-use Laltu\LaravelMaker\Livewire\Schema\SchemaList;
-use Laltu\LaravelMaker\Livewire\Schema\SchemaUpdate;
-use Laltu\LaravelMaker\Livewire\Setting;
-use Laltu\LaravelMaker\Livewire\SidePanel;
-use Livewire\Livewire;
 
 class LaravelMakerServiceProvider extends ServiceProvider
 {
@@ -41,6 +26,8 @@ class LaravelMakerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        Inertia::setRootView('laravel-maker::layout');
         /*
          * Optional methods to load your package assets
          */
@@ -50,7 +37,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
 
         $this->registerRoutes();
         $this->registerResources();
-        $this->registerLivewireComponents();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -59,7 +45,7 @@ class LaravelMakerServiceProvider extends ServiceProvider
 
             // Publishing assets.
             $this->publishes([
-                __DIR__ . '/../dist' => public_path('vendor/laravel-maker'),
+                __DIR__ . '/../public' => public_path('vendor/laravel-maker'),
             ], ['assets', 'laravel-assets']);
         }
 
@@ -90,66 +76,25 @@ class LaravelMakerServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
-        });
+        Route::name('laravel-maker.')
+            ->prefix(config('laravel-maker.path', 'laravel-maker'))
+            ->middleware(config('laravel-maker.middleware'))
+            ->group(function () {
+                $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
+            });
     }
 
-    /**
-     * Retrieves configuration for route.
-     *
-     * This method retrieves the configuration for a route used by the Laravel Maker package.
-     * It returns an array containing the prefix and middleware specified in the package's configuration.
-     *
-     * @return array The route configuration.
-     */
-    protected function routeConfiguration(): array
-    {
-        return [
-            'prefix' => config('laravel-maker.path', 'laravel-maker'),
-            'middleware' => config('laravel-maker.middleware'),
-        ];
-    }
 
     /**
      * Register the package resources.
      *
-     * This method is responsible for loading the package's views from the specified directory.
+     * This method is responsible for loading the package's Pages from the specified directory.
      *
      * @return void
      */
     protected function registerResources(): void
     {
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-maker');
-    }
-
-    /**
-     * Registers Livewire components.
-     *
-     * This method registers Livewire components using the provided aliases and classes.
-     *
-     * @return void
-     */
-    protected function registerLivewireComponents(): void
-    {
-        $components = [
-            'laravel-maker.dashboard' => Dashboard::class,
-            'laravel-maker.schema' => SchemaList::class,
-            'laravel-maker.schema-sql-import' => SchemaImportFromSql::class,
-            'laravel-maker.schema-create' => SchemaCreate::class,
-            'laravel-maker.schema-update' => SchemaUpdate::class,
-            'laravel-maker.generator' => Generator::class,
-            'laravel-maker.setting' => Setting::class,
-            'laravel-maker.list-module' => ModuleList::class,
-            'laravel-maker.module-create' => ModuleCreate::class,
-            'laravel-maker.module-update' => ModuleUpdate::class,
-            'laravel-maker.module-form-builder' => ModuleFormBuilder::class,
-            'laravel-maker.module-api-builder' => ModuleApiBuilder::class,
-        ];
-
-        foreach ($components as $alias => $class) {
-            $this->registerComponent($alias, $class);
-        }
     }
 
     /**
@@ -166,19 +111,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
         $this->app->singleton('laravel-maker', function () {
             return new \Laltu\LaravelMaker\Facades\LaravelMaker();
         });
-    }
-
-    /**
-     * Register a Livewire component.
-     *
-     * @param string $alias The alias for the component.
-     * @param string $class The fully qualified class name of the component.
-     *
-     * @return void
-     */
-    private function registerComponent(string $alias, string $class): void
-    {
-        Livewire::component($alias, $class);
     }
 
 }

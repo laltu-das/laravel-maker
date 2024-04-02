@@ -13,6 +13,8 @@ class Module extends Model
 
     protected $fillable = [
         'module_name',
+        'model_name',
+        'route_name',
         'controller_type',
         'controller_name',
         'form_fields',

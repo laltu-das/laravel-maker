@@ -58,7 +58,7 @@ class ReactFormBuilder implements ComponentBuilderInterface
         // Add other fixed imports
         $fixedImports = <<<IMPORTS
 import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
-import AdminLayout from "@/Layouts/AdminLayout.vue";
+import AdminLayout from "@/Layouts/AppLayout.vue";
 import InputError from "@/Components/Core/Form/InputError.vue";
 // ... other fixed imports ...
 IMPORTS;

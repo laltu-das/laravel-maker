@@ -33,7 +33,7 @@ trait VueTemplateBuilder
     {
         $imports = [
             "import { useForm, usePage } from '@inertiajs/vue3';",
-            "import AdminLayout from '@/Layouts/AdminLayout.vue';",
+            "import AdminLayout from '@/Layouts/AppLayout.vue';",
             "import InputError from '@/Components/InputError.vue';",
             "import SubmitButton from '@/Components/Buttons/SubmitButton.vue';",
             "import CancelButton from '@/Components/Buttons/CancelButton.vue';",

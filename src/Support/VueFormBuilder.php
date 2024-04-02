@@ -20,7 +20,7 @@ class VueFormBuilder
     public function generateDynamicImports(): string
     {
         $imports = [
-            "import AdminLayout from '@/Layouts/AdminLayout.vue';",
+            "import AdminLayout from '@/Layouts/AppLayout.vue';",
             "import InputError from '@/Components/InputError.vue';",
             "import SubmitButton from '@/Components/Button/SubmitButton.vue';",
             "import CancelButton from '@/Components/Button/CancelButton.vue';",
@@ -128,7 +128,7 @@ class VueFormBuilder
 
     protected function generateFieldWrapper($inputComponent, $errorComponent): string
     {
-        $tab = str_repeat(" ", 28); // For the input and error components
+        $tab = str_repeat(" ", 28); // For the input and error Components
         $closingTab = str_repeat(" ", 24); // For the closing </div> tag
 
         return "<div class=\"mb-4\">\n{$tab}{$inputComponent}\n{$tab}{$errorComponent}\n{$closingTab}</div>";

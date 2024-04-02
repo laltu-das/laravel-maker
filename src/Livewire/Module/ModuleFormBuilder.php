@@ -30,7 +30,6 @@ class ModuleFormBuilder extends Component
         $this->form->update();
 
         $this->js("alert('Update saved!')");
-
     }
 
     public function render()

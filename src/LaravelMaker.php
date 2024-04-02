@@ -9,8 +9,21 @@ use RuntimeException;
 
 class LaravelMaker
 {
+    /**
+     * Get the default JavaScript variables for Telescope.
+     *
+     * @return array
+     */
+    public static function scriptVariables()
+    {
+        return [
+//            'path' => config('laravel-maker.path'),
+//            'timezone' => config('app.timezone'),
+//            'recording' => ! cache('laravel-maker:pause-recording'),
+        ];
+    }
 
-    protected array $css = [__DIR__.'/../dist/laravel-maker.css'];
+    protected array $css = [__DIR__.'/../public/vendor/laravel-maker/laravel-maker.css'];
 
     /**
      * Register or return CSS for the Pulse dashboard.
@@ -56,7 +69,7 @@ class LaravelMaker
      */
     public function js(): string
     {
-        if (($content = file_get_contents(__DIR__.'/../dist/laravel-maker.js')) === false) {
+        if (($content = file_get_contents(__DIR__.'/../public/build/laravel-maker.js')) === false) {
             throw new RuntimeException('Unable to load the Pulse dashboard JavaScript.');
         }
 

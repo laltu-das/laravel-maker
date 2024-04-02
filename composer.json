@@ -18,7 +18,8 @@
     "require": {
         "php": "^8.2",
         "illuminate/support": "^11.0",
-        "livewire/livewire": "^3.4"
+        "inertiajs/inertia-laravel": "^1.0",
+        "tightenco/ziggy": "^2.1"
     },
     "require-dev": {
         "orchestra/testbench": "^9.0",
@@ -31,13 +32,30 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Laltu\\LaravelMaker\\Tests\\": "tests"
+            "Laltu\\LaravelMaker\\Tests\\": "tests",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "lint": [
+            "@php vendor/bin/phpstan analyse"
+        ]
     },
     "config": {
         "sort-packages": true
@@ -53,5 +71,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable" : true
+    "prefer-stable": true
 }

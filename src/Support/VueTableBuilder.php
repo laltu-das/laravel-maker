@@ -60,7 +60,7 @@ class VueTableBuilder
     public function getDynamicImports(): string
     {
         $this->setImportMethod([
-            "AdminLayout" => '@/Layouts/AdminLayout.vue',
+            "AdminLayout" => '@/Layouts/AppLayout.vue',
             "TableHead" => '@/Components/TableHead.vue',
             "TableBody" => '@/Components/TableBody.vue',
             "TableRow" => '@/Components/TableRow.vue',

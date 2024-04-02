@@ -10,6 +10,8 @@ return new class extends Migration {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
             $table->string('module_name');
+            $table->string('model_name');
+            $table->string('route_name');
             $table->string('controller_type');
             $table->string('controller_name');
             $table->string('form_fields')->nullable();
