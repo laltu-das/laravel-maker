@@ -7,15 +7,11 @@ use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Laltu\LaravelMaker\Commands\MakeActionCommand;
 use Laltu\LaravelMaker\Commands\MakeControllerCommand;
-use Laltu\LaravelMaker\Commands\MakeFactoryCommand;
 use Laltu\LaravelMaker\Commands\MakeInertiaFormCommand;
 use Laltu\LaravelMaker\Commands\MakeInertiaPageCommand;
 use Laltu\LaravelMaker\Commands\MakeInertiaTableCommand;
 use Laltu\LaravelMaker\Commands\MakeInertiaViewCommand;
-use Laltu\LaravelMaker\Commands\MakeMigrationCommand;
-use Laltu\LaravelMaker\Commands\MakeModelCommand;
 use Laltu\LaravelMaker\Commands\MakePackageCommand;
-use Laltu\LaravelMaker\Commands\MakeResourceCommand;
 use Laltu\LaravelMaker\Commands\MakeServiceCommand;
 
 class LaravelMakerServiceProvider extends ServiceProvider
@@ -55,10 +51,6 @@ class LaravelMakerServiceProvider extends ServiceProvider
             MakeServiceCommand::class,
             MakeActionCommand::class,
             MakeControllerCommand::class,
-            MakeMigrationCommand::class,
-            MakeModelCommand::class,
-            MakeResourceCommand::class,
-            MakeFactoryCommand::class,
 
             MakeInertiaViewCommand::class,
             MakeInertiaPageCommand::class,
