@@ -170,34 +170,55 @@ class MakeControllerCommand extends ControllerMakeCommand
      * @param string $name The name of the class to build.
      * @return string The built class.
      */
-    protected function buildClass($name): string
+    protected function buildClass($name)
     {
+        $rootNamespace = $this->rootNamespace();
+        $controllerNamespace = $this->getNamespace($name);
 
         $replace = [];
 
-        $replace["{{ routePath }}"] = Str::replace('_', '.', Str::snake(Str::replaceLast('Controller', '', $this->getNameInput())));
-        $replace["{{ viewPath }}"] = Str::replace('Controller', '', $this->getNameInput());
-
-        if ($this->option('api')) {
-            $modelClass = $this->parseModel($this->option('model'));
-            $replace = $this->buildResourceReplacements($replace, $modelClass);
+        if ($this->option('parent')) {
+            $replace = $this->buildParentReplacements();
         }
 
-        return str_replace(
+        if ($this->option('model')) {
+            $replace = $this->buildModelReplacements($replace);
+        }
+
+        if ($this->option('api')) {
+            $replace = $this->buildResourceReplacements($replace);
+        }
+
+        if ($this->option('creatable')) {
+            $replace['abort(404);'] = '//';
+        }
+
+        $baseControllerExists = file_exists($this->getPath("{$rootNamespace}Http\Controllers\Controller"));
+
+        if ($baseControllerExists) {
+            $replace["use {$controllerNamespace}\Controller;\n"] = '';
+        } else {
+            $replace[' extends Controller'] = '';
+            $replace["use {$rootNamespace}Http\Controllers\Controller;\n"] = '';
+        }
+
+        $class = str_replace(
             array_keys($replace), array_values($replace), parent::buildClass($name)
         );
+dd($class);
+        return $class;
     }
 
     /**
      * Build the resource replacements an array.
      *
      * @param array $replace The array of replacements.
-     * @param string $modelClass The class name of the model.
      *
      * @return array The updated array of replacements.
      */
-    protected function buildResourceReplacements(array $replace, string $modelClass): array
+    protected function buildResourceReplacements(array $replace): array
     {
+        $modelClass = $this->parseModel($this->option('model'));
 
         $resourceNamespace = 'App\\Http\\Resources';
         $resourceClass = class_basename($modelClass) . 'Resource';
@@ -208,17 +229,12 @@ class MakeControllerCommand extends ControllerMakeCommand
         }
 
         $namespacedResource = $resourceNamespace . '\\' . $resourceClass . ';';
-        $namespacedResourceCollection = $resourceNamespace . '\\' . $resourceCollectionClass . ';';
 
         return array_merge($replace, [
             '{{ resourceClass }}' => $resourceClass,
             '{{resourceClass}}' => $resourceClass,
-            '{{ resourceCollectionClass }}' => $resourceCollectionClass,
-            '{{resourceCollectionClass}}' => $resourceCollectionClass,
-            '{{ namespacedResources }}' => $namespacedResource,
-            '{{namespacedResources}}' => $namespacedResource,
-            '{{ namespacedResourceCollection }}' => $namespacedResourceCollection,
-            '{{namespacedResourceCollection}}' => $namespacedResourceCollection,
+            '{{ namespacedResource }}' => $namespacedResource,
+            '{{namespacedResource}}' => $namespacedResource,
         ]);
     }
 
