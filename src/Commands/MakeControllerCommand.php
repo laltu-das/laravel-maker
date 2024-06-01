@@ -43,6 +43,10 @@ class MakeControllerCommand extends ControllerMakeCommand
             $this->createAction();
         }
 
+        if ($this->option('api')) {
+            $this->createResource();
+        }
+
         return false;
     }
 
@@ -59,6 +63,22 @@ class MakeControllerCommand extends ControllerMakeCommand
         $this->call('make:service', [
             'name' => "{$name}Service",
             '--methods' => "get,store,show,update,destroy",
+        ]);
+    }
+
+    /**
+     * Creates a service for the specified controller name.
+     *
+     * @return void
+     */
+    protected function createResource(): void
+    {
+        $nameInput = Str::replace('Controller', '', $this->getNameInput());
+        $name = Str::studly($nameInput);
+
+        $this->call('make:resource', [
+            'name' => "{$name}Resource",
+            '--model' => $name,
         ]);
     }
 
