@@ -205,7 +205,7 @@ class MakeControllerCommand extends ControllerMakeCommand
         $class = str_replace(
             array_keys($replace), array_values($replace), parent::buildClass($name)
         );
-dd($class);
+
         return $class;
     }
 
