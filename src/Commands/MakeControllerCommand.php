@@ -6,13 +6,8 @@ use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Routing\Console\ControllerMakeCommand;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\multiselect;
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\text;
 
 class MakeControllerCommand extends ControllerMakeCommand
 {
@@ -172,34 +167,10 @@ class MakeControllerCommand extends ControllerMakeCommand
      */
     protected function buildClass($name)
     {
-        $rootNamespace = $this->rootNamespace();
-        $controllerNamespace = $this->getNamespace($name);
-
         $replace = [];
-
-        if ($this->option('parent')) {
-            $replace = $this->buildParentReplacements();
-        }
-
-        if ($this->option('model')) {
-            $replace = $this->buildModelReplacements($replace);
-        }
 
         if ($this->option('api')) {
             $replace = $this->buildResourceReplacements($replace);
-        }
-
-        if ($this->option('creatable')) {
-            $replace['abort(404);'] = '//';
-        }
-
-        $baseControllerExists = file_exists($this->getPath("{$rootNamespace}Http\Controllers\Controller"));
-
-        if ($baseControllerExists) {
-            $replace["use {$controllerNamespace}\Controller;\n"] = '';
-        } else {
-            $replace[' extends Controller'] = '';
-            $replace["use {$rootNamespace}Http\Controllers\Controller;\n"] = '';
         }
 
         $class = str_replace(
@@ -222,9 +193,8 @@ class MakeControllerCommand extends ControllerMakeCommand
 
         $resourceNamespace = 'App\\Http\\Resources';
         $resourceClass = class_basename($modelClass) . 'Resource';
-        $resourceCollectionClass = class_basename($modelClass) . 'ResourceCollection';
 
-        if (!class_exists($resourceClass) && confirm("A {$resourceClass} resource does not exist. Do you want to generate it?", default: true)) {
+        if (!class_exists($resourceNamespace.'\\'.$resourceClass) && confirm("A {$resourceClass} resource does not exist. Do you want to generate it?", default: true)) {
             $this->call('make:resource', ['name' => $resourceClass]);
         }
 
